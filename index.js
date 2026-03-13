@@ -195,10 +195,6 @@ jQuery(async () => {
     if (viewId === 'wb-sync-script-sync-view') title = '💻 脚本同步器';
     if (viewId === 'wb-sync-create-regex-view') title = '💻 创建正则脚本';
     if (viewId === 'wb-sync-create-script-view') title = '💻 创建酒馆助手脚本';
-    if (viewId === 'wb-sync-readme-view') {
-        title = '📄 插件说明';
-        renderReadme();
-    }
 
     $('#wb-sync-header-title').text(title);
     $('#wb-sync-popup-back-btn').show();
@@ -1079,21 +1075,6 @@ jQuery(async () => {
   }
 
   // --- 11. 初始化 ---
-  async function renderReadme() {
-    try {
-        const readmeContent = await $.get(`/${extensionFolderPath}/README.md`);
-        let htmlContent = `<pre style="white-space: pre-wrap; font-family: monospace; text-align: left;">${escapeHtml(readmeContent)}</pre>`;
-        if (window.showdown) {
-            const converter = new window.showdown.Converter();
-            htmlContent = `<div style="text-align: left; padding: 10px;">${converter.makeHtml(readmeContent)}</div>`;
-        }
-        $('#wb-sync-readme-content').html(htmlContent);
-    } catch (e) {
-        $('#wb-sync-readme-content').html('<p style="color:red;">无法加载插件说明。</p>');
-    }
-  }
-
-  // --- 11. 初始化 ---
   async function init() {
     try {
       const html = await $.get(`/${extensionFolderPath}/panel.html`);
@@ -1136,7 +1117,6 @@ jQuery(async () => {
       scriptSyncView = $('#wb-sync-script-sync-view');
       createRegexView = $('#wb-sync-create-regex-view');
       createScriptView = $('#wb-sync-create-script-view');
-      readmeView = $('#wb-sync-readme-view');
 
       // 绑定事件
       $('#wb-sync-popup-close-button').on('click touchend', closePopup);
@@ -1171,7 +1151,42 @@ jQuery(async () => {
       $('#wb-sync-goto-create-regex-btn').on('click', () => showSubView('wb-sync-create-regex-view'));
       $('#wb-sync-goto-create-script-btn').on('click', () => showSubView('wb-sync-create-script-view'));
 
-      $('#wb-sync-show-readme-btn').on('click', () => showSubView('wb-sync-readme-view'));
+      $('#wb-sync-show-readme-btn').on('click', async () => {
+        try {
+          const readmeContent = await $.get(`/${extensionFolderPath}/README.md`);
+
+          let htmlContent = `<pre style="white-space: pre-wrap; font-family: monospace; text-align: left;">${escapeHtml(readmeContent)}</pre>`;
+          if (window.showdown) {
+            const converter = new window.showdown.Converter();
+            htmlContent = `<div style="text-align: left; padding: 10px;">${converter.makeHtml(readmeContent)}</div>`;
+          }
+
+          // 创建一个自定义的模态框 (黑色背景，白色字体，100%不透明度)
+          const $modal = $(`
+            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2147483647; display: flex; justify-content: center; align-items: center;">
+              <div style="background: #2c2f33; color: #fff; width: 90%; max-width: 800px; max-height: 85vh; border-radius: 8px; display: flex; flex-direction: column; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 1px solid #40444b; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                <div style="padding: 15px; border-bottom: 1px solid #40444b; display: flex; justify-content: space-between; align-items: center;">
+                  <h3 style="margin: 0; color: #fff;">插件说明</h3>
+                  <button class="wb-sync-close-modal-btn" style="background: none; border: none; color: #fff; font-size: 1.5em; cursor: pointer;">&times;</button>
+                </div>
+                <div style="padding: 20px; overflow-y: auto; flex-grow: 1; color: #fff;">
+                  ${htmlContent}
+                </div>
+              </div>
+            </div>
+          `);
+
+          $modal.find('.wb-sync-close-modal-btn').on('click', () => $modal.remove());
+          $modal.on('click', e => {
+            if (e.target === $modal[0]) $modal.remove();
+          });
+
+          $('body').append($modal);
+        } catch (e) {
+          console.error(e);
+          toastr.error('无法加载插件说明: ' + e.message);
+        }
+      });
 
       $('#wb-sync-duplicate-submit-btn').on('click', handleDuplicateWorldbook);
       $('#wb-sync-rename-submit-btn').on('click', handleRenameWorldbook);
