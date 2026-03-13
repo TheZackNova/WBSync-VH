@@ -1,0 +1,1048 @@
+<!-- 悬浮球 -->
+<div id="wb-sync-floating-btn" title="世界书同步器">
+  <i class="fa-solid fa-book-atlas"></i>
+</div>
+
+<!-- 弹窗遮罩层 -->
+<div id="wb-sync-popup-overlay" class="wb-sync-popup-overlay" style="display: none">
+  <div id="wb-sync-popup" class="wb-sync-popup-container">
+    <div id="wb-sync-popup-header" class="wb-sync-popup-header">
+      <div id="wb-sync-header-title" class="wb-sync-header-title">世界书同步器 - 主菜单</div>
+      <div class="wb-sync-header-controls">
+        <button id="wb-sync-popup-back-btn" class="wb-sync-header-btn" title="返回主菜单" style="display: none">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <button id="wb-sync-popup-close-button" class="wb-sync-header-btn close-btn" title="关闭">&times;</button>
+      </div>
+    </div>
+    <div class="wb-sync-popup-body" id="wb-sync-popup-body">
+      <!-- 主页面 -->
+      <div id="wb-sync-main-view" style="display: flex; flex-direction: column; gap: 15px; min-height: min-content">
+        <!-- 载入全局世界书 -->
+        <div class="wb-sync-section">
+          <div class="wb-sync-section-header">
+            <h4><i class="fa-solid fa-globe"></i> 载入全局世界书</h4>
+          </div>
+          <div class="wb-sync-section-content">
+            <div class="wb-sync-actions">
+              <button id="wb-sync-select-book-btn" class="wb-sync-button">选择世界书 (全局)</button>
+              <button id="wb-sync-load-preset-btn" class="wb-sync-button">载入方案</button>
+            </div>
+            <div id="wb-sync-preset-list-container" class="wb-sync-preset-list-container" style="display: none"></div>
+          </div>
+        </div>
+
+        <!-- 编辑世界书 -->
+        <div class="wb-sync-section">
+          <div class="wb-sync-section-header">
+            <h4><i class="fa-solid fa-pen-to-square"></i> 编辑世界书</h4>
+          </div>
+          <div class="wb-sync-section-content">
+            <div id="wb-sync-edit-actions-container" class="wb-sync-actions">
+              <button id="wb-sync-create-wb-btn" class="wb-sync-button">➕ 新建世界书</button>
+              <button id="wb-sync-goto-rename-btn" class="wb-sync-button">✏️ 修改名称</button>
+              <button id="wb-sync-goto-duplicate-btn" class="wb-sync-button">📑 复制世界书</button>
+              <button id="wb-sync-goto-modify-btn" class="wb-sync-button">📝 修改条目</button>
+              <button id="wb-sync-goto-delete-btn" class="wb-sync-button">🗑️ 删除世界书和条目</button>
+              <button id="wb-sync-goto-transfer-btn" class="wb-sync-button">🔄 条目迁移</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 酒馆助手功能 -->
+        <div class="wb-sync-section">
+          <div class="wb-sync-section-header">
+            <h4><i class="fa-solid fa-robot"></i> 酒馆助手功能</h4>
+          </div>
+          <div class="wb-sync-section-content">
+            <div class="wb-sync-actions">
+              <button id="wb-sync-goto-create-script-btn" class="wb-sync-button">💻 创建酒馆助手脚本</button>
+              <button id="wb-sync-main-import-script-btn" class="wb-sync-button">📂 导入脚本</button>
+            </div>
+            <div
+              id="wb-sync-main-import-script-options"
+              style="
+                display: none;
+                margin-top: 10px;
+                padding: 10px;
+                background: rgba(0, 0, 0, 0.2);
+                border-radius: 5px;
+                border: 1px dashed var(--wb-sync-border);
+              "
+            >
+              <span class="wb-sync-label" style="display: block; margin-bottom: 8px">选择导入目标:</span>
+              <div class="wb-sync-actions" style="margin-top: 0">
+                <button id="wb-sync-main-import-script-global-btn" class="wb-sync-button wb-sync-btn-small">
+                  全局脚本库
+                </button>
+                <button id="wb-sync-main-import-script-preset-btn" class="wb-sync-button wb-sync-btn-small">
+                  预设脚本库
+                </button>
+                <button id="wb-sync-main-import-script-character-btn" class="wb-sync-button wb-sync-btn-small">
+                  角色脚本库
+                </button>
+              </div>
+              <input type="file" id="wb-sync-main-script-file-input" style="display: none" accept=".json" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 正则功能 -->
+        <div class="wb-sync-section">
+          <div class="wb-sync-section-header">
+            <h4><i class="fa-solid fa-code"></i> 正则功能</h4>
+          </div>
+          <div class="wb-sync-section-content">
+            <div class="wb-sync-actions">
+              <button id="wb-sync-goto-create-regex-btn" class="wb-sync-button">💻 创建正则脚本</button>
+              <button id="wb-sync-main-import-regex-btn" class="wb-sync-button">📂 导入正则</button>
+            </div>
+            <div
+              id="wb-sync-main-import-regex-options"
+              style="
+                display: none;
+                margin-top: 10px;
+                padding: 10px;
+                background: rgba(0, 0, 0, 0.2);
+                border-radius: 5px;
+                border: 1px dashed var(--wb-sync-border);
+              "
+            >
+              <span class="wb-sync-label" style="display: block; margin-bottom: 8px">选择导入目标:</span>
+              <div class="wb-sync-actions" style="margin-top: 0">
+                <button id="wb-sync-main-import-regex-global-btn" class="wb-sync-button wb-sync-btn-small">
+                  全局正则脚本
+                </button>
+                <button id="wb-sync-main-import-regex-preset-btn" class="wb-sync-button wb-sync-btn-small">
+                  预设正则脚本
+                </button>
+                <button id="wb-sync-main-import-regex-character-btn" class="wb-sync-button wb-sync-btn-small">
+                  局部正则脚本
+                </button>
+              </div>
+              <input type="file" id="wb-sync-main-regex-file-input" style="display: none" accept=".json" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 插件功能 -->
+        <div class="wb-sync-section">
+          <div class="wb-sync-section-header">
+            <h4><i class="fa-solid fa-plug"></i> 插件功能</h4>
+          </div>
+          <div class="wb-sync-section-content">
+            <div class="wb-sync-actions">
+              <button id="wb-sync-goto-sync-btn" class="wb-sync-button">⚡ 世界书同步器</button>
+              <button id="wb-sync-goto-frontend-btn" class="wb-sync-button">💻 前端同步器</button>
+              <button id="wb-sync-goto-script-sync-btn" class="wb-sync-button">💻 脚本同步器</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 其他功能 -->
+        <div class="wb-sync-section">
+          <div class="wb-sync-section-header">
+            <h4><i class="fa-solid fa-wand-magic-sparkles"></i> 其他功能</h4>
+          </div>
+          <div class="wb-sync-section-content">
+            <div class="wb-sync-actions">
+              <button id="wb-sync-show-readme-btn" class="wb-sync-button">📄 插件说明</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 创建正则脚本子页面 -->
+      <div id="wb-sync-create-regex-view" class="wb-sync-section" style="display: none; height: 100%">
+        <div class="wb-sync-section-header">
+          <h4>
+            <i class="fa-solid fa-code"></i> 创建正则脚本
+            <i
+              class="fa-solid fa-chevron-up wb-sync-collapse-icon"
+              style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
+            ></i>
+          </h4>
+        </div>
+        <div class="wb-sync-section-content">
+          <!-- 正则脚本设置区 -->
+          <div class="wb-sync-controls-box" style="border-style: dashed">
+            <span class="wb-sync-batch-title">正则脚本设置:</span>
+            <div class="wb-sync-row">
+              <div class="wb-sync-group" style="flex: 1">
+                <span class="wb-sync-label">脚本名称:</span>
+                <input
+                  type="text"
+                  id="wb-sync-cr-script-name"
+                  class="wb-sync-input"
+                  style="width: 100%"
+                  value=""
+                />
+              </div>
+              <div class="wb-sync-group" style="flex: 1">
+                <span class="wb-sync-label">查找正则:</span>
+                <input
+                  type="text"
+                  id="wb-sync-cr-find-regex"
+                  class="wb-sync-input"
+                  style="width: 100%"
+                  value=""
+                />
+              </div>
+            </div>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px">
+              <!-- 作用范围 -->
+              <div style="display: flex; flex-direction: column; gap: 5px">
+                <span class="wb-sync-label" style="font-weight: bold">作用范围</span>
+                <label class="wb-sync-checkbox-label"
+                  ><input type="checkbox" class="wb-sync-cr-placement-cb" value="1" /> 用户输入</label
+                >
+                <label class="wb-sync-checkbox-label"
+                  ><input type="checkbox" class="wb-sync-cr-placement-cb" value="2" checked /> AI输出</label
+                >
+                <label class="wb-sync-checkbox-label"
+                  ><input type="checkbox" class="wb-sync-cr-placement-cb" value="4" /> 快捷命令</label
+                >
+                <label class="wb-sync-checkbox-label"
+                  ><input type="checkbox" class="wb-sync-cr-placement-cb" value="3" /> 世界信息</label
+                >
+                <label class="wb-sync-checkbox-label"
+                  ><input type="checkbox" class="wb-sync-cr-placement-cb" value="5" /> 推理</label
+                >
+              </div>
+
+              <!-- 其他选项 & 宏 -->
+              <div style="display: flex; flex-direction: column; gap: 5px">
+                <span class="wb-sync-label" style="font-weight: bold">其他选项</span>
+                <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-cr-disabled" /> 已禁用</label>
+                <label class="wb-sync-checkbox-label"
+                  ><input type="checkbox" id="wb-sync-cr-run-on-edit" checked /> 在编辑时运行</label
+                >
+
+                <span class="wb-sync-label" style="font-weight: bold; margin-top: 5px">正则表达式查找时的宏</span>
+                <select id="wb-sync-cr-substitute-regex" class="wb-sync-select" style="width: 120px">
+                  <option value="0" selected>不替换</option>
+                  <option value="1">替换</option>
+                </select>
+              </div>
+
+              <!-- 短暂 & 深度 -->
+              <div style="display: flex; flex-direction: column; gap: 5px">
+                <span class="wb-sync-label" style="font-weight: bold">短暂</span>
+                <label class="wb-sync-checkbox-label"
+                  ><input type="checkbox" id="wb-sync-cr-markdown-only" checked /> 仅格式显示</label
+                >
+                <label class="wb-sync-checkbox-label"
+                  ><input type="checkbox" id="wb-sync-cr-prompt-only" /> 仅格式提示词</label
+                >
+
+                <div style="display: flex; gap: 10px; margin-top: 5px">
+                  <div style="display: flex; flex-direction: column; gap: 2px">
+                    <span class="wb-sync-label">最小深度</span>
+                    <input
+                      type="number"
+                      id="wb-sync-cr-min-depth"
+                      class="wb-sync-input"
+                      style="width: 70px"
+                      placeholder="无限"
+                    />
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 2px">
+                    <span class="wb-sync-label">最大深度</span>
+                    <input
+                      type="number"
+                      id="wb-sync-cr-max-depth"
+                      class="wb-sync-input"
+                      style="width: 70px"
+                      placeholder="无限"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wb-sync-controls-box" style="flex-grow: 1; display: flex; flex-direction: column">
+            <span class="wb-sync-label">修剪掉:</span>
+            <textarea
+              id="wb-sync-cr-trim-strings"
+              class="wb-sync-textarea"
+              style="min-height: 60px; margin-bottom: 10px"
+              placeholder="在替换之前全局修剪正则表达式匹配中任何不需要的部分。用回车键分隔每个元素。"
+            ></textarea>
+
+            <span class="wb-sync-label">替换为 (正则替换内容):</span>
+            <textarea
+              id="wb-sync-cr-content"
+              class="wb-sync-textarea"
+              style="flex-grow: 1; font-family: monospace"
+            ></textarea>
+
+            <div class="wb-sync-actions" style="justify-content: flex-end; margin-top: 10px; flex-wrap: wrap">
+              <button id="wb-sync-cr-import-global-btn" class="wb-sync-button">导入至全局正则</button>
+              <button id="wb-sync-cr-import-preset-btn" class="wb-sync-button">导入至预设正则</button>
+              <button id="wb-sync-cr-import-character-btn" class="wb-sync-button">导入至局部正则</button>
+              <button id="wb-sync-cr-download-btn" class="wb-sync-button wb-sync-btn-primary">⬇️ 下载成正则脚本</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 创建酒馆助手脚本子页面 -->
+      <div id="wb-sync-create-script-view" class="wb-sync-section" style="display: none; height: 100%">
+        <div class="wb-sync-section-header">
+          <h4>
+            <i class="fa-solid fa-code"></i> 创建酒馆助手脚本
+            <i
+              class="fa-solid fa-chevron-up wb-sync-collapse-icon"
+              style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
+            ></i>
+          </h4>
+        </div>
+        <div class="wb-sync-section-content">
+          <div class="wb-sync-controls-box" style="border-style: dashed">
+            <div class="wb-sync-row">
+              <div class="wb-sync-group" style="flex: 1">
+                <span class="wb-sync-label">脚本名称:</span>
+                <input
+                  type="text"
+                  id="wb-sync-cs-script-name"
+                  class="wb-sync-input"
+                  style="width: 100%"
+                  value=""
+                />
+              </div>
+            </div>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px">
+              <div style="display: flex; flex-direction: column; gap: 5px">
+                <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-cs-disabled" /> 已禁用</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="wb-sync-controls-box" style="flex-grow: 1; display: flex; flex-direction: column">
+            <span class="wb-sync-label">脚本内容 (JS/TS):</span>
+            <textarea
+              id="wb-sync-cs-content"
+              class="wb-sync-textarea"
+              style="flex-grow: 1; font-family: monospace"
+            ></textarea>
+
+            <span class="wb-sync-label" style="margin-top: 10px;">作者备注:</span>
+            <textarea
+              id="wb-sync-cs-info"
+              class="wb-sync-textarea"
+              style="min-height: 60px;"
+              placeholder="脚本备注，例如作者名、版本和注意事项等，支持简单的 markdown 和 html"
+            ></textarea>
+
+            <div class="wb-sync-actions" style="justify-content: flex-end; margin-top: 10px; flex-wrap: wrap">
+              <button
+                id="wb-sync-cs-import-global-script-btn"
+                class="wb-sync-button"
+                style="background-color: var(--wb-sync-primary); color: #000; opacity: 1"
+              >
+                导入至全局脚本库
+              </button>
+              <button
+                id="wb-sync-cs-import-preset-script-btn"
+                class="wb-sync-button"
+                style="background-color: var(--wb-sync-primary); color: #000; opacity: 1"
+              >
+                导入至预设脚本库
+              </button>
+              <button
+                id="wb-sync-cs-import-character-script-btn"
+                class="wb-sync-button"
+                style="background-color: var(--wb-sync-primary); color: #000; opacity: 1"
+              >
+                导入至角色脚本库
+              </button>
+              <button id="wb-sync-cs-download-btn" class="wb-sync-button wb-sync-btn-primary" style="opacity: 1">
+                ⬇️ 下载脚本
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 前端同步器子页面 -->
+      <div id="wb-sync-frontend-view" class="wb-sync-section" style="display: none; height: 100%">
+        <div class="wb-sync-section-header">
+          <h4>
+            <i class="fa-solid fa-code"></i> 前端同步器
+            <i
+              class="fa-solid fa-chevron-up wb-sync-collapse-icon"
+              style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
+            ></i>
+          </h4>
+        </div>
+        <div class="wb-sync-section-content">
+          <div class="wb-sync-controls-box">
+            <div class="wb-sync-row">
+              <div class="wb-sync-group">
+                <span class="wb-sync-label">起始标签:</span>
+                <input
+                  type="text"
+                  id="wb-sync-fe-tag-start"
+                  class="wb-sync-input"
+                  value="```html"
+                  style="width: 80px"
+                />
+              </div>
+              <div class="wb-sync-group">
+                <span class="wb-sync-label">结束标签:</span>
+                <input type="text" id="wb-sync-fe-tag-end" class="wb-sync-input" value="```" style="width: 80px" />
+              </div>
+              <button class="wb-sync-button" id="wb-sync-fe-extract-btn">
+                <i class="fa-solid fa-magnifying-glass"></i> 提取最新消息
+              </button>
+            </div>
+          </div>
+
+          <!-- 正则脚本设置区 -->
+          <div class="wb-sync-controls-box" style="border-style: dashed">
+            <span class="wb-sync-batch-title">正则脚本设置:</span>
+            <div class="wb-sync-row">
+              <div class="wb-sync-group" style="flex: 1">
+                <span class="wb-sync-label">脚本名称:</span>
+                <input
+                  type="text"
+                  id="wb-sync-fe-script-name"
+                  class="wb-sync-input"
+                  style="width: 100%"
+                  value="新前端脚本"
+                />
+              </div>
+              <div class="wb-sync-group" style="flex: 1">
+                <span class="wb-sync-label">查找正则:</span>
+                <input
+                  type="text"
+                  id="wb-sync-fe-find-regex"
+                  class="wb-sync-input"
+                  style="width: 100%"
+                  value="<打开面板>"
+                />
+              </div>
+            </div>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px">
+              <!-- 作用范围 -->
+              <div style="display: flex; flex-direction: column; gap: 5px">
+                <span class="wb-sync-label" style="font-weight: bold">作用范围</span>
+                <label class="wb-sync-checkbox-label"
+                  ><input type="checkbox" class="wb-sync-fe-placement-cb" value="1" /> 用户输入</label
+                >
+                <label class="wb-sync-checkbox-label"
+                  ><input type="checkbox" class="wb-sync-fe-placement-cb" value="2" checked /> AI输出</label
+                >
+                <label class="wb-sync-checkbox-label"
+                  ><input type="checkbox" class="wb-sync-fe-placement-cb" value="4" /> 快捷命令</label
+                >
+                <label class="wb-sync-checkbox-label"
+                  ><input type="checkbox" class="wb-sync-fe-placement-cb" value="3" /> 世界信息</label
+                >
+                <label class="wb-sync-checkbox-label"
+                  ><input type="checkbox" class="wb-sync-fe-placement-cb" value="5" /> 推理</label
+                >
+              </div>
+
+              <!-- 其他选项 & 宏 -->
+              <div style="display: flex; flex-direction: column; gap: 5px">
+                <span class="wb-sync-label" style="font-weight: bold">其他选项</span>
+                <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-fe-disabled" /> 已禁用</label>
+                <label class="wb-sync-checkbox-label"
+                  ><input type="checkbox" id="wb-sync-fe-run-on-edit" checked /> 在编辑时运行</label
+                >
+
+                <span class="wb-sync-label" style="font-weight: bold; margin-top: 5px">正则表达式查找时的宏</span>
+                <select id="wb-sync-fe-substitute-regex" class="wb-sync-select" style="width: 120px">
+                  <option value="0" selected>不替换</option>
+                  <option value="1">替换</option>
+                </select>
+              </div>
+
+              <!-- 短暂 & 深度 -->
+              <div style="display: flex; flex-direction: column; gap: 5px">
+                <span class="wb-sync-label" style="font-weight: bold">短暂</span>
+                <label class="wb-sync-checkbox-label"
+                  ><input type="checkbox" id="wb-sync-fe-markdown-only" checked /> 仅格式显示</label
+                >
+                <label class="wb-sync-checkbox-label"
+                  ><input type="checkbox" id="wb-sync-fe-prompt-only" /> 仅格式提示词</label
+                >
+
+                <div style="display: flex; gap: 10px; margin-top: 5px">
+                  <div style="display: flex; flex-direction: column; gap: 2px">
+                    <span class="wb-sync-label">最小深度</span>
+                    <input
+                      type="number"
+                      id="wb-sync-fe-min-depth"
+                      class="wb-sync-input"
+                      style="width: 70px"
+                      placeholder="无限"
+                    />
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 2px">
+                    <span class="wb-sync-label">最大深度</span>
+                    <input
+                      type="number"
+                      id="wb-sync-fe-max-depth"
+                      class="wb-sync-input"
+                      style="width: 70px"
+                      placeholder="无限"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wb-sync-controls-box" style="flex-grow: 1; display: flex; flex-direction: column">
+            <span class="wb-sync-label">修剪掉:</span>
+            <textarea
+              id="wb-sync-fe-trim-strings"
+              class="wb-sync-textarea"
+              style="min-height: 60px; margin-bottom: 10px"
+              placeholder="在替换之前全局修剪正则表达式匹配中任何不需要的部分。用回车键分隔每个元素。"
+            ></textarea>
+
+            <span class="wb-sync-label">替换为 (提取的 HTML 代码):</span>
+            <textarea
+              id="wb-sync-fe-content"
+              class="wb-sync-textarea"
+              style="flex-grow: 1; font-family: monospace"
+            ></textarea>
+
+            <div class="wb-sync-actions" style="justify-content: flex-end; margin-top: 10px">
+              <button id="wb-sync-fe-import-global-btn" class="wb-sync-button">导入至全局正则</button>
+              <button id="wb-sync-fe-import-preset-btn" class="wb-sync-button">导入至预设正则</button>
+              <button id="wb-sync-fe-import-character-btn" class="wb-sync-button">导入至局部正则</button>
+              <button id="wb-sync-fe-render-btn" class="wb-sync-button">👁️ 渲染前端</button>
+              <button id="wb-sync-fe-download-btn" class="wb-sync-button wb-sync-btn-primary">⬇️ 下载成正则脚本</button>
+            </div>
+          </div>
+
+          <!-- 渲染预览区 -->
+          <div
+            id="wb-sync-fe-preview-container"
+            style="
+              display: none;
+              margin-top: 15px;
+              border: 1px solid var(--wb-sync-border);
+              border-radius: 5px;
+              padding: 10px;
+              background: #fff;
+              color: #000;
+              overflow: auto;
+              min-height: 300px;
+            "
+          >
+            <!-- 渲染内容将放在这里 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 脚本同步器子页面 -->
+      <div id="wb-sync-script-sync-view" class="wb-sync-section" style="display: none; height: 100%">
+        <div class="wb-sync-section-header">
+          <h4>
+            <i class="fa-solid fa-code"></i> 脚本同步器
+            <i
+              class="fa-solid fa-chevron-up wb-sync-collapse-icon"
+              style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
+            ></i>
+          </h4>
+        </div>
+        <div class="wb-sync-section-content">
+          <div class="wb-sync-controls-box">
+            <div class="wb-sync-row">
+              <div class="wb-sync-group">
+                <span class="wb-sync-label">起始标签:</span>
+                <input
+                  type="text"
+                  id="wb-sync-ss-tag-start"
+                  class="wb-sync-input"
+                  value="```javascript"
+                  style="width: 80px"
+                />
+              </div>
+              <div class="wb-sync-group">
+                <span class="wb-sync-label">结束标签:</span>
+                <input type="text" id="wb-sync-ss-tag-end" class="wb-sync-input" value="```" style="width: 80px" />
+              </div>
+              <button class="wb-sync-button" id="wb-sync-ss-extract-btn">
+                <i class="fa-solid fa-magnifying-glass"></i> 提取最新消息
+              </button>
+            </div>
+          </div>
+
+          <div class="wb-sync-controls-box" style="border-style: dashed">
+            <div class="wb-sync-row">
+              <div class="wb-sync-group" style="flex: 1">
+                <span class="wb-sync-label">脚本名称:</span>
+                <input
+                  type="text"
+                  id="wb-sync-ss-script-name"
+                  class="wb-sync-input"
+                  style="width: 100%"
+                  value="新助手脚本"
+                />
+              </div>
+            </div>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px">
+              <div style="display: flex; flex-direction: column; gap: 5px">
+                <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-ss-disabled" /> 已禁用</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="wb-sync-controls-box" style="flex-grow: 1; display: flex; flex-direction: column">
+            <span class="wb-sync-label">提取的脚本内容 (JS/TS):</span>
+            <textarea
+              id="wb-sync-ss-content"
+              class="wb-sync-textarea"
+              style="flex-grow: 1; font-family: monospace"
+            ></textarea>
+
+            <span class="wb-sync-label" style="margin-top: 10px;">作者备注:</span>
+            <textarea
+              id="wb-sync-ss-info"
+              class="wb-sync-textarea"
+              style="min-height: 60px;"
+              placeholder="脚本备注，例如作者名、版本和注意事项等，支持简单的 markdown 和 html"
+            ></textarea>
+
+            <div class="wb-sync-actions" style="justify-content: flex-end; margin-top: 10px; flex-wrap: wrap">
+              <button
+                id="wb-sync-ss-import-global-script-btn"
+                class="wb-sync-button"
+                style="background-color: var(--wb-sync-primary); color: #000; opacity: 1"
+              >
+                导入至全局脚本库
+              </button>
+              <button
+                id="wb-sync-ss-import-preset-script-btn"
+                class="wb-sync-button"
+                style="background-color: var(--wb-sync-primary); color: #000; opacity: 1"
+              >
+                导入至预设脚本库
+              </button>
+              <button
+                id="wb-sync-ss-import-character-script-btn"
+                class="wb-sync-button"
+                style="background-color: var(--wb-sync-primary); color: #000; opacity: 1"
+              >
+                导入至角色脚本库
+              </button>
+              <button id="wb-sync-ss-download-btn" class="wb-sync-button wb-sync-btn-primary" style="opacity: 1">
+                ⬇️ 下载脚本
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 世界书同步器子页面 -->
+      <div id="wb-sync-sync-view" class="wb-sync-section" style="display: none; height: 100%">
+        <div class="wb-sync-section-header">
+          <h4>
+            <i class="fa-solid fa-bolt"></i> 世界书同步器
+            <i
+              class="fa-solid fa-chevron-up wb-sync-collapse-icon"
+              style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
+            ></i>
+          </h4>
+        </div>
+        <div class="wb-sync-section-content">
+          <!-- 顶部控制区 -->
+          <div class="wb-sync-controls-box">
+            <div class="wb-sync-row">
+              <div class="wb-sync-group">
+                <span class="wb-sync-label">目标世界书:</span>
+                <select id="wb-sync-target-wb" class="wb-sync-select">
+                  <option value="">-- 加载中 --</option>
+                </select>
+                <button class="wb-sync-button wb-sync-btn-small" id="wb-sync-sync-create-wb-btn" title="新建世界书">
+                  ➕
+                </button>
+              </div>
+              <div class="wb-sync-group">
+                <span class="wb-sync-label">起始标签:</span>
+                <input type="text" id="wb-sync-tag-start" class="wb-sync-input" value="" style="width: 80px" />
+              </div>
+              <div class="wb-sync-group">
+                <span class="wb-sync-label">结束标签:</span>
+                <input type="text" id="wb-sync-tag-end" class="wb-sync-input" value="" style="width: 80px" />
+              </div>
+              <button class="wb-sync-button" id="wb-sync-extract-btn">
+                <i class="fa-solid fa-magnifying-glass"></i> 提取最新消息
+              </button>
+              <button class="wb-sync-button wb-sync-btn-primary" id="wb-sync-sync-all-btn" style="margin-left: auto">
+                <i class="fa-solid fa-cloud-arrow-up"></i> 一键同步全部
+              </button>
+            </div>
+          </div>
+
+          <!-- 批量设置区 -->
+          <div class="wb-sync-controls-box" style="border-style: dashed">
+            <div class="wb-sync-row">
+              <span class="wb-sync-batch-title">批量设置:</span>
+              <select id="wb-sync-batch-mode" class="wb-sync-select">
+                <option value="">-- 触发模式 --</option>
+                <option value="constant">常驻 (蓝灯)</option>
+                <option value="selective">条件触发 (绿灯)</option>
+              </select>
+              <select id="wb-sync-batch-position" class="wb-sync-select">
+                <option value="">-- 插入位置 --</option>
+                <option value="0">角色定义之前</option>
+                <option value="1">角色定义之后</option>
+                <option value="2">示例消息前 (↑EM)</option>
+                <option value="3">示例消息后 (↓EM)</option>
+                <option value="4">作者说明之前</option>
+                <option value="5">作者说明之后</option>
+                <option value="6">@D◆[系统]在深度</option>
+                <option value="7">@D[用户]在深度</option>
+                <option value="8">@D[AI]在深度</option>
+              </select>
+              <div id="wb-sync-batch-depth-container" style="display: none; align-items: center; gap: 5px">
+                <span class="wb-sync-label">深度:</span>
+                <input
+                  type="number"
+                  id="wb-sync-batch-depth"
+                  class="wb-sync-input"
+                  style="width: 60px"
+                  min="0"
+                  placeholder="4"
+                />
+              </div>
+              <label class="wb-sync-checkbox-label">
+                <input type="checkbox" id="wb-sync-batch-prevent-in" /> 不可被递归
+              </label>
+              <label class="wb-sync-checkbox-label">
+                <input type="checkbox" id="wb-sync-batch-prevent-out" /> 防止进一步递归
+              </label>
+              <button class="wb-sync-button" id="wb-sync-apply-batch-btn">应用批量设置</button>
+            </div>
+          </div>
+
+          <!-- 卡片容器 -->
+          <div id="wb-sync-cards-container" class="wb-sync-cards-grid">
+            <div class="wb-sync-empty-msg">点击上方“提取最新消息”按钮，从聊天记录中提取世界书条目。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 世界书选择子页面 -->
+      <div id="wb-sync-select-view" class="wb-sync-section" style="display: none; height: 100%">
+        <div class="wb-sync-section-header">
+          <h4>
+            <i class="fa-solid fa-check-to-slot"></i> 选择要启用的世界书
+            <i
+              class="fa-solid fa-chevron-up wb-sync-collapse-icon"
+              style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
+            ></i>
+          </h4>
+        </div>
+        <div class="wb-sync-section-content">
+          <div id="wb-sync-book-list" class="wb-sync-book-list-container"></div>
+          <div class="wb-sync-actions">
+            <button id="wb-sync-save-preset-btn" class="wb-sync-button">保存方案</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 复制世界书子页面 -->
+      <div id="wb-sync-duplicate-view" class="wb-sync-section" style="display: none; height: 100%">
+        <div class="wb-sync-section-header">
+          <h4>
+            <i class="fa-solid fa-copy"></i> 复制世界书
+            <i
+              class="fa-solid fa-chevron-up wb-sync-collapse-icon"
+              style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
+            ></i>
+          </h4>
+        </div>
+        <div class="wb-sync-section-content">
+          <div class="wb-sync-modify-controls">
+            <div class="wb-sync-grid-container">
+              <label for="wb-sync-dup-source-select">源世界书:</label>
+              <select id="wb-sync-dup-source-select" class="wb-sync-select"></select>
+              <label for="wb-sync-dup-target-input">新世界书名称:</label>
+              <input type="text" id="wb-sync-dup-target-input" class="wb-sync-input" placeholder="输入新名称..." />
+            </div>
+          </div>
+          <div class="wb-sync-actions">
+            <button id="wb-sync-duplicate-submit-btn" class="wb-sync-button">确认复制</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 修改世界书名称子页面 -->
+      <div id="wb-sync-rename-view" class="wb-sync-section" style="display: none; height: 100%">
+        <div class="wb-sync-section-header">
+          <h4>
+            <i class="fa-solid fa-pen"></i> 修改世界书名称
+            <i
+              class="fa-solid fa-chevron-up wb-sync-collapse-icon"
+              style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
+            ></i>
+          </h4>
+        </div>
+        <div class="wb-sync-section-content">
+          <div class="wb-sync-modify-controls">
+            <div class="wb-sync-grid-container">
+              <label for="wb-sync-rename-source-select">选择世界书:</label>
+              <select id="wb-sync-rename-source-select" class="wb-sync-select"></select>
+              <label for="wb-sync-rename-target-input">新名称:</label>
+              <input type="text" id="wb-sync-rename-target-input" class="wb-sync-input" placeholder="输入新名称..." />
+            </div>
+          </div>
+          <div class="wb-sync-actions">
+            <button id="wb-sync-rename-submit-btn" class="wb-sync-button">确认修改</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 修改世界书子页面 -->
+      <div id="wb-sync-modify-view" class="wb-sync-section" style="display: none; height: 100%">
+        <div class="wb-sync-section-header">
+          <h4>
+            <i class="fa-solid fa-pen-to-square"></i> 修改世界书条目
+            <i
+              class="fa-solid fa-chevron-up wb-sync-collapse-icon"
+              style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
+            ></i>
+          </h4>
+        </div>
+        <div class="wb-sync-section-content">
+          <div class="wb-sync-modify-controls">
+            <div class="wb-sync-grid-container">
+              <label for="wb-sync-worldbook-select">选择世界书:</label>
+              <select id="wb-sync-worldbook-select" class="wb-sync-select"></select>
+              <label for="wb-sync-entry-select">选择条目:</label>
+              <select id="wb-sync-entry-select" class="wb-sync-select"></select>
+            </div>
+
+            <!-- 条目详细设置区 -->
+            <div
+              id="wb-sync-modify-details"
+              style="
+                display: none;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 10px;
+                padding: 15px;
+                border: 1px solid var(--wb-sync-border);
+                border-radius: 5px;
+                background: rgba(0, 0, 0, 0.2);
+              "
+            >
+              <div class="wb-sync-row">
+                <div class="wb-sync-group" style="flex: 1">
+                  <span class="wb-sync-label">名称:</span>
+                  <input type="text" id="wb-sync-mod-name" class="wb-sync-input" style="width: 100%" />
+                </div>
+                <div class="wb-sync-group" style="flex: 1">
+                  <span class="wb-sync-label">关键字:</span>
+                  <input
+                    type="text"
+                    id="wb-sync-mod-keys"
+                    class="wb-sync-input"
+                    style="width: 100%"
+                    placeholder="逗号分隔"
+                  />
+                </div>
+              </div>
+
+              <span class="wb-sync-label" style="margin-top: 5px">内容:</span>
+              <textarea id="wb-sync-mod-content" class="wb-sync-textarea" rows="6"></textarea>
+
+              <div class="wb-sync-row" style="margin-top: 5px">
+                <div class="wb-sync-group">
+                  <span class="wb-sync-label">触发模式:</span>
+                  <select id="wb-sync-mod-mode" class="wb-sync-select">
+                    <option value="constant">常驻 (蓝灯)</option>
+                    <option value="selective">条件触发 (绿灯)</option>
+                  </select>
+                </div>
+                <div class="wb-sync-group">
+                  <span class="wb-sync-label">插入位置:</span>
+                  <select id="wb-sync-mod-position" class="wb-sync-select">
+                    <option value="before_character_definition">角色定义之前</option>
+                    <option value="after_character_definition">角色定义之后</option>
+                    <option value="before_example_messages">示例消息前 (↑EM)</option>
+                    <option value="after_example_messages">示例消息后 (↓EM)</option>
+                    <option value="before_author_note">作者说明之前</option>
+                    <option value="after_author_note">作者说明之后</option>
+                    <option value="at_depth_system">@D◆[系统]在深度</option>
+                    <option value="at_depth_user">@D[用户]在深度</option>
+                    <option value="at_depth_assistant">@D[AI]在深度</option>
+                  </select>
+                </div>
+                <div class="wb-sync-group">
+                  <span class="wb-sync-label">顺序:</span>
+                  <input type="number" id="wb-sync-mod-order" class="wb-sync-input" style="width: 70px" value="" />
+                </div>
+                <div class="wb-sync-group">
+                  <span class="wb-sync-label">触发概率%:</span>
+                  <input
+                    type="number"
+                    id="wb-sync-mod-prob"
+                    class="wb-sync-input"
+                    style="width: 60px"
+                    min="0"
+                    max="100"
+                    value=""
+                  />
+                </div>
+              </div>
+
+              <div
+                class="wb-sync-row"
+                id="wb-sync-mod-depth-container"
+                style="
+                  display: none;
+                  background: rgba(255, 170, 0, 0.1);
+                  padding: 8px;
+                  border-radius: 4px;
+                  border: 1px dashed #ffaa00;
+                "
+              >
+                <span class="wb-sync-label" style="color: #ffaa00">深度设置:</span>
+                <input
+                  type="number"
+                  id="wb-sync-mod-depth"
+                  class="wb-sync-input"
+                  style="width: 80px"
+                  min="0"
+                  placeholder="例如: 4"
+                />
+                <span style="font-size: 12px; color: var(--wb-sync-text-muted)">（从最新消息往回数的层数）</span>
+              </div>
+
+              <div class="wb-sync-row">
+                <span class="wb-sync-label">递归设置:</span>
+                <label class="wb-sync-checkbox-label">
+                  <input type="checkbox" id="wb-sync-mod-prevent-in" /> 不可被递归
+                </label>
+                <label class="wb-sync-checkbox-label">
+                  <input type="checkbox" id="wb-sync-mod-prevent-out" /> 防止进一步递归
+                </label>
+              </div>
+
+              <div class="wb-sync-actions" style="justify-content: flex-end; margin-top: 10px">
+                <button id="wb-sync-save-manual-changes-btn" class="wb-sync-button">保存手动修改</button>
+              </div>
+            </div>
+
+            <hr style="border-color: var(--wb-sync-border); margin: 15px 0" />
+
+            <label for="wb-sync-user-prompt" class="wb-sync-textarea-label">你的修改要求 (AI处理):</label>
+            <textarea
+              id="wb-sync-user-prompt"
+              class="wb-sync-textarea"
+              rows="3"
+              placeholder="例如：将这个条目的内容改成..."
+            ></textarea>
+            <label for="wb-sync-ai-response" class="wb-sync-textarea-label">AI 的回复:</label>
+            <textarea
+              id="wb-sync-ai-response"
+              class="wb-sync-textarea"
+              rows="5"
+              readonly
+              placeholder="AI处理后的内容将显示在这里..."
+            ></textarea>
+          </div>
+          <div class="wb-sync-actions">
+            <button id="wb-sync-submit-modification-btn" class="wb-sync-button">提交给AI</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 删除视图 -->
+      <div id="wb-sync-delete-view" style="display: none; flex-direction: column; gap: 15px; height: 100%">
+        <div class="wb-sync-section">
+          <div class="wb-sync-section-header">
+            <h4>
+              <i class="fa-solid fa-trash-can"></i> 删除世界书
+              <i
+                class="fa-solid fa-chevron-up wb-sync-collapse-icon"
+                style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
+              ></i>
+            </h4>
+          </div>
+          <div class="wb-sync-section-content">
+            <p class="wb-sync-description">
+              点击下方的世界书进行选择 (可多选)，再次点击取消选择。选择后，其条目会显示在下方。
+            </p>
+            <div id="wb-sync-worldbook-list-container" class="wb-sync-book-list-container"></div>
+            <div class="wb-sync-actions">
+              <button id="wb-sync-delete-worldbook-btn" class="wb-sync-button abandon">删除选中的世界书</button>
+            </div>
+          </div>
+        </div>
+        <div class="wb-sync-section" style="flex-grow: 1">
+          <div class="wb-sync-section-header">
+            <h4>
+              <i class="fa-solid fa-file-circle-minus"></i> 删除条目
+              <i
+                class="fa-solid fa-chevron-up wb-sync-collapse-icon"
+                style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
+              ></i>
+            </h4>
+          </div>
+          <div class="wb-sync-section-content">
+            <p class="wb-sync-description">下方会展示已选择的世界书中的所有条目。点击条目进行选择。</p>
+            <h5>📘 蓝灯条目 (Constant Entry)</h5>
+            <div
+              id="wb-sync-constant-entries-container"
+              class="wb-sync-book-list-container"
+              style="margin-bottom: 15px"
+            >
+              <p class="wb-sync-no-tasks">请先在上方选择一个或多个世界书。</p>
+            </div>
+            <h5>📗 绿灯条目 (Normal Entry)</h5>
+            <div id="wb-sync-normal-entries-container" class="wb-sync-book-list-container"></div>
+            <div class="wb-sync-actions">
+              <button id="wb-sync-delete-entry-btn" class="wb-sync-button abandon">删除选中的条目</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- 条目迁移子页面 -->
+      <div id="wb-sync-transfer-view" class="wb-sync-section" style="display: none; height: 100%">
+        <div class="wb-sync-section-header">
+          <h4>
+            <i class="fa-solid fa-exchange-alt"></i> 条目迁移
+            <i
+              class="fa-solid fa-chevron-up wb-sync-collapse-icon"
+              style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
+            ></i>
+          </h4>
+        </div>
+        <div class="wb-sync-section-content">
+          <div class="wb-sync-transfer-controls">
+            <div class="wb-sync-grid-container">
+              <label for="wb-sync-source-worldbook-select">源世界书:</label>
+              <select id="wb-sync-source-worldbook-select" class="wb-sync-select"></select>
+              <label for="wb-sync-target-worldbook-select">目标世界书:</label>
+              <select id="wb-sync-target-worldbook-select" class="wb-sync-select"></select>
+            </div>
+            <label class="wb-sync-textarea-label">选择要迁移的条目:</label>
+            <div
+              id="wb-sync-source-entries-container"
+              class="wb-sync-book-list-container"
+              style="height: 200px; overflow-y: auto"
+            >
+              <p class="wb-sync-no-tasks">请先选择一个源世界书。</p>
+            </div>
+            <div class="wb-sync-actions">
+              <button id="wb-sync-transfer-entries-btn" class="wb-sync-button">执行迁移</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

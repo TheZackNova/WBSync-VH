@@ -1,0 +1,7 @@
+{
+    "display_name": "世界书同步器",
+    "author": "倾心",
+    "version": "1.0.0",
+    "js": "index.js",
+    "css": "style.css"
+}

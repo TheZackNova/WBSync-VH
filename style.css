@@ -1,0 +1,691 @@
+/* --- 全局与基础样式 --- */
+:root {
+  --wb-sync-main-bg: #2c2f33;
+  --wb-sync-section-bg: #23272a;
+  --wb-sync-text: #ffffff;
+  --wb-sync-text-muted: #99aab5;
+  --wb-sync-primary: #00ffcc;
+  --wb-sync-primary-hover: #00ccaa;
+  --wb-sync-danger: #f04747;
+  --wb-sync-border: #40444b;
+  --wb-sync-card-border: #445060;
+  --wb-sync-card-bg: rgba(20, 24, 32, 0.9);
+  --wb-sync-radius: 8px;
+  --wb-sync-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+  --wb-sync-font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* --- 浮动按钮 --- */
+#wb-sync-floating-btn {
+  position: fixed;
+  z-index: 2147483645;
+  cursor: grab;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(145deg, #2f3338, #212529);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--wb-sync-primary);
+  font-size: 24px;
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    inset 0 2px 2px rgba(255, 255, 255, 0.05),
+    0 0 0 1px rgba(0, 0, 0, 0.5);
+  transition:
+    transform 0.2s ease-out,
+    box-shadow 0.2s ease-out,
+    color 0.2s ease-out;
+}
+
+#wb-sync-floating-btn:hover {
+  transform: scale(1.1);
+  color: var(--wb-sync-primary-hover);
+  box-shadow:
+    0 6px 12px rgba(0, 0, 0, 0.4),
+    inset 0 2px 3px rgba(255, 255, 255, 0.08),
+    0 0 10px rgba(0, 255, 204, 0.5);
+}
+
+#wb-sync-floating-btn:active {
+  cursor: grabbing;
+}
+
+/* --- 弹窗遮罩层 --- */
+.wb-sync-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 10001;
+}
+
+/* --- 主面板容器 --- */
+.wb-sync-popup-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2147483646;
+  width: 90vw;
+  height: 85vh;
+  max-height: 85vh;
+  background-color: var(--wb-sync-main-bg);
+  color: var(--wb-sync-text);
+  font-family: var(--wb-sync-font-family);
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--wb-sync-radius);
+  box-shadow: var(--wb-sync-shadow);
+  border: 1px solid var(--wb-sync-border);
+}
+
+@media (min-width: 768px) {
+  .wb-sync-popup-container {
+    width: 60vw;
+    max-width: 1000px;
+  }
+}
+
+.wb-sync-popup-header {
+  height: 40px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  border-bottom: 1px solid var(--wb-sync-border);
+  user-select: none;
+}
+
+.wb-sync-header-title {
+  flex-grow: 1;
+  font-weight: bold;
+  color: var(--wb-sync-primary);
+  font-size: 15px;
+  pointer-events: none;
+}
+
+.wb-sync-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.wb-sync-header-btn {
+  background: transparent;
+  border: none;
+  color: var(--wb-sync-text-muted);
+  font-size: 16px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
+  border-radius: 4px;
+}
+
+.wb-sync-header-btn:hover {
+  color: var(--wb-sync-text);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.wb-sync-header-btn.close-btn {
+  font-size: 24px;
+}
+
+.wb-sync-header-btn.close-btn:hover {
+  color: var(--wb-sync-danger);
+  background-color: rgba(240, 71, 71, 0.1);
+}
+
+.wb-sync-popup-body {
+    flex-grow: 1;
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: calc(100% - 40px);
+}
+
+/* 自定义滚动条样式 */
+.wb-sync-popup-body::-webkit-scrollbar,
+.wb-sync-book-list-container::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.wb-sync-popup-body::-webkit-scrollbar-track,
+.wb-sync-book-list-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.wb-sync-popup-body::-webkit-scrollbar-thumb,
+.wb-sync-book-list-container::-webkit-scrollbar-thumb {
+    background: var(--wb-sync-border);
+    border-radius: 4px;
+}
+
+.wb-sync-popup-body::-webkit-scrollbar-thumb:hover,
+.wb-sync-book-list-container::-webkit-scrollbar-thumb:hover {
+    background: var(--wb-sync-text-muted);
+}
+
+/* --- 区块样式 --- */
+.wb-sync-section {
+  background-color: var(--wb-sync-section-bg);
+  border-radius: var(--wb-sync-radius);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--wb-sync-border);
+  max-height: 100%;
+}
+
+.wb-sync-section-header {
+  padding: 12px 16px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid var(--wb-sync-border);
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s;
+}
+
+.wb-sync-section-header:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.wb-sync-section-header h4 {
+  margin: 0;
+  font-size: 1.1em;
+  color: var(--wb-sync-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wb-sync-section-content {
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wb-sync-section h5 {
+  margin: 0;
+  font-size: 1em;
+  color: var(--wb-sync-text-muted);
+  margin-top: 10px;
+}
+
+/* --- 按钮和控件 --- */
+.wb-sync-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.wb-sync-button {
+  background-color: var(--wb-sync-primary);
+  color: #000;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: bold;
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wb-sync-button:hover {
+  background-color: var(--wb-sync-primary-hover);
+}
+
+.wb-sync-button:active {
+  transform: scale(0.98);
+}
+
+.wb-sync-button.abandon {
+  background-color: var(--wb-sync-danger);
+  color: white;
+}
+
+.wb-sync-button:disabled {
+  background-color: var(--wb-sync-border);
+  color: var(--wb-sync-text-muted);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.wb-sync-description {
+  font-size: 0.9em;
+  color: var(--wb-sync-text-muted);
+  line-height: 1.5;
+  margin: 0 0 10px 0;
+}
+
+.wb-sync-no-tasks {
+  color: var(--wb-sync-text-muted);
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+}
+
+/* --- 兼容性样式 --- */
+.wb-sync-edit-controls,
+.wb-sync-modify-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wb-sync-select,
+.wb-sync-textarea {
+  width: 100%;
+  padding: 10px;
+  background-color: var(--wb-sync-main-bg);
+  color: white;
+  border: 1px solid var(--wb-sync-border);
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.wb-sync-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.wb-sync-textarea-label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+  color: var(--wb-sync-text-muted);
+}
+
+.wb-sync-grid-container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.wb-sync-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.wb-sync-book-list-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px;
+  background-color: var(--wb-sync-section-bg);
+  border-radius: 5px;
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid var(--wb-sync-border);
+}
+
+.wb-sync-book-button {
+  background-color: #ffffff;
+  color: #2c2f33;
+  border: 1px solid #cccccc;
+  padding: 8px 12px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+  white-space: normal;
+  text-align: left;
+  height: auto;
+  line-height: 1.3;
+  max-width: 100%;
+}
+
+.wb-sync-book-button.selected {
+  background-color: var(--wb-sync-primary);
+  color: #000;
+  border-color: var(--wb-sync-primary-hover);
+}
+
+.wb-sync-preset-list-container {
+  margin-top: 10px;
+  background-color: var(--wb-sync-section-bg);
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.wb-sync-preset-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.wb-sync-preset-item:hover {
+  background-color: var(--wb-sync-main-bg);
+}
+
+.wb-sync-delete-preset-btn {
+  background: none;
+  border: none;
+  color: var(--wb-sync-danger);
+  cursor: pointer;
+  font-size: 1.2em;
+  padding: 0 5px;
+}
+
+/* --- 条目迁移视图特定样式 --- */
+.wb-sync-transfer-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+#wb-sync-source-entries-container::-webkit-scrollbar {
+  display: none;
+}
+#wb-sync-source-entries-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.wb-sync-checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 5px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.wb-sync-checkbox-item:hover {
+  background-color: var(--wb-sync-main-bg);
+}
+
+.wb-sync-checkbox-item input[type='checkbox'] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--wb-sync-primary);
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+}
+
+.wb-sync-checkbox-item input[type='checkbox']:checked {
+  background-color: var(--wb-sync-primary);
+  border-color: var(--wb-sync-primary-hover);
+}
+
+.wb-sync-checkbox-item input[type='checkbox']:checked::after {
+  content: '✔';
+  font-size: 14px;
+  color: #000;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.wb-sync-checkbox-item label {
+  flex-grow: 1;
+  cursor: pointer;
+  color: var(--wb-sync-text);
+}
+
+/* --- 世界书同步器 (原面板) 样式 --- */
+.wb-sync-controls-box {
+  background-color: var(--wb-sync-section-bg);
+  border: 1px solid var(--wb-sync-border);
+  border-radius: var(--wb-sync-radius);
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.wb-sync-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+}
+
+.wb-sync-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wb-sync-label {
+  font-size: 13px;
+  color: var(--wb-sync-text-muted);
+  white-space: nowrap;
+}
+
+.wb-sync-input {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--wb-sync-border);
+  color: var(--wb-sync-text);
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.wb-sync-input:focus {
+  border-color: var(--wb-sync-primary);
+}
+
+.wb-sync-btn {
+  background: transparent;
+  border: 1px solid var(--wb-sync-primary);
+  color: var(--wb-sync-primary);
+  padding: 6px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.wb-sync-btn:hover:not(:disabled) {
+  background: rgba(0, 255, 204, 0.1);
+  box-shadow: 0 0 8px rgba(0, 255, 204, 0.3);
+}
+
+.wb-sync-btn:disabled {
+  border-color: var(--wb-sync-border);
+  color: var(--wb-sync-text-muted);
+  cursor: not-allowed;
+}
+
+.wb-sync-btn-primary {
+  background: var(--wb-sync-primary);
+  color: #000;
+  font-weight: bold;
+}
+
+.wb-sync-btn-primary:hover:not(:disabled) {
+  background: var(--wb-sync-primary-hover);
+  color: #000;
+}
+
+.wb-sync-batch-title {
+  color: #ffaa00;
+  font-weight: bold;
+  font-size: 13px;
+  margin-right: 10px;
+}
+
+.wb-sync-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.wb-sync-card {
+  background: var(--wb-sync-card-bg);
+  border: 1px solid var(--wb-sync-card-border);
+  border-left: 4px solid var(--wb-sync-primary);
+  border-radius: 6px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s,
+    border-color 0.2s;
+}
+
+.wb-sync-card:hover {
+  border-color: var(--wb-sync-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 255, 204, 0.1);
+}
+
+.wb-sync-card-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wb-sync-card-row.col {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.wb-sync-card-label {
+  font-size: 12px;
+  color: var(--wb-sync-text-muted);
+  min-width: 60px;
+}
+
+.wb-sync-card-input,
+.wb-sync-card-select,
+.wb-sync-card-textarea {
+  flex: 1;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--wb-sync-card-border);
+  color: var(--wb-sync-text);
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+  outline: none;
+}
+
+.wb-sync-card-input:focus,
+.wb-sync-card-select:focus,
+.wb-sync-card-textarea:focus {
+  border-color: #ffaa00;
+}
+
+.wb-sync-card-textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: monospace;
+}
+
+.wb-sync-checkbox-label {
+  font-size: 12px;
+  color: var(--wb-sync-text);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.wb-sync-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 5px;
+  border-top: 1px dashed var(--wb-sync-card-border);
+  padding-top: 10px;
+}
+
+.wb-sync-btn-small {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+.wb-sync-btn-danger {
+  border-color: var(--wb-sync-danger);
+  color: var(--wb-sync-danger);
+}
+
+.wb-sync-btn-danger:hover:not(:disabled) {
+  background: rgba(240, 71, 71, 0.1);
+  box-shadow: 0 0 8px rgba(240, 71, 71, 0.3);
+}
+
+.wb-sync-empty-msg {
+  text-align: center;
+  padding: 40px;
+  color: var(--wb-sync-text-muted);
+  font-style: italic;
+  background: var(--wb-sync-section-bg);
+  border-radius: var(--wb-sync-radius);
+  border: 1px dashed var(--wb-sync-border);
+}
+
+/* --- 响应式布局 --- */
+@media (max-width: 768px) {
+  .wb-sync-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .wb-sync-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .wb-sync-group {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .wb-sync-input,
+  .wb-sync-select {
+    width: 100%;
+  }
+  .wb-sync-btn {
+    width: 100%;
+    text-align: center;
+  }
+  .wb-sync-card-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .wb-sync-card-label {
+    margin-bottom: 2px;
+  }
+}
