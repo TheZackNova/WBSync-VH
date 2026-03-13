@@ -24,9 +24,7 @@ jQuery(async () => {
     frontendView,
     createRegexView,
     createScriptView,
-    scriptSyncView,
-    readmeView,
-    loader;
+    scriptSyncView;
   let bookList, presetListContainer, overlay;
   let worldbookListContainer, constantEntriesContainer, normalEntriesContainer;
 
@@ -48,8 +46,12 @@ jQuery(async () => {
   // --- 2. 工具函数 & API 封装 ---
   const escapeHtml = unsafe => {
     if (unsafe === null || typeof unsafe === 'undefined') return '';
-    // 使用 jQuery 的 text() 方法来安全地转义 HTML
-    return $('<div>').text(String(unsafe)).html();
+    return String(unsafe)
+      .replace(/&/g, '&')
+      .replace(/</g, '<')
+      .replace(/>/g, '>')
+      .replace(/"/g, '"')
+      .replace(/'/g, '&#039;');
   };
 
   const delay = ms => new Promise(res => setTimeout(res, ms));
@@ -108,14 +110,6 @@ jQuery(async () => {
     }
   }
 
-  function showLoader() {
-    if(loader) loader.show();
-  }
-
-  function hideLoader() {
-    if(loader) loader.hide();
-  }
-
   function closePopup() {
     if (overlay) overlay.hide();
   }
@@ -142,7 +136,7 @@ jQuery(async () => {
     localStorage.setItem(STORAGE_KEY_LAST_VIEW, 'wb-sync-main-view');
 
     // 检查是否在角色卡中，以决定是否显示角色/局部相关的导入按钮
-    const isCharacterSelected = SillyTavern.getContext().characterId !== undefined;
+    const isCharacterSelected = window.TavernHelper && typeof window.TavernHelper.getCharData === 'function' && window.TavernHelper.getCharData('current') !== null;
     if (isCharacterSelected) {
       $('#wb-sync-main-import-script-character-btn').show();
       $('#wb-sync-main-import-regex-character-btn').show();
@@ -284,19 +278,33 @@ jQuery(async () => {
     try {
       const [allBooks, settings] = await Promise.all([getAllLorebooks(), getLorebookSettings()]);
       const enabledBooks = new Set(settings.selected_global_lorebooks);
+      bookList.empty();
+      if (allBooks.length === 0) return bookList.append('<p>未找到任何世界书。</p>');
 
-      if (allBooks.length === 0) {
-        bookList.html('<p>未找到任何世界书。</p>');
-        return;
-      }
-
-      const buttonsHtml = allBooks.map(book => {
+      allBooks.forEach(book => {
         const isEnabled = enabledBooks.has(book.file_name);
-        return `<button class="wb-sync-book-button ${isEnabled ? 'selected' : ''}" data-book-filename="${escapeHtml(book.file_name)}">${escapeHtml(book.name)}</button>`;
-      }).join('');
-
-      bookList.html(buttonsHtml);
-
+        const btn = $('<button></button>')
+          .addClass('wb-sync-book-button')
+          .toggleClass('selected', isEnabled)
+          .text(book.name)
+          .data('book-filename', book.file_name)
+          .on('click', async function () {
+            const $this = $(this);
+            const isSel = $this.hasClass('selected');
+            $this.toggleClass('selected');
+            try {
+              const curSettings = await getLorebookSettings();
+              let enabled = curSettings.selected_global_lorebooks || [];
+              if (isSel) enabled = enabled.filter(n => n !== book.file_name);
+              else if (!enabled.includes(book.file_name)) enabled.push(book.file_name);
+              await setLorebookSettings({ selected_global_lorebooks: enabled });
+            } catch (e) {
+              $this.toggleClass('selected');
+              toastr.error('更新状态失败');
+            }
+          });
+        bookList.append(btn);
+      });
     } catch (e) {
       bookList.empty().append(`<p style="color:red;">加载失败: ${e.message}</p>`);
     }
@@ -370,39 +378,34 @@ jQuery(async () => {
   async function loadEntriesForSelectedBooks() {
     constantEntriesContainer.empty();
     normalEntriesContainer.empty();
-    const selectedBooks = worldbookListContainer.find('.selected');
-    if (selectedBooks.length === 0) {
+    const selected = worldbookListContainer.find('.selected');
+    if (selected.length === 0) {
       constantEntriesContainer.html('<p class="wb-sync-no-tasks">请先选择世界书。</p>');
-      normalEntriesContainer.html('');
       return;
     }
-
     try {
-        const bookNames = selectedBooks.map((_, el) => $(el).data('book-name')).get();
-        const allEntriesPromises = bookNames.map(bookName => getLorebookEntries(bookName).then(entries => ({ bookName, entries })));
-        const results = await Promise.all(allEntriesPromises);
-
-        let constantHtml = '';
-        let normalHtml = '';
-
-        results.forEach(({ bookName, entries }) => {
-            entries.forEach(e => {
-                const buttonHtml = `<button class="wb-sync-book-button" data-uid="${e.uid}" data-book-name="${escapeHtml(bookName)}">${escapeHtml(e.comment || `UID:${e.uid}`)}</button>`;
-                if (e.type === 'constant') {
-                    constantHtml += buttonHtml;
-                } else {
-                    normalHtml += buttonHtml;
-                }
+      for (const btn of selected) {
+        const bookName = $(btn).data('book-name');
+        const entries = await getLorebookEntries(bookName);
+        entries.forEach(e => {
+          const eBtn = $('<button></button>')
+            .addClass('wb-sync-book-button')
+            .text(e.comment || `UID:${e.uid}`)
+            .data('uid', e.uid)
+            .data('book-name', bookName)
+            .on('click', function () {
+              $(this).toggleClass('selected');
             });
+          if (e.type === 'constant') constantEntriesContainer.append(eBtn);
+          else normalEntriesContainer.append(eBtn);
         });
-
-        constantEntriesContainer.html(constantHtml || '<p class="wb-sync-no-tasks">无蓝灯条目。</p>');
-        normalEntriesContainer.html(normalHtml || '<p class="wb-sync-no-tasks">无绿灯条目。</p>');
-
+      }
+      if (constantEntriesContainer.children().length === 0)
+        constantEntriesContainer.html('<p class="wb-sync-no-tasks">无蓝灯条目。</p>');
+      if (normalEntriesContainer.children().length === 0)
+        normalEntriesContainer.html('<p class="wb-sync-no-tasks">无绿灯条目。</p>');
     } catch (e) {
-        toastr.error('加载条目失败: ' + e.message);
-        constantEntriesContainer.html('<p style="color:red;">加载失败</p>');
-        normalEntriesContainer.html('');
+      toastr.error('加载条目失败');
     }
   }
 
@@ -497,26 +500,20 @@ jQuery(async () => {
     if (src === tgt) return toastr.warning('源和目标不能相同');
     if (uids.length === 0) return toastr.warning('请选择条目');
 
-    showLoader();
     transBtn.prop('disabled', true).text('迁移中...');
     try {
       const all = transEntriesContainer.data('entries') || [];
       const toTrans = all.filter(e => uids.includes(String(e.uid)));
-
-      // 使用 Promise.all 并行创建条目
-      const createPromises = toTrans.map(e => {
+      for (const e of toTrans) {
         const newE = { ...e };
         delete newE.uid;
-        return createLorebookEntry(tgt, newE);
-      });
-      await Promise.all(createPromises);
-
+        await createLorebookEntry(tgt, newE);
+      }
       toastr.success(`成功迁移 ${toTrans.length} 个条目`);
       transEntriesContainer.find('input:checked').prop('checked', false);
     } catch (e) {
       toastr.error(`迁移失败: ${e.message}`);
     } finally {
-      hideLoader();
       transBtn.prop('disabled', false).text('执行迁移');
     }
   }
@@ -539,7 +536,6 @@ jQuery(async () => {
     if (!source) return toastr.warning('请选择源世界书');
     if (!target) return toastr.warning('请输入新世界书名称');
 
-    showLoader();
     const $btn = $('#wb-sync-duplicate-submit-btn');
     $btn.prop('disabled', true).text('复制中...');
     try {
@@ -547,7 +543,7 @@ jQuery(async () => {
       const entries = await getLorebookEntries(source);
 
       // 创建新世界书
-      await tavernHelperApi.createLorebook(target);
+      await tavernHelperApi.createWorldbook(target);
 
       // 复制条目 (去除 uid 让系统重新生成)
       const newEntries = entries.map(e => {
@@ -564,7 +560,6 @@ jQuery(async () => {
     } catch (e) {
       toastr.error(`复制失败: ${e.message}`);
     } finally {
-      hideLoader();
       $btn.prop('disabled', false).text('确认复制');
     }
   }
@@ -587,14 +582,13 @@ jQuery(async () => {
     if (!source) return toastr.warning('请选择要重命名的世界书');
     if (!newName) return toastr.warning('请输入新名称');
 
-    showLoader();
     const $btn = $('#wb-sync-rename-submit-btn');
     $btn.prop('disabled', true).text('重命名中...');
     try {
       if (!tavernHelperApi) tavernHelperApi = await waitForTavernHelper();
       // TavernHelper 没有直接重命名的 API，所以我们通过 复制 -> 删除 的方式实现
       const entries = await getLorebookEntries(source);
-      await tavernHelperApi.createLorebook(newName);
+      await tavernHelperApi.createWorldbook(newName);
       const newEntries = entries.map(e => {
         const newE = { ...e };
         delete newE.uid;
@@ -610,7 +604,6 @@ jQuery(async () => {
     } catch (e) {
       toastr.error(`重命名失败: ${e.message}`);
     } finally {
-      hideLoader();
       $btn.prop('disabled', false).text('确认修改');
     }
   }
@@ -832,58 +825,41 @@ jQuery(async () => {
   // --- 10. 世界书同步器 (我们的核心逻辑) ---
   async function populateSyncWorldbooks() {
     try {
-      const books = await getAllLorebooks();
+      if (!window.TavernHelper) throw new Error('TavernHelper 未加载');
+      const books = await window.TavernHelper.getWorldbookNames();
       $targetWbSelect.empty().append('<option value="">-- 请选择目标世界书 --</option>');
-      books.forEach(book => $targetWbSelect.append(`<option value="${escapeHtml(book.file_name)}">${escapeHtml(book.name)}</option>`));
+      books.forEach(book => $targetWbSelect.append(`<option value="${escapeHtml(book)}">${escapeHtml(book)}</option>`));
     } catch (error) {
       $targetWbSelect.empty().append('<option value="">加载失败</option>');
     }
   }
 
-  async function extractContentFromMessage(startTag, endTag) {
-    if (!startTag || !endTag) {
-        toastr.warning('请填写起始和结束标签');
-        return null;
-    }
-    try {
-        if (!tavernHelperApi) tavernHelperApi = await waitForTavernHelper();
-        const messages = await tavernHelperApi.getChatMessages({ amount: 1 });
-        if (!messages || messages.length === 0) {
-            toastr.warning('未找到最新消息');
-            return null;
-        }
-
-        const lastMessage = messages[0].message;
-        const regexStr = `${escapeRegExp(startTag)}([\\s\\S]*?)${escapeRegExp(endTag)}`;
-        const regex = new RegExp(regexStr, 'g');
-
-        let match;
-        const extractedTexts = [];
-        while ((match = regex.exec(lastMessage)) !== null) {
-            extractedTexts.push(match[1].trim());
-        }
-
-        if (extractedTexts.length === 0) {
-            toastr.info(`未找到被 ${startTag} 和 ${endTag} 包裹的内容`);
-            return null;
-        }
-        return extractedTexts;
-    } catch (error) {
-        toastr.error('提取失败: ' + error.message);
-        return null;
-    }
-  }
-
-  async function extractMessages() {
+  function extractMessages() {
     const startTag = $('#wb-sync-tag-start').val();
     const endTag = $('#wb-sync-tag-end').val();
+    if (!startTag || !endTag) return toastr.warning('请填写起始和结束标签');
 
-    const extractedTexts = await extractContentFromMessage(startTag, endTag);
-    if (!extractedTexts) return;
+    try {
+      if (!window.TavernHelper) throw new Error('TavernHelper 未加载');
+      const messages = window.TavernHelper.getChatMessages(-1);
+      if (!messages || messages.length === 0) return toastr.warning('未找到最新消息');
 
-    extractedCards = extractedTexts.map((text, index) => parseExtractedText(text, index));
-    renderCards();
-    toastr.success(`成功提取 ${extractedCards.length} 个条目`);
+      const lastMessage = messages[0].message;
+      const regexStr = `${escapeRegExp(startTag)}([\\s\\S]*?)${escapeRegExp(endTag)}`;
+      const regex = new RegExp(regexStr, 'g');
+
+      let match,
+        extractedTexts = [];
+      while ((match = regex.exec(lastMessage)) !== null) extractedTexts.push(match[1].trim());
+
+      if (extractedTexts.length === 0) return toastr.info(`未找到被 ${startTag} 和 ${endTag} 包裹的内容`);
+
+      extractedCards = extractedTexts.map((text, index) => parseExtractedText(text, index));
+      renderCards();
+      toastr.success(`成功提取 ${extractedCards.length} 个条目`);
+    } catch (error) {
+      toastr.error('提取失败');
+    }
   }
 
   function escapeRegExp(string) {
@@ -918,59 +894,97 @@ jQuery(async () => {
   }
 
   function renderCards() {
-    if (extractedCards.length === 0) {
-        $cardsContainer.html('<div class="wb-sync-empty-msg">没有提取到任何条目。</div>');
-        return;
-    }
+    $cardsContainer.empty();
+    if (extractedCards.length === 0)
+      return $cardsContainer.html('<div class="wb-sync-empty-msg">没有提取到任何条目。</div>');
 
-    const cardsHtml = extractedCards.map(card => {
-        const isDepthVisible = parseInt(card.position) >= 6 && parseInt(card.position) <= 8;
-        return `
-            <div class="wb-sync-card" data-id="${card.id}">
-                <div class="wb-sync-card-row"><span class="wb-sync-card-label">名称</span><input type="text" class="wb-sync-card-input card-name" value="${escapeHtml(card.name)}"></div>
-                <div class="wb-sync-card-row"><span class="wb-sync-card-label">关键字</span><input type="text" class="wb-sync-card-input card-keys" value="${escapeHtml(card.keys)}" placeholder="逗号分隔"></div>
-                <div class="wb-sync-card-row col"><span class="wb-sync-card-label">内容</span><textarea class="wb-sync-card-textarea card-content">${escapeHtml(card.content)}</textarea></div>
-                <div style="border-top: 1px solid var(--wb-sync-card-border); margin: 5px 0;"></div>
-                <div class="wb-sync-card-row">
-                    <span class="wb-sync-card-label">触发模式</span>
-                    <select class="wb-sync-card-select card-mode">
-                        <option value="constant" ${card.mode === 'constant' ? 'selected' : ''}>常驻 (蓝灯)</option>
-                        <option value="selective" ${card.mode === 'selective' ? 'selected' : ''}>条件触发 (绿灯)</option>
-                    </select>
-                </div>
-                <div class="wb-sync-card-row">
-                    <span class="wb-sync-card-label">插入位置</span>
-                    <select class="wb-sync-card-select card-position">
-                        <option value="0" ${card.position == 0 ? 'selected' : ''}>角色定义之前</option>
-                        <option value="1" ${card.position == 1 ? 'selected' : ''}>角色定义之后</option>
-                        <option value="2" ${card.position == 2 ? 'selected' : ''}>示例消息前 (↑EM)</option>
-                        <option value="3" ${card.position == 3 ? 'selected' : ''}>示例消息后 (↓EM)</option>
-                        <option value="4" ${card.position == 4 ? 'selected' : ''}>作者说明之前</option>
-                        <option value="5" ${card.position == 5 ? 'selected' : ''}>作者说明之后</option>
-                        <option value="6" ${card.position == 6 ? 'selected' : ''}>@D◆[系统]在深度</option>
-                        <option value="7" ${card.position == 7 ? 'selected' : ''}>@D[用户]在深度</option>
-                        <option value="8" ${card.position == 8 ? 'selected' : ''}>@D[AI]在深度</option>
-                    </select>
-                </div>
-                <div class="wb-sync-card-row card-depth-row" style="display: ${isDepthVisible ? 'flex' : 'none'};">
-                    <span class="wb-sync-card-label">插入深度</span><input type="number" class="wb-sync-card-input card-depth" value="${card.depth}" min="0">
-                </div>
-                <div class="wb-sync-card-row">
-                    <span class="wb-sync-card-label">递归设置</span>
-                    <div style="display: flex; gap: 10px;">
-                        <label class="wb-sync-checkbox-label"><input type="checkbox" class="card-prevent-in" ${card.preventIncoming ? 'checked' : ''}> 不可被递归</label>
-                        <label class="wb-sync-checkbox-label"><input type="checkbox" class="card-prevent-out" ${card.preventOutgoing ? 'checked' : ''}> 防止进一步递归</label>
+    extractedCards.forEach(card => {
+      const isDepthVisible = parseInt(card.position) >= 6 && parseInt(card.position) <= 8;
+      const cardHtml = `
+                <div class="wb-sync-card" data-id="${card.id}">
+                    <div class="wb-sync-card-row"><span class="wb-sync-card-label">名称</span><input type="text" class="wb-sync-card-input card-name" value="${escapeHtml(card.name)}"></div>
+                    <div class="wb-sync-card-row"><span class="wb-sync-card-label">关键字</span><input type="text" class="wb-sync-card-input card-keys" value="${escapeHtml(card.keys)}" placeholder="逗号分隔"></div>
+                    <div class="wb-sync-card-row col"><span class="wb-sync-card-label">内容</span><textarea class="wb-sync-card-textarea card-content">${escapeHtml(card.content)}</textarea></div>
+                    <div style="border-top: 1px solid var(--wb-sync-card-border); margin: 5px 0;"></div>
+                    <div class="wb-sync-card-row">
+                        <span class="wb-sync-card-label">触发模式</span>
+                        <select class="wb-sync-card-select card-mode">
+                            <option value="constant" ${card.mode === 'constant' ? 'selected' : ''}>常驻 (蓝灯)</option>
+                            <option value="selective" ${card.mode === 'selective' ? 'selected' : ''}>条件触发 (绿灯)</option>
+                        </select>
+                    </div>
+                    <div class="wb-sync-card-row">
+                        <span class="wb-sync-card-label">插入位置</span>
+                        <select class="wb-sync-card-select card-position">
+                            <option value="0" ${card.position == 0 ? 'selected' : ''}>角色定义之前</option>
+                            <option value="1" ${card.position == 1 ? 'selected' : ''}>角色定义之后</option>
+                            <option value="2" ${card.position == 2 ? 'selected' : ''}>示例消息前 (↑EM)</option>
+                            <option value="3" ${card.position == 3 ? 'selected' : ''}>示例消息后 (↓EM)</option>
+                            <option value="4" ${card.position == 4 ? 'selected' : ''}>作者说明之前</option>
+                            <option value="5" ${card.position == 5 ? 'selected' : ''}>作者说明之后</option>
+                            <option value="6" ${card.position == 6 ? 'selected' : ''}>@D◆[系统]在深度</option>
+                            <option value="7" ${card.position == 7 ? 'selected' : ''}>@D[用户]在深度</option>
+                            <option value="8" ${card.position == 8 ? 'selected' : ''}>@D[AI]在深度</option>
+                        </select>
+                    </div>
+                    <div class="wb-sync-card-row card-depth-row" style="display: ${isDepthVisible ? 'flex' : 'none'};">
+                        <span class="wb-sync-card-label">插入深度</span><input type="number" class="wb-sync-card-input card-depth" value="${card.depth}" min="0">
+                    </div>
+                    <div class="wb-sync-card-row">
+                        <span class="wb-sync-card-label">递归设置</span>
+                        <div style="display: flex; gap: 10px;">
+                            <label class="wb-sync-checkbox-label"><input type="checkbox" class="card-prevent-in" ${card.preventIncoming ? 'checked' : ''}> 不可被递归</label>
+                            <label class="wb-sync-checkbox-label"><input type="checkbox" class="card-prevent-out" ${card.preventOutgoing ? 'checked' : ''}> 防止进一步递归</label>
+                        </div>
+                    </div>
+                    <div class="wb-sync-card-actions">
+                        <button class="wb-sync-button wb-sync-btn-small sync-single-btn">同步此条目</button>
+                        <button class="wb-sync-button wb-sync-btn-small abandon delete-card-btn">删除</button>
                     </div>
                 </div>
-                <div class="wb-sync-card-actions">
-                    <button class="wb-sync-button wb-sync-btn-small sync-single-btn">同步此条目</button>
-                    <button class="wb-sync-button wb-sync-btn-small abandon delete-card-btn">删除</button>
-                </div>
-            </div>
-        `;
-    }).join('');
+            `;
+      $cardsContainer.append(cardHtml);
+    });
 
-    $cardsContainer.html(cardsHtml);
+    $('.wb-sync-card').each(function () {
+      const $card = $(this),
+        id = $card.data('id'),
+        cardData = extractedCards.find(c => c.id === id);
+      if (!cardData) return;
+      $card.find('.card-name').on('change', function () {
+        cardData.name = $(this).val();
+      });
+      $card.find('.card-keys').on('change', function () {
+        cardData.keys = $(this).val();
+      });
+      $card.find('.card-content').on('change', function () {
+        cardData.content = $(this).val();
+      });
+      $card.find('.card-mode').on('change', function () {
+        cardData.mode = $(this).val();
+      });
+      $card.find('.card-depth').on('change', function () {
+        cardData.depth = parseInt($(this).val()) || 0;
+      });
+      $card.find('.card-prevent-in').on('change', function () {
+        cardData.preventIncoming = $(this).is(':checked');
+      });
+      $card.find('.card-prevent-out').on('change', function () {
+        cardData.preventOutgoing = $(this).is(':checked');
+      });
+      $card.find('.card-position').on('change', function () {
+        const val = $(this).val();
+        cardData.position = val;
+        $card.find('.card-depth-row').css('display', parseInt(val) >= 6 && parseInt(val) <= 8 ? 'flex' : 'none');
+      });
+      $card.find('.sync-single-btn').on('click', async function () {
+        await syncEntries([cardData], $(this));
+      });
+      $card.find('.delete-card-btn').on('click', function () {
+        extractedCards = extractedCards.filter(c => c.id !== id);
+        renderCards();
+      });
+    });
   }
 
   function applyBatchSettings() {
@@ -1049,9 +1063,9 @@ jQuery(async () => {
     if (cardsToSync.length === 0) return toastr.warning('没有可同步的条目');
     if ($btn) $btn.prop('disabled', true).text('同步中...');
     try {
-      if (!tavernHelperApi) tavernHelperApi = await waitForTavernHelper();
+      if (!window.TavernHelper) throw new Error('TavernHelper 未加载');
       const newEntries = cardsToSync.map(c => buildEntryData(c));
-      await tavernHelperApi.createLorebookEntries(targetWb, newEntries);
+      await window.TavernHelper.createWorldbookEntries(targetWb, newEntries);
       toastr.success(`成功同步 ${newEntries.length} 个条目`);
       if ($btn) $btn.text('已同步').css({ 'border-color': 'var(--wb-sync-primary)', color: 'var(--wb-sync-primary)' });
     } catch (e) {
@@ -1071,7 +1085,6 @@ jQuery(async () => {
       $('body').append(html);
 
       // DOM 引用
-      loader = $('#wb-sync-loader');
       mainView = $('#wb-sync-main-view');
       selectView = $('#wb-sync-select-view');
       modifyView = $('#wb-sync-modify-view');
@@ -1080,11 +1093,6 @@ jQuery(async () => {
       syncView = $('#wb-sync-sync-view');
       duplicateView = $('#wb-sync-duplicate-view');
       renameView = $('#wb-sync-rename-view');
-      readmeView = $('#wb-sync-readme-view');
-      frontendView = $('#wb-sync-frontend-view');
-      scriptSyncView = $('#wb-sync-script-sync-view');
-      createRegexView = $('#wb-sync-create-regex-view');
-      createScriptView = $('#wb-sync-create-script-view');
 
       bookList = $('#wb-sync-book-list');
       presetListContainer = $('#wb-sync-preset-list-container');
@@ -1109,6 +1117,12 @@ jQuery(async () => {
       $cardsContainer = $('#wb-sync-cards-container');
       $targetWbSelect = $('#wb-sync-target-wb');
 
+      frontendView = $('#wb-sync-frontend-view');
+      scriptSyncView = $('#wb-sync-script-sync-view');
+      createRegexView = $('#wb-sync-create-regex-view');
+      createScriptView = $('#wb-sync-create-script-view');
+      readmeView = $('#wb-sync-readme-view');
+
       // 绑定事件
       $('#wb-sync-popup-close-button').on('click touchend', closePopup);
       $('#wb-sync-popup-back-btn').on('click touchend', showMainView);
@@ -1130,7 +1144,6 @@ jQuery(async () => {
         }
       });
 
-      // 主菜单按钮事件
       $('#wb-sync-select-book-btn').on('click', () => showSubView('wb-sync-select-view'));
       $('#wb-sync-load-preset-btn').on('click', () => presetListContainer.slideToggle());
       $('#wb-sync-goto-delete-btn').on('click', () => showSubView('wb-sync-delete-view'));
@@ -1166,8 +1179,8 @@ jQuery(async () => {
         const name = prompt('请输入新世界书的名称：');
         if (!name || !name.trim()) return;
         try {
-          if (!tavernHelperApi) tavernHelperApi = await waitForTavernHelper();
-          await tavernHelperApi.createLorebook(name.trim());
+          if (!window.TavernHelper) throw new Error('TavernHelper 未加载');
+          await window.TavernHelper.createWorldbook(name.trim());
           toastr.success(`世界书 "${name}" 创建成功！`);
           if (callback) await callback(name.trim());
         } catch (e) {
@@ -1198,21 +1211,9 @@ jQuery(async () => {
         showMainView();
       });
 
-      // 删除视图事件 (事件委托)
-      worldbookListContainer.on('click', '.wb-sync-book-button', function () {
-          $(this).toggleClass('selected');
-          loadEntriesForSelectedBooks();
-      });
-      constantEntriesContainer.on('click', '.wb-sync-book-button', function () {
-          $(this).toggleClass('selected');
-      });
-      normalEntriesContainer.on('click', '.wb-sync-book-button', function () {
-          $(this).toggleClass('selected');
-      });
       $('#wb-sync-delete-worldbook-btn').on('click', handleDeleteWorldbooks);
       $('#wb-sync-delete-entry-btn').on('click', handleDeleteEntries);
 
-      // 修改视图事件
       modifyWbSelect.on('change', populateModifyEntrySelect);
       modifyEntrySelect.on('change', handleModifyEntryChange);
       $('#wb-sync-save-manual-changes-btn').on('click', handleManualSave);
@@ -1251,6 +1252,14 @@ jQuery(async () => {
 
         const maxDepthStr = $(`#wb-sync-${prefix}-max-depth`).val();
         const maxDepth = maxDepthStr !== '' ? parseInt(maxDepthStr) : null;
+
+        function generateUUID() {
+          return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            let r = (Math.random() * 16) | 0,
+              v = c == 'x' ? r : (r & 0x3) | 0x8;
+            return v.toString(16);
+          });
+        }
 
         const trimStringsRaw = $(`#wb-sync-${prefix}-trim-strings`).val() || '';
         const trimStrings = trimStringsRaw
@@ -1467,7 +1476,7 @@ jQuery(async () => {
 
       // 主菜单 - 导入正则脚本
       $('#wb-sync-main-import-regex-btn').on('click', () => {
-        const isCharacterSelected = SillyTavern.getContext().characterId !== undefined;
+        const isCharacterSelected = window.TavernHelper && typeof window.TavernHelper.getCharData === 'function' && window.TavernHelper.getCharData('current') !== null;
         if (isCharacterSelected) {
           $('#wb-sync-main-import-regex-character-btn').show();
         } else {
@@ -1524,25 +1533,33 @@ jQuery(async () => {
       });
 
       // 脚本同步器事件
-      $('#wb-sync-ss-extract-btn').on('click', async () => {
+      $('#wb-sync-ss-extract-btn').on('click', () => {
         const startTag = $('#wb-sync-ss-tag-start').val();
         const endTag = $('#wb-sync-ss-tag-end').val();
+        if (!startTag || !endTag) return toastr.warning('请填写起始和结束标签');
 
-        const extractedTexts = await extractContentFromMessage(startTag, endTag);
-        if (!extractedTexts) return;
+        try {
+          if (!window.TavernHelper) throw new Error('TavernHelper 未加载');
+          const messages = window.TavernHelper.getChatMessages(-1);
+          if (!messages || messages.length === 0) return toastr.warning('未找到最新消息');
 
-        let finalContent = extractedTexts.join('\n\n');
-        $('#wb-sync-ss-content').val(finalContent);
-        toastr.success('提取成功');
+          const lastMessage = messages[0].message;
+          const regexStr = `${escapeRegExp(startTag)}([\\s\\S]*?)${escapeRegExp(endTag)}`;
+          const regex = new RegExp(regexStr, 'g');
+
+          let match,
+            extractedTexts = [];
+          while ((match = regex.exec(lastMessage)) !== null) extractedTexts.push(match[1].trim());
+
+          if (extractedTexts.length === 0) return toastr.info(`未找到被 ${startTag} 和 ${endTag} 包裹的内容`);
+
+          let finalContent = extractedTexts.join('\n\n');
+          $('#wb-sync-ss-content').val(finalContent);
+          toastr.success('提取成功');
+        } catch (error) {
+          toastr.error('提取失败');
+        }
       });
-
-      function generateUUID() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-          let r = (Math.random() * 16) | 0,
-            v = c == 'x' ? r : (r & 0x3) | 0x8;
-          return v.toString(16);
-        });
-      }
 
       function getScriptSyncObjFromUI() {
         const content = $('#wb-sync-ss-content').val();
@@ -1551,6 +1568,14 @@ jQuery(async () => {
         const scriptName = $('#wb-sync-ss-script-name').val().trim() || '新助手脚本';
         const isDisabled = $('#wb-sync-ss-disabled').is(':checked');
         const info = $('#wb-sync-ss-info').val() || '';
+
+        function generateUUID() {
+          return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            let r = (Math.random() * 16) | 0,
+              v = c == 'x' ? r : (r & 0x3) | 0x8;
+            return v.toString(16);
+          });
+        }
 
         return {
           type: 'script',
@@ -1636,19 +1661,35 @@ jQuery(async () => {
       });
 
       // 前端同步器事件
-      $('#wb-sync-fe-extract-btn').on('click', async () => {
+      $('#wb-sync-fe-extract-btn').on('click', () => {
         const startTag = $('#wb-sync-fe-tag-start').val();
         const endTag = $('#wb-sync-fe-tag-end').val();
+        if (!startTag || !endTag) return toastr.warning('请填写起始和结束标签');
 
-        const extractedTexts = await extractContentFromMessage(startTag, endTag);
-        if (!extractedTexts) return;
+        try {
+          if (!window.TavernHelper) throw new Error('TavernHelper 未加载');
+          const messages = window.TavernHelper.getChatMessages(-1);
+          if (!messages || messages.length === 0) return toastr.warning('未找到最新消息');
 
-        let finalContent = extractedTexts.join('\n\n');
-        if (!finalContent.startsWith('```')) {
+          const lastMessage = messages[0].message;
+          const regexStr = `${escapeRegExp(startTag)}([\\s\\S]*?)${escapeRegExp(endTag)}`;
+          const regex = new RegExp(regexStr, 'g');
+
+          let match,
+            extractedTexts = [];
+          while ((match = regex.exec(lastMessage)) !== null) extractedTexts.push(match[1].trim());
+
+          if (extractedTexts.length === 0) return toastr.info(`未找到被 ${startTag} 和 ${endTag} 包裹的内容`);
+
+          let finalContent = extractedTexts.join('\n\n');
+          if (!finalContent.startsWith('```')) {
             finalContent = '```html\n' + finalContent + '\n```';
+          }
+          $('#wb-sync-fe-content').val(finalContent);
+          toastr.success('提取成功');
+        } catch (error) {
+          toastr.error('提取失败');
         }
-        $('#wb-sync-fe-content').val(finalContent);
-        toastr.success('提取成功');
       });
 
       $('#wb-sync-fe-render-btn').on('click', () => {
@@ -1867,7 +1908,7 @@ jQuery(async () => {
 
       // 主菜单 - 导入酒馆助手脚本
       $('#wb-sync-main-import-script-btn').on('click', () => {
-        const isCharacterSelected = SillyTavern.getContext().characterId !== undefined;
+        const isCharacterSelected = window.TavernHelper && typeof window.TavernHelper.getCharData === 'function' && window.TavernHelper.getCharData('current') !== null;
         if (isCharacterSelected) {
           $('#wb-sync-main-import-script-character-btn').show();
         } else {
@@ -1957,71 +1998,6 @@ jQuery(async () => {
       });
       $tagEnd.on('change input', function () {
         localStorage.setItem(STORAGE_KEY_TAG_END, $(this).val());
-      });
-
-      // 世界书选择视图 (事件委托)
-      bookList.on('click', '.wb-sync-book-button', async function () {
-        const $this = $(this);
-        const bookFilename = $this.data('book-filename');
-        const isSelected = $this.hasClass('selected');
-
-        // 立即更新UI，提供即时反馈
-        $this.toggleClass('selected');
-
-        try {
-          const curSettings = await getLorebookSettings();
-          let enabled = curSettings.selected_global_lorebooks || [];
-
-          if (isSelected) {
-            enabled = enabled.filter(n => n !== bookFilename);
-          } else if (!enabled.includes(bookFilename)) {
-            enabled.push(bookFilename);
-          }
-
-          await setLorebookSettings({ selected_global_lorebooks: enabled });
-        } catch (e) {
-          // 如果API调用失败，则恢复UI状态
-          $this.toggleClass('selected');
-          toastr.error('更新世界书状态失败');
-        }
-      });
-
-      // 同步器事件 (事件委托)
-      $cardsContainer.on('change', 'input, select, textarea', function() {
-          const $target = $(this);
-          const $card = $target.closest('.wb-sync-card');
-          const id = $card.data('id');
-          const cardData = extractedCards.find(c => c.id === id);
-          if (!cardData) return;
-
-          if ($target.hasClass('card-name')) cardData.name = $target.val();
-          else if ($target.hasClass('card-keys')) cardData.keys = $target.val();
-          else if ($target.hasClass('card-content')) cardData.content = $target.val();
-          else if ($target.hasClass('card-mode')) cardData.mode = $target.val();
-          else if ($target.hasClass('card-depth')) cardData.depth = parseInt($target.val()) || 0;
-          else if ($target.hasClass('card-prevent-in')) cardData.preventIncoming = $target.is(':checked');
-          else if ($target.hasClass('card-prevent-out')) cardData.preventOutgoing = $target.is(':checked');
-          else if ($target.hasClass('card-position')) {
-              const val = $target.val();
-              cardData.position = val;
-              $card.find('.card-depth-row').css('display', parseInt(val) >= 6 && parseInt(val) <= 8 ? 'flex' : 'none');
-          }
-      });
-
-      $cardsContainer.on('click', '.sync-single-btn', async function() {
-          const $card = $(this).closest('.wb-sync-card');
-          const id = $card.data('id');
-          const cardData = extractedCards.find(c => c.id === id);
-          if (cardData) {
-              await syncEntries([cardData], $(this));
-          }
-      });
-
-      $cardsContainer.on('click', '.delete-card-btn', function() {
-          const $card = $(this).closest('.wb-sync-card');
-          const id = $card.data('id');
-          extractedCards = extractedCards.filter(c => c.id !== id);
-          renderCards(); // Re-render after deletion
       });
 
       $('#wb-sync-extract-btn').on('click', extractMessages);
