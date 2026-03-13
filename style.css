@@ -157,6 +157,38 @@
     height: calc(100% - 40px);
 }
 
+/* --- 加载动画 --- */
+.wb-sync-loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--wb-sync-primary);
+  border-radius: var(--wb-sync-radius);
+}
+
+.wb-sync-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 4px solid var(--wb-sync-primary);
+  width: 40px;
+  height: 40px;
+  animation: wb-sync-spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes wb-sync-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /* 自定义滚动条样式 */
 .wb-sync-popup-body::-webkit-scrollbar,
 .wb-sync-book-list-container::-webkit-scrollbar {
