@@ -1163,13 +1163,13 @@ jQuery(async () => {
 
           // 创建一个自定义的模态框 (黑色背景，白色字体，100%不透明度)
           const $modal = $(`
-            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2147483647;">
-              <div style="position: absolute; top: 52%; left: 50%; transform: translate(-50%, -50%); background: #2c2f33; color: #fff; width: 90%; max-width: 800px; max-height: 85vh; border-radius: 8px; display: flex; flex-direction: column; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 1px solid #40444b;">
-                <div style="padding: 15px; border-bottom: 1px solid #40444b; display: flex; justify-content: space-between; align-items: center;">
-                  <h3 style="margin: 0; color: #fff;">插件说明</h3>
-                  <button class="wb-sync-close-modal-btn" style="background: none; border: none; color: #fff; font-size: 1.5em; cursor: pointer;">&times;</button>
+            <div class="wb-sync-readme-modal">
+              <div class="wb-sync-readme-content">
+                <div class="wb-sync-readme-header">
+                  <h3>插件说明</h3>
+                  <button class="wb-sync-close-modal-btn">&times;</button>
                 </div>
-                <div style="padding: 20px; overflow-y: auto; flex-grow: 1; color: #fff;">
+                <div class="wb-sync-readme-body">
                   ${htmlContent}
                 </div>
               </div>
