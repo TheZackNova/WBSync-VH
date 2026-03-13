@@ -195,6 +195,10 @@ jQuery(async () => {
     if (viewId === 'wb-sync-script-sync-view') title = '💻 脚本同步器';
     if (viewId === 'wb-sync-create-regex-view') title = '💻 创建正则脚本';
     if (viewId === 'wb-sync-create-script-view') title = '💻 创建酒馆助手脚本';
+    if (viewId === 'wb-sync-readme-view') {
+      title = '📄 插件说明';
+      loadReadme();
+    }
 
     $('#wb-sync-header-title').text(title);
     $('#wb-sync-popup-back-btn').show();
@@ -1117,6 +1121,7 @@ jQuery(async () => {
       scriptSyncView = $('#wb-sync-script-sync-view');
       createRegexView = $('#wb-sync-create-regex-view');
       createScriptView = $('#wb-sync-create-script-view');
+      readmeView = $('#wb-sync-readme-view');
 
       // 绑定事件
       $('#wb-sync-popup-close-button').on('click touchend', closePopup);
@@ -1150,43 +1155,22 @@ jQuery(async () => {
       $('#wb-sync-goto-script-sync-btn').on('click', () => showSubView('wb-sync-script-sync-view'));
       $('#wb-sync-goto-create-regex-btn').on('click', () => showSubView('wb-sync-create-regex-view'));
       $('#wb-sync-goto-create-script-btn').on('click', () => showSubView('wb-sync-create-script-view'));
+      $('#wb-sync-goto-readme-btn').on('click', () => showSubView('wb-sync-readme-view'));
 
-      $('#wb-sync-show-readme-btn').on('click', async () => {
+      async function loadReadme() {
         try {
-          const readmeContent = await $.get(`/${extensionFolderPath}/README.md`);
-
-          let htmlContent = `<pre style="white-space: pre-wrap; font-family: monospace; text-align: left;">${escapeHtml(readmeContent)}</pre>`;
-          if (window.showdown) {
-            const converter = new window.showdown.Converter();
-            htmlContent = `<div style="text-align: left; padding: 10px;">${converter.makeHtml(readmeContent)}</div>`;
-          }
-
-          // 创建一个自定义的模态框 (黑色背景，白色字体，100%不透明度)
-          const $modal = $(`
-            <div class="wb-sync-readme-modal">
-              <div class="wb-sync-readme-content">
-                <div class="wb-sync-readme-header">
-                  <h3>插件说明</h3>
-                  <button class="wb-sync-close-modal-btn">&times;</button>
-                </div>
-                <div class="wb-sync-readme-body">
-                  ${htmlContent}
-                </div>
-              </div>
-            </div>
-          `);
-
-          $modal.find('.wb-sync-close-modal-btn').on('click', () => $modal.remove());
-          $modal.on('click', e => {
-            if (e.target === $modal[0]) $modal.remove();
-          });
-
-          $('body').append($modal);
+            const readmeContent = await $.get(`/${extensionFolderPath}/README.md`);
+            let htmlContent = `<pre style="white-space: pre-wrap; font-family: monospace; text-align: left;">${escapeHtml(readmeContent)}</pre>`;
+            if (window.showdown) {
+                const converter = new window.showdown.Converter();
+                htmlContent = `<div style="text-align: left; padding: 10px;">${converter.makeHtml(readmeContent)}</div>`;
+            }
+            $('#wb-sync-readme-content').html(htmlContent);
         } catch (e) {
-          console.error(e);
-          toastr.error('无法加载插件说明: ' + e.message);
+            console.error(e);
+            $('#wb-sync-readme-content').html('<p style="color:red;">无法加载插件说明: ' + e.message + '</p>');
         }
-      });
+      }
 
       $('#wb-sync-duplicate-submit-btn').on('click', handleDuplicateWorldbook);
       $('#wb-sync-rename-submit-btn').on('click', handleRenameWorldbook);
