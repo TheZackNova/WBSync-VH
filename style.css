@@ -662,29 +662,54 @@
 
 /* --- 响应式布局 --- */
 @media (max-width: 768px) {
+  .wb-sync-popup-container {
+    top: 2.5vh;
+    left: 2.5vw;
+    width: 95vw;
+    height: 95vh;
+    transform: none;
+  }
+
+  .wb-sync-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .wb-sync-button {
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+  }
+
   .wb-sync-cards-grid {
     grid-template-columns: 1fr;
   }
+
   .wb-sync-row {
     flex-direction: column;
     align-items: stretch;
   }
+
   .wb-sync-group {
     flex-direction: column;
     align-items: flex-start;
   }
+
   .wb-sync-input,
   .wb-sync-select {
     width: 100%;
   }
+
   .wb-sync-btn {
     width: 100%;
     text-align: center;
   }
+
   .wb-sync-card-row {
     flex-direction: column;
     align-items: flex-start;
   }
+
   .wb-sync-card-label {
     margin-bottom: 2px;
   }
