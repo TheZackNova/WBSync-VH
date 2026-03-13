@@ -25,7 +25,6 @@ jQuery(async () => {
     createRegexView,
     createScriptView,
     scriptSyncView,
-    readmeView,
     loader;
   let bookList, presetListContainer, overlay;
   let worldbookListContainer, constantEntriesContainer, normalEntriesContainer;
@@ -201,7 +200,6 @@ jQuery(async () => {
     if (viewId === 'wb-sync-script-sync-view') title = '💻 脚本同步器';
     if (viewId === 'wb-sync-create-regex-view') title = '💻 创建正则脚本';
     if (viewId === 'wb-sync-create-script-view') title = '💻 创建酒馆助手脚本';
-    if (viewId === 'wb-sync-readme-view') title = '📄 插件说明';
 
     $('#wb-sync-header-title').text(title);
     $('#wb-sync-popup-back-btn').show();
@@ -1077,7 +1075,6 @@ jQuery(async () => {
       syncView = $('#wb-sync-sync-view');
       duplicateView = $('#wb-sync-duplicate-view');
       renameView = $('#wb-sync-rename-view');
-      readmeView = $('#wb-sync-readme-view');
       frontendView = $('#wb-sync-frontend-view');
       scriptSyncView = $('#wb-sync-script-sync-view');
       createRegexView = $('#wb-sync-create-regex-view');
@@ -1139,7 +1136,6 @@ jQuery(async () => {
       $('#wb-sync-goto-script-sync-btn').on('click', () => showSubView('wb-sync-script-sync-view'));
       $('#wb-sync-goto-create-regex-btn').on('click', () => showSubView('wb-sync-create-regex-view'));
       $('#wb-sync-goto-create-script-btn').on('click', () => showSubView('wb-sync-create-script-view'));
-      $('#wb-sync-goto-readme-btn').on('click', () => showSubView('wb-sync-readme-view'));
 
       $('#wb-sync-duplicate-submit-btn').on('click', handleDuplicateWorldbook);
       $('#wb-sync-rename-submit-btn').on('click', handleRenameWorldbook);
