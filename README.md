@@ -1,6 +1,12 @@
-# 世界书同步器 (Worldbook Synchronizer)
+# 世界书同步器 (Worldbook Synchronizer) v1.2.0
 
 这是一个为 SillyTavern 设计的强大世界书管理与同步插件，旨在提供一个比默认编辑器更高效、更直观的工作流程。
+
+## 🆕 更新日志 (Changelog)
+
+### v1.2.0
+*   **修复**: 移除了 CSS 中滚动条的 `:hover` 伪类样式，解决了酒馆核心 `dynamic-styles.js` 尝试生成 `:focus-visible` 规则时导致的控制台红字报错问题。
+*   **优化**: 提升了插件在最新版 SillyTavern 中的兼容性和稳定性。
 
 ## ✨ 核心功能
 

@@ -202,11 +202,6 @@
     border-radius: 4px;
 }
 
-.wb-sync-popup-body::-webkit-scrollbar-thumb:hover,
-.wb-sync-book-list-container::-webkit-scrollbar-thumb:hover {
-    background: var(--wb-sync-text-muted);
-}
-
 .wb-sync-section {
   background-color: var(--wb-sync-section-bg);
   border-radius: var(--wb-sync-radius);

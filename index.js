@@ -30,7 +30,8 @@ jQuery(async () => {
     modifyEntrySelect,
     modifyContent,
     modifySaveBtn;
-  let transSourceSelect, transTargetSelect, transEntriesContainer, transBtn;
+  let transSourceSelect, transTargetSelect, transEntriesContainer, transBtn, transSelectAllBtn;
+  let copySourceSelect, copyTargetSelect, copyEntriesContainer, copyBtn, copySelectAllBtn;
 
   let extractedCards = [];
   let $cardsContainer, $targetWbSelect;
@@ -335,11 +336,7 @@ jQuery(async () => {
         const btn = $('<button></button>')
           .addClass('wb-sync-book-button')
           .text(b.name)
-          .data('book-name', b.file_name)
-          .on('click', function () {
-            $(this).toggleClass('selected');
-            loadEntriesForSelectedBooks();
-          });
+          .data('book-name', b.file_name);
         worldbookListContainer.append(btn);
       });
     } catch (e) {
@@ -368,7 +365,7 @@ jQuery(async () => {
 
         results.forEach(({ bookName, entries }) => {
             entries.forEach(e => {
-                const buttonHtml = `<button class="wb-sync-book-button" data-uid="${e.uid}" data-book-name="${escapeHtml(bookName)}">${escapeHtml(e.comment || `UID:${e.uid}`)}</button>`;
+                const buttonHtml = `<button class="wb-sync-book-button" data-uid="${e.uid}" data-book-name="${escapeHtml(bookName)}" title="${escapeHtml(e.comment || `UID:${e.uid}`)}">${escapeHtml(e.comment || `UID:${e.uid}`)}</button>`;
                 if (e.type === 'constant') {
                     constantHtml += buttonHtml;
                 } else {
@@ -429,15 +426,22 @@ jQuery(async () => {
 
   async function populateTransferSelects() {
     transEntriesContainer.html('<p class="wb-sync-no-tasks">请先选择源世界书。</p>');
+    copyEntriesContainer.html('<p class="wb-sync-no-tasks">请先选择源世界书。</p>');
+    if (transSelectAllBtn) transSelectAllBtn.hide();
+    if (copySelectAllBtn) copySelectAllBtn.hide();
     try {
       const books = await getAllLorebooks();
       const ph = '<option value="">--请选择世界书--</option>';
       transSourceSelect.empty().append(ph);
       transTargetSelect.empty().append(ph);
+      copySourceSelect.empty().append(ph);
+      copyTargetSelect.empty().append(ph);
       books.forEach(b => {
         const opt = `<option value="${escapeHtml(b.file_name)}">${escapeHtml(b.name)}</option>`;
         transSourceSelect.append(opt);
         transTargetSelect.append(opt);
+        copySourceSelect.append(opt);
+        copyTargetSelect.append(opt);
       });
     } catch (e) {
       toastr.error('加载失败');
@@ -446,23 +450,85 @@ jQuery(async () => {
 
   async function renderSourceEntries() {
     const src = transSourceSelect.val();
-    if (!src) return transEntriesContainer.html('<p class="wb-sync-no-tasks">请先选择源世界书。</p>');
+
+    // 联动：禁用目标下拉框中与源相同的选项
+    transTargetSelect.find('option').prop('disabled', false);
+    if (src) {
+        transTargetSelect.find(`option[value="${escapeHtml(src)}"]`).prop('disabled', true);
+        if (transTargetSelect.val() === src) transTargetSelect.val('');
+    }
+
+    if (!src) {
+        transSelectAllBtn.hide();
+        return transEntriesContainer.html('<p class="wb-sync-no-tasks">请先选择源世界书。</p>');
+    }
     transEntriesContainer.html('<p>加载中...</p>');
     try {
       const entries = await getLorebookEntries(src);
       transEntriesContainer.data('entries', entries).empty();
-      if (entries.length === 0) return transEntriesContainer.html('<p class="wb-sync-no-tasks">无条目。</p>');
+      if (entries.length === 0) {
+          transSelectAllBtn.hide();
+          return transEntriesContainer.html('<p class="wb-sync-no-tasks">无条目。</p>');
+      }
+      transSelectAllBtn.show();
       entries.forEach(e => {
         const id = `trans-entry-${e.uid}`;
+        const blueIcon = '<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid black; background-color: #0078d7; margin-right: 6px; vertical-align: middle;" title="蓝灯 (常驻)"></span>';
+        const greenIcon = '<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid black; background-color: #00cc00; margin-right: 6px; vertical-align: middle;" title="绿灯 (条件触发)"></span>';
+        const typeTag = e.type === 'constant' ? blueIcon : greenIcon;
+        const displayName = escapeHtml(e.comment || `UID:${e.uid}`);
         transEntriesContainer.append(`
-                    <div class="wb-sync-checkbox-item">
+                    <div class="wb-sync-checkbox-item" title="${displayName}">
                         <input type="checkbox" id="${id}" value="${e.uid}">
-                        <label for="${id}">${escapeHtml(e.comment || `UID:${e.uid}`)}</label>
+                        <label for="${id}">${typeTag}${displayName}</label>
                     </div>
                 `);
       });
     } catch (e) {
+      transSelectAllBtn.hide();
       transEntriesContainer.html('<p style="color:red;">加载失败</p>');
+    }
+  }
+
+  async function renderCopySourceEntries() {
+    const src = copySourceSelect.val();
+
+    // 联动：禁用目标下拉框中与源相同的选项
+    copyTargetSelect.find('option').prop('disabled', false);
+    if (src) {
+        copyTargetSelect.find(`option[value="${escapeHtml(src)}"]`).prop('disabled', true);
+        if (copyTargetSelect.val() === src) copyTargetSelect.val('');
+    }
+
+    if (!src) {
+        copySelectAllBtn.hide();
+        return copyEntriesContainer.html('<p class="wb-sync-no-tasks">请先选择源世界书。</p>');
+    }
+    copyEntriesContainer.html('<p>加载中...</p>');
+    try {
+      const entries = await getLorebookEntries(src);
+      copyEntriesContainer.data('entries', entries).empty();
+      if (entries.length === 0) {
+          copySelectAllBtn.hide();
+          return copyEntriesContainer.html('<p class="wb-sync-no-tasks">无条目。</p>');
+      }
+      copySelectAllBtn.show();
+      entries.forEach(e => {
+        const id = `copy-entry-${e.uid}`;
+        const blueIcon = '<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid black; background-color: #0078d7; margin-right: 6px; vertical-align: middle;" title="蓝灯 (常驻)"></span>';
+        const greenIcon = '<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid black; background-color: #00cc00; margin-right: 6px; vertical-align: middle;" title="绿灯 (条件触发)"></span>';
+        const typeTag = e.type === 'constant' ? blueIcon : greenIcon;
+        const displayName = escapeHtml(e.comment || `UID:${e.uid}`);
+        copyEntriesContainer.append(`
+                    <div class="wb-sync-checkbox-item" title="${displayName}">
+                        <input type="checkbox" id="${id}" value="${e.uid}">
+                        <label for="${id}">${typeTag}${displayName}</label>
+                    </div>
+                `);
+      });
+    } catch (e) {
+      copySelectAllBtn.hide();
+      copyEntriesContainer.html('<p style="color:red;">加载失败</p>');
     }
   }
 
@@ -483,20 +549,65 @@ jQuery(async () => {
       const all = transEntriesContainer.data('entries') || [];
       const toTrans = all.filter(e => uids.includes(String(e.uid)));
 
-      const createPromises = toTrans.map(e => {
+      const newEntries = toTrans.map(e => {
         const newE = { ...e };
         delete newE.uid;
-        return createLorebookEntry(tgt, newE);
+        return newE;
       });
-      await Promise.all(createPromises);
+
+      if (!tavernHelperApi) tavernHelperApi = await waitForTavernHelper();
+
+      // 批量创建
+      await tavernHelperApi.createLorebookEntries(tgt, newEntries);
+      // 批量删除
+      await tavernHelperApi.deleteLorebookEntries(src, uids.map(uid => parseInt(uid)));
 
       toastr.success(`成功迁移 ${toTrans.length} 个条目`);
       transEntriesContainer.find('input:checked').prop('checked', false);
+      renderSourceEntries();
     } catch (e) {
       toastr.error(`迁移失败: ${e.message}`);
     } finally {
       hideLoader();
       transBtn.prop('disabled', false).text('执行迁移');
+    }
+  }
+
+  async function handleCopyEntries() {
+    const src = copySourceSelect.val(),
+      tgt = copyTargetSelect.val();
+    const uids = copyEntriesContainer
+      .find('input:checked')
+      .map((_, el) => $(el).val())
+      .get();
+    if (!src || !tgt) return toastr.warning('请选择源和目标');
+    if (src === tgt) return toastr.warning('源和目标不能相同');
+    if (uids.length === 0) return toastr.warning('请选择条目');
+
+    showLoader();
+    copyBtn.prop('disabled', true).text('复制中...');
+    try {
+      const all = copyEntriesContainer.data('entries') || [];
+      const toCopy = all.filter(e => uids.includes(String(e.uid)));
+
+      const newEntries = toCopy.map(e => {
+        const newE = { ...e };
+        delete newE.uid;
+        return newE;
+      });
+
+      if (!tavernHelperApi) tavernHelperApi = await waitForTavernHelper();
+
+      // 批量创建
+      await tavernHelperApi.createLorebookEntries(tgt, newEntries);
+
+      toastr.success(`成功复制 ${toCopy.length} 个条目`);
+      copyEntriesContainer.find('input:checked').prop('checked', false);
+    } catch (e) {
+      toastr.error(`复制失败: ${e.message}`);
+    } finally {
+      hideLoader();
+      copyBtn.prop('disabled', false).text('执行复制');
     }
   }
 
@@ -1006,6 +1117,13 @@ jQuery(async () => {
       transTargetSelect = $('#wb-sync-target-worldbook-select');
       transEntriesContainer = $('#wb-sync-source-entries-container');
       transBtn = $('#wb-sync-transfer-entries-btn');
+      transSelectAllBtn = $('#wb-sync-transfer-select-all-btn');
+
+      copySourceSelect = $('#wb-sync-copy-source-worldbook-select');
+      copyTargetSelect = $('#wb-sync-copy-target-worldbook-select');
+      copyEntriesContainer = $('#wb-sync-copy-source-entries-container');
+      copyBtn = $('#wb-sync-copy-entries-btn');
+      copySelectAllBtn = $('#wb-sync-copy-select-all-btn');
 
       $cardsContainer = $('#wb-sync-cards-container');
       $targetWbSelect = $('#wb-sync-target-wb');
@@ -1175,6 +1293,19 @@ jQuery(async () => {
 
       transSourceSelect.on('change', renderSourceEntries);
       transBtn.on('click', handleTransferEntries);
+      transSelectAllBtn.on('click', () => {
+          const checkboxes = transEntriesContainer.find('input[type="checkbox"]');
+          const allChecked = checkboxes.length === checkboxes.filter(':checked').length;
+          checkboxes.prop('checked', !allChecked);
+      });
+
+      copySourceSelect.on('change', renderCopySourceEntries);
+      copyBtn.on('click', handleCopyEntries);
+      copySelectAllBtn.on('click', () => {
+          const checkboxes = copyEntriesContainer.find('input[type="checkbox"]');
+          const allChecked = checkboxes.length === checkboxes.filter(':checked').length;
+          checkboxes.prop('checked', !allChecked);
+      });
 
       function getRegexObjFromUI(prefix) {
         const htmlContent = $(`#wb-sync-${prefix}-content`).val();
@@ -1987,6 +2118,8 @@ jQuery(async () => {
               $(`#${qrMenuId}`).on('click', () => {
                   showPopup();
               });
+              const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)) || {};
+              $(`#${qrMenuId}`).toggle(settings.showQrBtn !== false);
               clearInterval(qrInterval);
           } else {
               qrRetryCount++;
@@ -2003,6 +2136,8 @@ jQuery(async () => {
                       $(`#${qrMenuId}`).on('click', () => {
                           showPopup();
                       });
+                      const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)) || {};
+                      $(`#${qrMenuId}`).toggle(settings.showQrBtn !== false);
                   }
               }
           }

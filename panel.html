@@ -930,34 +930,75 @@
         </div>
       </div>
 
-      <div id="wb-sync-transfer-view" class="wb-sync-section" style="display: none; height: 100%">
-        <div class="wb-sync-section-header">
-          <h4>
-            <i class="fa-solid fa-exchange-alt"></i> 条目迁移
-            <i
-              class="fa-solid fa-chevron-up wb-sync-collapse-icon"
-              style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
-            ></i>
-          </h4>
+      <div id="wb-sync-transfer-view" style="display: none; flex-direction: column; gap: 15px; height: 100%">
+        <div class="wb-sync-section">
+          <div class="wb-sync-section-header">
+            <h4>
+              <i class="fa-solid fa-exchange-alt"></i> 条目迁移
+              <i
+                class="fa-solid fa-chevron-up wb-sync-collapse-icon"
+                style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
+              ></i>
+            </h4>
+          </div>
+          <div class="wb-sync-section-content">
+            <div class="wb-sync-transfer-controls">
+              <div class="wb-sync-grid-container">
+                <label for="wb-sync-source-worldbook-select">源世界书:</label>
+                <select id="wb-sync-source-worldbook-select" class="wb-sync-select"></select>
+                <label for="wb-sync-target-worldbook-select">目标世界书:</label>
+                <select id="wb-sync-target-worldbook-select" class="wb-sync-select"></select>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                <label class="wb-sync-textarea-label" style="margin-top: 0;">选择要迁移的条目:</label>
+                <button id="wb-sync-transfer-select-all-btn" class="wb-sync-button wb-sync-btn-small" style="display: none;">全选 / 反选</button>
+              </div>
+              <div
+                id="wb-sync-source-entries-container"
+                class="wb-sync-book-list-container"
+                style="height: 200px; overflow-y: auto"
+              >
+                <p class="wb-sync-no-tasks">请先选择一个源世界书。</p>
+              </div>
+              <div class="wb-sync-actions">
+                <button id="wb-sync-transfer-entries-btn" class="wb-sync-button">执行迁移</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="wb-sync-section-content">
-          <div class="wb-sync-transfer-controls">
-            <div class="wb-sync-grid-container">
-              <label for="wb-sync-source-worldbook-select">源世界书:</label>
-              <select id="wb-sync-source-worldbook-select" class="wb-sync-select"></select>
-              <label for="wb-sync-target-worldbook-select">目标世界书:</label>
-              <select id="wb-sync-target-worldbook-select" class="wb-sync-select"></select>
-            </div>
-            <label class="wb-sync-textarea-label">选择要迁移的条目:</label>
-            <div
-              id="wb-sync-source-entries-container"
-              class="wb-sync-book-list-container"
-              style="height: 200px; overflow-y: auto"
-            >
-              <p class="wb-sync-no-tasks">请先选择一个源世界书。</p>
-            </div>
-            <div class="wb-sync-actions">
-              <button id="wb-sync-transfer-entries-btn" class="wb-sync-button">执行迁移</button>
+
+        <div class="wb-sync-section">
+          <div class="wb-sync-section-header">
+            <h4>
+              <i class="fa-solid fa-copy"></i> 条目复制
+              <i
+                class="fa-solid fa-chevron-up wb-sync-collapse-icon"
+                style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
+              ></i>
+            </h4>
+          </div>
+          <div class="wb-sync-section-content">
+            <div class="wb-sync-transfer-controls">
+              <div class="wb-sync-grid-container">
+                <label for="wb-sync-copy-source-worldbook-select">源世界书:</label>
+                <select id="wb-sync-copy-source-worldbook-select" class="wb-sync-select"></select>
+                <label for="wb-sync-copy-target-worldbook-select">目标世界书:</label>
+                <select id="wb-sync-copy-target-worldbook-select" class="wb-sync-select"></select>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                <label class="wb-sync-textarea-label" style="margin-top: 0;">选择要复制的条目:</label>
+                <button id="wb-sync-copy-select-all-btn" class="wb-sync-button wb-sync-btn-small" style="display: none;">全选 / 反选</button>
+              </div>
+              <div
+                id="wb-sync-copy-source-entries-container"
+                class="wb-sync-book-list-container"
+                style="height: 200px; overflow-y: auto"
+              >
+                <p class="wb-sync-no-tasks">请先选择一个源世界书。</p>
+              </div>
+              <div class="wb-sync-actions">
+                <button id="wb-sync-copy-entries-btn" class="wb-sync-button">执行复制</button>
+              </div>
             </div>
           </div>
         </div>
