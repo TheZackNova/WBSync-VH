@@ -1,4 +1,3 @@
-/* --- 全局与基础样式 --- */
 :root {
   --wb-sync-main-bg: #2c2f33;
   --wb-sync-section-bg: #23272a;
@@ -15,7 +14,6 @@
   --wb-sync-font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
 }
 
-/* --- 浮动按钮 --- */
 #wb-sync-floating-btn {
   position: fixed;
   z-index: 2147483645;
@@ -52,7 +50,6 @@
   cursor: grabbing;
 }
 
-/* --- 弹窗遮罩层 --- */
 .wb-sync-popup-overlay {
   position: fixed;
   top: 0;
@@ -63,7 +60,6 @@
   z-index: 10001;
 }
 
-/* --- 主面板容器 --- */
 .wb-sync-popup-container {
   position: fixed;
   top: 50%;
@@ -157,7 +153,6 @@
     height: calc(100% - 40px);
 }
 
-/* --- 加载动画 --- */
 .wb-sync-loader {
   position: absolute;
   top: 0;
@@ -189,7 +184,6 @@
   100% { transform: rotate(360deg); }
 }
 
-/* 自定义滚动条样式 */
 .wb-sync-popup-body::-webkit-scrollbar,
 .wb-sync-book-list-container::-webkit-scrollbar {
     width: 8px;
@@ -213,7 +207,6 @@
     background: var(--wb-sync-text-muted);
 }
 
-/* --- 区块样式 --- */
 .wb-sync-section {
   background-color: var(--wb-sync-section-bg);
   border-radius: var(--wb-sync-radius);
@@ -261,7 +254,6 @@
   margin-top: 10px;
 }
 
-/* --- 按钮和控件 --- */
 .wb-sync-actions {
   display: flex;
   flex-wrap: wrap;
@@ -320,7 +312,6 @@
   font-style: italic;
 }
 
-/* --- 兼容性样式 --- */
 .wb-sync-edit-controls,
 .wb-sync-modify-controls {
   display: flex;
@@ -428,7 +419,6 @@
   padding: 0 5px;
 }
 
-/* --- 条目迁移视图特定样式 --- */
 .wb-sync-transfer-controls {
   display: flex;
   flex-direction: column;
@@ -492,7 +482,6 @@
   color: var(--wb-sync-text);
 }
 
-/* --- 世界书同步器 (原面板) 样式 --- */
 .wb-sync-controls-box {
   background-color: var(--wb-sync-section-bg);
   border: 1px solid var(--wb-sync-border);
@@ -746,61 +735,6 @@
   flex-grow: 1;
 }
 
-/* --- 插件说明弹窗 --- */
-.wb-sync-readme-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 2147483647;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.wb-sync-readme-content {
-  background: #2c2f33;
-  color: #fff;
-  width: 90%;
-  max-width: 800px;
-  max-height: 85vh;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-  border: 1px solid #40444b;
-}
-
-.wb-sync-readme-header {
-  padding: 15px;
-  border-bottom: 1px solid #40444b;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.wb-sync-readme-header h3 {
-  margin: 0;
-  color: #fff;
-}
-
-.wb-sync-close-modal-btn {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 1.5em;
-  cursor: pointer;
-}
-
-.wb-sync-readme-body {
-  padding: 20px;
-  overflow-y: auto;
-  flex-grow: 1;
-}
-
-/* --- 响应式布局 --- */
 @media (max-width: 768px) {
   .wb-sync-readme-content {
     width: 95vw;

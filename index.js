@@ -1,17 +1,13 @@
-// SillyTavern 插件：世界书同步器 (整合版)
-// 作者：倾心
-// 版本：1.0.0
-
 jQuery(async () => {
   const MODULE_NAME = '世界书同步器';
   const extensionFolderPath = `scripts/extensions/third-party/WBSync`;
 
-  // --- 1. 状态变量 ---
   const PRESET_STORAGE_KEY = 'wb_sync_presets';
   const STORAGE_KEY_BUTTON_POS = 'wb-sync-btn-pos';
   const STORAGE_KEY_TAG_START = 'wb-sync-tag-start-val';
   const STORAGE_KEY_TAG_END = 'wb-sync-tag-end-val';
   const STORAGE_KEY_LAST_VIEW = 'wb-sync-last-view';
+  const STORAGE_KEY_SETTINGS = 'wb-sync-settings';
 
   let mainView,
     selectView,
@@ -25,29 +21,22 @@ jQuery(async () => {
     createRegexView,
     createScriptView,
     scriptSyncView,
+    settingsView,
     loader;
   let bookList, presetListContainer, overlay;
   let worldbookListContainer, constantEntriesContainer, normalEntriesContainer;
 
-  // 修改条目视图
   let modifyWbSelect,
     modifyEntrySelect,
-    modifyUserPrompt,
-    modifyAiResponse,
     modifyContent,
-    modifySubmitBtn,
     modifySaveBtn;
-  // 迁移视图
   let transSourceSelect, transTargetSelect, transEntriesContainer, transBtn;
 
-  // 同步器视图 (我们的核心功能)
   let extractedCards = [];
   let $cardsContainer, $targetWbSelect;
 
-  // --- 2. 工具函数 & API 封装 ---
   const escapeHtml = unsafe => {
     if (unsafe === null || typeof unsafe === 'undefined') return '';
-    // 使用 jQuery 的 text() 方法来安全地转义 HTML
     return $('<div>').text(String(unsafe)).html();
   };
 
@@ -96,7 +85,6 @@ jQuery(async () => {
     return await tavernHelperApi.createLorebookEntry(bookName, entryData);
   }
 
-  // --- 3. 视图管理 ---
   function showPopup() {
     if (overlay) overlay.css('display', 'flex');
     const lastView = localStorage.getItem(STORAGE_KEY_LAST_VIEW);
@@ -133,6 +121,7 @@ jQuery(async () => {
       createRegexView,
       createScriptView,
       scriptSyncView,
+      settingsView,
     ].forEach(v => v && v.hide());
     renderPresets();
 
@@ -140,7 +129,6 @@ jQuery(async () => {
     $('#wb-sync-popup-back-btn').hide();
     localStorage.setItem(STORAGE_KEY_LAST_VIEW, 'wb-sync-main-view');
 
-    // 检查是否在角色卡中，以决定是否显示角色/局部相关的导入按钮
     const isCharacterSelected = SillyTavern.getContext().characterId !== undefined;
     if (isCharacterSelected) {
       $('#wb-sync-main-import-script-character-btn').show();
@@ -165,6 +153,7 @@ jQuery(async () => {
       createRegexView,
       createScriptView,
       scriptSyncView,
+      settingsView,
     ].forEach(v => v && v.hide());
 
     let title = '世界书同步器';
@@ -200,6 +189,7 @@ jQuery(async () => {
     if (viewId === 'wb-sync-script-sync-view') title = '💻 脚本同步器';
     if (viewId === 'wb-sync-create-regex-view') title = '💻 创建正则脚本';
     if (viewId === 'wb-sync-create-script-view') title = '💻 创建酒馆助手脚本';
+    if (viewId === 'wb-sync-settings-view') title = '⚙️ 插件设置';
 
     $('#wb-sync-header-title').text(title);
     $('#wb-sync-popup-back-btn').show();
@@ -207,7 +197,6 @@ jQuery(async () => {
     localStorage.setItem(STORAGE_KEY_LAST_VIEW, viewId);
   }
 
-  // --- 4. 悬浮球与入口管理 ---
   function initFloatingButton() {
     const $btn = $('#wb-sync-floating-btn');
 
@@ -224,7 +213,6 @@ jQuery(async () => {
     const savedPos = JSON.parse(localStorage.getItem(STORAGE_KEY_BUTTON_POS));
     if (savedPos) {
       $btn.css({ top: savedPos.top, left: savedPos.left, right: 'auto', bottom: 'auto' });
-      // 延迟一下确保DOM渲染完毕后再限制边界
       setTimeout(enforceBounds, 100);
     } else {
       $btn.css({ bottom: '20px', right: '20px' });
@@ -273,7 +261,6 @@ jQuery(async () => {
     });
   }
 
-  // --- 5. 全局世界书 & 预设逻辑 ---
   async function renderWorldBooks() {
     bookList.empty().append('<p>加载中...</p>');
     try {
@@ -339,7 +326,6 @@ jQuery(async () => {
     presetListContainer.show();
   }
 
-  // --- 6. 删除视图逻辑 ---
   async function renderDeleteView() {
     try {
       const books = await getAllLorebooks();
@@ -441,7 +427,6 @@ jQuery(async () => {
     }
   }
 
-  // --- 7. 迁移视图逻辑 ---
   async function populateTransferSelects() {
     transEntriesContainer.html('<p class="wb-sync-no-tasks">请先选择源世界书。</p>');
     try {
@@ -498,7 +483,6 @@ jQuery(async () => {
       const all = transEntriesContainer.data('entries') || [];
       const toTrans = all.filter(e => uids.includes(String(e.uid)));
 
-      // 使用 Promise.all 并行创建条目
       const createPromises = toTrans.map(e => {
         const newE = { ...e };
         delete newE.uid;
@@ -516,7 +500,6 @@ jQuery(async () => {
     }
   }
 
-  // --- 7.5 复制视图逻辑 ---
   async function populateDuplicateSelect() {
     try {
       const books = await getAllLorebooks();
@@ -541,17 +524,14 @@ jQuery(async () => {
       if (!tavernHelperApi) tavernHelperApi = await waitForTavernHelper();
       const entries = await getLorebookEntries(source);
 
-      // 创建新世界书
       await tavernHelperApi.createLorebook(target);
 
-      // 复制条目 (去除 uid 让系统重新生成)
       const newEntries = entries.map(e => {
         const newE = { ...e };
         delete newE.uid;
         return newE;
       });
 
-      // 写入新世界书
       await tavernHelperApi.replaceLorebookEntries(target, newEntries);
 
       toastr.success(`成功复制世界书为 "${target}"`);
@@ -564,7 +544,6 @@ jQuery(async () => {
     }
   }
 
-  // --- 7.6 重命名视图逻辑 ---
   async function populateRenameSelect() {
     try {
       const books = await getAllLorebooks();
@@ -587,7 +566,6 @@ jQuery(async () => {
     $btn.prop('disabled', true).text('重命名中...');
     try {
       if (!tavernHelperApi) tavernHelperApi = await waitForTavernHelper();
-      // TavernHelper 没有直接重命名的 API，所以我们通过 复制 -> 删除 的方式实现
       const entries = await getLorebookEntries(source);
       await tavernHelperApi.createLorebook(newName);
       const newEntries = entries.map(e => {
@@ -600,7 +578,6 @@ jQuery(async () => {
 
       toastr.success(`成功将 "${source}" 重命名为 "${newName}"`);
       $('#wb-sync-rename-target-input').val('');
-      // 重新填充下拉列表
       await populateRenameSelect();
     } catch (e) {
       toastr.error(`重命名失败: ${e.message}`);
@@ -610,7 +587,6 @@ jQuery(async () => {
     }
   }
 
-  // --- 8. 修改视图逻辑 ---
   async function populateModifyWorldbookSelect() {
     try {
       const books = await getAllLorebooks();
@@ -671,7 +647,6 @@ jQuery(async () => {
             posVal = e.position.type;
           }
         } else if (e.position !== undefined) {
-          // 兼容旧版数字 position
           const p = parseInt(e.position);
           if (p === 0) posVal = 'before_character_definition';
           else if (p === 1) posVal = 'after_character_definition';
@@ -715,7 +690,7 @@ jQuery(async () => {
 
       const e = entries[idx];
       e.name = $('#wb-sync-mod-name').val();
-      e.comment = e.name; // 兼容旧版显示
+      e.comment = e.name;
       e.content = $('#wb-sync-mod-content').val();
 
       const keysStr = $('#wb-sync-mod-keys').val();
@@ -729,8 +704,8 @@ jQuery(async () => {
       if (!e.strategy) e.strategy = {};
       e.strategy.type = $('#wb-sync-mod-mode').val();
       e.strategy.keys = keysArr;
-      e.type = e.strategy.type === 'constant' ? 'constant' : 'Normal'; // 兼容旧版
-      e.key = keysArr; // 兼容旧版
+      e.type = e.strategy.type === 'constant' ? 'constant' : 'Normal';
+      e.key = keysArr;
 
       const posVal = $('#wb-sync-mod-position').val();
       if (!e.position || typeof e.position !== 'object') e.position = { order: e.order || 100 };
@@ -744,7 +719,7 @@ jQuery(async () => {
       }
 
       e.position.order = parseInt($('#wb-sync-mod-order').val()) || 100;
-      e.order = e.position.order; // 兼容旧版
+      e.order = e.position.order;
 
       e.probability = parseInt($('#wb-sync-mod-prob').val());
       if (isNaN(e.probability)) e.probability = 100;
@@ -761,70 +736,6 @@ jQuery(async () => {
     }
   }
 
-  function extractAndCleanJson(rawText) {
-    if (!rawText) return '';
-    const match = rawText.match(/```json\s*([\s\S]*?)\s*```/);
-    let jsonStr = match ? match[1] : rawText;
-    if (!match) {
-      const first = jsonStr.indexOf('['),
-        last = jsonStr.lastIndexOf(']');
-      if (first !== -1 && last > first) jsonStr = jsonStr.substring(first, last + 1);
-    }
-    return jsonStr
-      .trim()
-      .replace(
-        /"content":\s*"((?:[^"\\]|\\.)*)"/g,
-        (m, val) => `"${'content'}": "${val.replace(/\n/g, '\\n').replace(/\r/g, '\\r')}"`,
-      );
-  }
-
-  async function handleSubmitModification() {
-    const book = modifyWbSelect.val(),
-      uid = modifyEntrySelect.val(),
-      prompt = modifyUserPrompt.val().trim();
-    if (!book) return alert('请选择世界书');
-    if (!prompt) return alert('请输入要求');
-    modifyAiResponse.val('处理中...');
-    modifySubmitBtn.prop('disabled', true);
-    let rawRes = '';
-    try {
-      if (!tavernHelperApi) tavernHelperApi = await waitForTavernHelper();
-      const entries = await getLorebookEntries(book);
-      const whole = JSON.stringify(entries, null, 2);
-      let finalPrompt = `你是一个专业的SillyTavern世界书JSON数据工程师。\n输出必须是纯净的JSON，包裹在 \`\`\`json ... \`\`\` 中。\n绝对不能修改 uid 和 type。\n\n`;
-      if (uid) {
-        const target = entries.find(e => e.uid == uid);
-        finalPrompt += `修改以下条目:\n\`\`\`json\n${JSON.stringify(target, null, 2)}\n\`\`\`\n要求: ${prompt}`;
-      } else {
-        finalPrompt += `修改整个世界书:\n\`\`\`json\n${whole}\n\`\`\`\n要求: ${prompt}`;
-      }
-      rawRes = await tavernHelperApi.generateRaw({
-        ordered_prompts: [{ role: 'user', content: finalPrompt }],
-        max_new_tokens: 4096,
-      });
-      modifyAiResponse.val(rawRes);
-      const cleaned = extractAndCleanJson(rawRes);
-      if (!cleaned) throw new Error('无法提取JSON');
-      const updated = JSON.parse(cleaned);
-      let newEntries = [];
-      if (uid) {
-        const idx = entries.findIndex(e => e.uid == uid);
-        entries[idx] = { ...entries[idx], ...updated, uid: entries[idx].uid, type: entries[idx].type };
-        newEntries = entries;
-      } else {
-        if (!Array.isArray(updated)) throw new Error('返回的不是数组');
-        newEntries = updated;
-      }
-      await setLorebookEntries(book, newEntries);
-      alert('更新成功！');
-    } catch (e) {
-      alert(`失败: ${e.message}`);
-    } finally {
-      modifySubmitBtn.prop('disabled', false);
-    }
-  }
-
-  // --- 10. 世界书同步器 (我们的核心逻辑) ---
   async function populateSyncWorldbooks() {
     try {
       const books = await getAllLorebooks();
@@ -842,7 +753,7 @@ jQuery(async () => {
     }
     try {
         if (!tavernHelperApi) tavernHelperApi = await waitForTavernHelper();
-        const messages = await tavernHelperApi.getChatMessages({ amount: 1 });
+        const messages = await tavernHelperApi.getChatMessages(-1);
         if (!messages || messages.length === 0) {
             toastr.warning('未找到最新消息');
             return null;
@@ -1059,13 +970,11 @@ jQuery(async () => {
     }
   }
 
-  // --- 11. 初始化 ---
   async function init() {
     try {
       const html = await $.get(`/${extensionFolderPath}/panel.html`);
       $('body').append(html);
 
-      // DOM 引用
       loader = $('#wb-sync-loader');
       mainView = $('#wb-sync-main-view');
       selectView = $('#wb-sync-select-view');
@@ -1079,6 +988,7 @@ jQuery(async () => {
       scriptSyncView = $('#wb-sync-script-sync-view');
       createRegexView = $('#wb-sync-create-regex-view');
       createScriptView = $('#wb-sync-create-script-view');
+      settingsView = $('#wb-sync-settings-view');
 
       bookList = $('#wb-sync-book-list');
       presetListContainer = $('#wb-sync-preset-list-container');
@@ -1090,10 +1000,7 @@ jQuery(async () => {
 
       modifyWbSelect = $('#wb-sync-worldbook-select');
       modifyEntrySelect = $('#wb-sync-entry-select');
-      modifyUserPrompt = $('#wb-sync-user-prompt');
-      modifyAiResponse = $('#wb-sync-ai-response');
       modifyContent = $('#wb-sync-selected-entry-content');
-      modifySubmitBtn = $('#wb-sync-submit-modification-btn');
 
       transSourceSelect = $('#wb-sync-source-worldbook-select');
       transTargetSelect = $('#wb-sync-target-worldbook-select');
@@ -1103,7 +1010,6 @@ jQuery(async () => {
       $cardsContainer = $('#wb-sync-cards-container');
       $targetWbSelect = $('#wb-sync-target-wb');
 
-      // 绑定事件
       $('#wb-sync-popup-close-button').on('click touchend', closePopup);
       $('#wb-sync-popup-back-btn').on('click touchend', showMainView);
       overlay.on('click', function (e) {
@@ -1111,7 +1017,6 @@ jQuery(async () => {
       });
       $('#wb-sync-popup').on('click', e => e.stopPropagation());
 
-      // 卡片折叠逻辑 (使用事件委托确保动态内容也能生效)
       $('#wb-sync-popup').on('click', '.wb-sync-section-header:has(.wb-sync-collapse-icon)', function () {
         const $content = $(this).closest('.wb-sync-section').find('.wb-sync-section-content');
         const $icon = $(this).find('.wb-sync-collapse-icon');
@@ -1124,7 +1029,6 @@ jQuery(async () => {
         }
       });
 
-      // 主菜单按钮事件
       $('#wb-sync-select-book-btn').on('click', () => showSubView('wb-sync-select-view'));
       $('#wb-sync-load-preset-btn').on('click', () => presetListContainer.slideToggle());
       $('#wb-sync-goto-delete-btn').on('click', () => showSubView('wb-sync-delete-view'));
@@ -1136,6 +1040,59 @@ jQuery(async () => {
       $('#wb-sync-goto-script-sync-btn').on('click', () => showSubView('wb-sync-script-sync-view'));
       $('#wb-sync-goto-create-regex-btn').on('click', () => showSubView('wb-sync-create-regex-view'));
       $('#wb-sync-goto-create-script-btn').on('click', () => showSubView('wb-sync-create-script-view'));
+      $('#wb-sync-goto-settings-btn').on('click', () => showSubView('wb-sync-settings-view'));
+
+      // 设置页面逻辑
+      const $showFloatingBtn = $('#wb-sync-setting-show-floating-btn');
+      const $showMagicWandBtn = $('#wb-sync-setting-show-magic-wand-btn');
+      const $showQrBtn = $('#wb-sync-setting-show-qr-btn');
+
+      function loadSettings() {
+        const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)) || {};
+        $showFloatingBtn.prop('checked', settings.showFloatingBtn !== false);
+        $showMagicWandBtn.prop('checked', settings.showMagicWandBtn !== false);
+        $showQrBtn.prop('checked', settings.showQrBtn !== false);
+        applySettings(settings);
+      }
+
+      function saveSettings() {
+        const settings = {
+          showFloatingBtn: $showFloatingBtn.is(':checked'),
+          showMagicWandBtn: $showMagicWandBtn.is(':checked'),
+          showQrBtn: $showQrBtn.is(':checked'),
+        };
+
+        if (!settings.showFloatingBtn && !settings.showMagicWandBtn && !settings.showQrBtn) {
+          toastr.warning('至少需要保留一个插件入口！');
+          const lastChecked = $(this).data('last-checked');
+          if (lastChecked) {
+            $(this).prop('checked', true);
+          }
+          return;
+        }
+
+        localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(settings));
+        applySettings(settings);
+        toastr.success('设置已保存!');
+      }
+
+      function applySettings(settings) {
+        $('#wb-sync-floating-btn').toggle(settings.showFloatingBtn !== false);
+        $('#wb-sync-magic-wand-item').toggle(settings.showMagicWandBtn !== false);
+        $('#wb-sync-qr-menu-item').toggle(settings.showQrBtn !== false);
+      }
+
+      $showFloatingBtn.on('mousedown', function() {
+        $(this).data('last-checked', $(this).is(':checked'));
+      }).on('change', saveSettings);
+      $showMagicWandBtn.on('mousedown', function() {
+        $(this).data('last-checked', $(this).is(':checked'));
+      }).on('change', saveSettings);
+      $showQrBtn.on('mousedown', function() {
+        $(this).data('last-checked', $(this).is(':checked'));
+      }).on('change', saveSettings);
+
+      loadSettings();
 
       $('#wb-sync-duplicate-submit-btn').on('click', handleDuplicateWorldbook);
       $('#wb-sync-rename-submit-btn').on('click', handleRenameWorldbook);
@@ -1176,7 +1133,6 @@ jQuery(async () => {
         showMainView();
       });
 
-      // 删除视图事件 (事件委托)
       worldbookListContainer.on('click', '.wb-sync-book-button', function () {
           $(this).toggleClass('selected');
           loadEntriesForSelectedBooks();
@@ -1190,11 +1146,9 @@ jQuery(async () => {
       $('#wb-sync-delete-worldbook-btn').on('click', handleDeleteWorldbooks);
       $('#wb-sync-delete-entry-btn').on('click', handleDeleteEntries);
 
-      // 修改视图事件
       modifyWbSelect.on('change', populateModifyEntrySelect);
       modifyEntrySelect.on('change', handleModifyEntryChange);
       $('#wb-sync-save-manual-changes-btn').on('click', handleManualSave);
-      modifySubmitBtn.on('click', handleSubmitModification);
 
       $('#wb-sync-mod-position').on('change', function () {
         const val = $(this).val();
@@ -1215,7 +1169,7 @@ jQuery(async () => {
         $(`.wb-sync-${prefix}-placement-cb:checked`).each(function () {
           placementInts.push(parseInt($(this).val()));
         });
-        if (placementInts.length === 0) placementInts.push(2); // Default to AI Output if none selected
+        if (placementInts.length === 0) placementInts.push(2);
 
         const isDisabled = $(`#wb-sync-${prefix}-disabled`).is(':checked');
         const runOnEdit = $(`#wb-sync-${prefix}-run-on-edit`).is(':checked');
@@ -1370,7 +1324,6 @@ jQuery(async () => {
         toastr.success('下载成功！');
       });
 
-      // 导入正则脚本 (子页面)
       $('#wb-sync-cr-load-btn').on('click', () => {
         $('#wb-sync-cr-file-input').click();
       });
@@ -1384,16 +1337,13 @@ jQuery(async () => {
           try {
             const data = JSON.parse(e.target.result);
 
-            // 填充 UI
             $('#wb-sync-cr-script-name').val(data.scriptName || data.script_name || '');
             $('#wb-sync-cr-find-regex').val(data.findRegex || data.find_regex || '');
 
-            // 提取内容 (去除 ```html 包装)
             let content = data.replaceString || data.replace_string || '';
             content = content.replace(/^```(?:html)?\n?/i, '').replace(/\n?```$/i, '');
             $('#wb-sync-cr-content').val(content);
 
-            // 填充修剪掉
             let trimStrings = '';
             if (Array.isArray(data.trimStrings)) {
               trimStrings = data.trimStrings.join('\n');
@@ -1402,7 +1352,6 @@ jQuery(async () => {
             }
             $('#wb-sync-cr-trim-strings').val(trimStrings);
 
-            // 填充作用范围
             $('.wb-sync-cr-placement-cb').prop('checked', false);
             let placements = data.placement || [];
             if (data.source) {
@@ -1416,12 +1365,10 @@ jQuery(async () => {
               $(`.wb-sync-cr-placement-cb[value="${val}"]`).prop('checked', true);
             });
 
-            // 其他选项
             $('#wb-sync-cr-disabled').prop('checked', data.disabled || data.enabled === false);
             $('#wb-sync-cr-run-on-edit').prop('checked', data.runOnEdit || data.run_on_edit || false);
             $('#wb-sync-cr-substitute-regex').val(data.substituteRegex || 0);
 
-            // 短暂 & 深度
             $('#wb-sync-cr-markdown-only').prop(
               'checked',
               data.markdownOnly || (data.destination && data.destination.display) || false,
@@ -1437,13 +1384,11 @@ jQuery(async () => {
           } catch (err) {
             toastr.error('解析 JSON 文件失败: ' + err.message);
           }
-          // 清空 input 以便下次可以选择同一个文件
           $('#wb-sync-cr-file-input').val('');
         };
         reader.readAsText(file);
       });
 
-      // 主菜单 - 导入正则脚本
       $('#wb-sync-main-import-regex-btn').on('click', () => {
         const isCharacterSelected = SillyTavern.getContext().characterId !== undefined;
         if (isCharacterSelected) {
@@ -1478,8 +1423,7 @@ jQuery(async () => {
             const data = JSON.parse(e.target.result);
             if (!window.TavernHelper) throw new Error('TavernHelper 未加载');
 
-            // 确保数据格式正确 (如果是旧格式，可能需要转换，这里假设导入的是标准格式)
-            const tavernRegex = data.id ? data : convertToTavernRegex(data); // 简单判断
+            const tavernRegex = data.id ? data : convertToTavernRegex(data);
 
             let targetOpt = { type: 'global' };
             if (currentRegexImportTarget === 'preset') targetOpt = { type: 'preset', name: 'in_use' };
@@ -1501,7 +1445,6 @@ jQuery(async () => {
         reader.readAsText(file);
       });
 
-      // 脚本同步器事件
       $('#wb-sync-ss-extract-btn').on('click', async () => {
         const startTag = $('#wb-sync-ss-tag-start').val();
         const endTag = $('#wb-sync-ss-tag-end').val();
@@ -1613,7 +1556,6 @@ jQuery(async () => {
         toastr.success('下载成功！');
       });
 
-      // 前端同步器事件
       $('#wb-sync-fe-extract-btn').on('click', async () => {
         const startTag = $('#wb-sync-fe-tag-start').val();
         const endTag = $('#wb-sync-fe-tag-end').val();
@@ -1633,7 +1575,6 @@ jQuery(async () => {
         let htmlContent = $('#wb-sync-fe-content').val();
         if (!htmlContent) return toastr.warning('没有可渲染的内容');
 
-        // 去除可能存在的 markdown 代码块标记
         htmlContent = htmlContent.replace(/^```(?:html)?\n?/i, '').replace(/\n?```$/i, '');
 
         const iframe = $('<iframe>', {
@@ -1714,7 +1655,6 @@ jQuery(async () => {
         toastr.success('下载成功！');
       });
 
-      // 创建酒馆助手脚本事件
       function getScriptObjFromUI() {
         const content = $('#wb-sync-cs-content').val();
         if (!content) return null;
@@ -1814,7 +1754,6 @@ jQuery(async () => {
         toastr.success('下载成功！');
       });
 
-      // 导入酒馆助手脚本 (子页面)
       $('#wb-sync-cs-load-btn').on('click', () => {
         $('#wb-sync-cs-file-input').click();
       });
@@ -1828,7 +1767,6 @@ jQuery(async () => {
           try {
             const data = JSON.parse(e.target.result);
 
-            // 填充 UI
             $('#wb-sync-cs-script-name').val(data.name || '');
             $('#wb-sync-cs-content').val(data.content || '');
             $('#wb-sync-cs-disabled').prop('checked', data.enabled === false);
@@ -1837,13 +1775,11 @@ jQuery(async () => {
           } catch (err) {
             toastr.error('解析 JSON 文件失败: ' + err.message);
           }
-          // 清空 input 以便下次可以选择同一个文件
           $('#wb-sync-cs-file-input').val('');
         };
         reader.readAsText(file);
       });
 
-      // 主菜单 - 导入酒馆助手脚本
       $('#wb-sync-main-import-script-btn').on('click', () => {
         const isCharacterSelected = SillyTavern.getContext().characterId !== undefined;
         if (isCharacterSelected) {
@@ -1878,7 +1814,6 @@ jQuery(async () => {
             const data = JSON.parse(e.target.result);
             if (!window.TavernHelper) throw new Error('TavernHelper 未加载');
 
-            // 确保数据格式正确
             const scriptObj =
               data.type === 'script'
                 ? data
@@ -1919,17 +1854,14 @@ jQuery(async () => {
         reader.readAsText(file);
       });
 
-      // 同步器事件
       const $tagStart = $('#wb-sync-tag-start');
       const $tagEnd = $('#wb-sync-tag-end');
 
-      // 恢复保存的标签
       const savedTagStart = localStorage.getItem(STORAGE_KEY_TAG_START);
       const savedTagEnd = localStorage.getItem(STORAGE_KEY_TAG_END);
       if (savedTagStart) $tagStart.val(savedTagStart);
       if (savedTagEnd) $tagEnd.val(savedTagEnd);
 
-      // 监听标签变化并保存
       $tagStart.on('change input', function () {
         localStorage.setItem(STORAGE_KEY_TAG_START, $(this).val());
       });
@@ -1937,13 +1869,11 @@ jQuery(async () => {
         localStorage.setItem(STORAGE_KEY_TAG_END, $(this).val());
       });
 
-      // 世界书选择视图 (事件委托)
       bookList.on('click', '.wb-sync-book-button', async function () {
         const $this = $(this);
         const bookFilename = $this.data('book-filename');
         const isSelected = $this.hasClass('selected');
 
-        // 立即更新UI，提供即时反馈
         $this.toggleClass('selected');
 
         try {
@@ -1958,13 +1888,11 @@ jQuery(async () => {
 
           await setLorebookSettings({ selected_global_lorebooks: enabled });
         } catch (e) {
-          // 如果API调用失败，则恢复UI状态
           $this.toggleClass('selected');
           toastr.error('更新世界书状态失败');
         }
       });
 
-      // 同步器事件 (事件委托)
       $cardsContainer.on('change', 'input, select, textarea', function() {
           const $target = $(this);
           const $card = $target.closest('.wb-sync-card');
@@ -1999,7 +1927,7 @@ jQuery(async () => {
           const $card = $(this).closest('.wb-sync-card');
           const id = $card.data('id');
           extractedCards = extractedCards.filter(c => c.id !== id);
-          renderCards(); // Re-render after deletion
+          renderCards();
       });
 
       $('#wb-sync-extract-btn').on('click', extractMessages);
@@ -2020,6 +1948,72 @@ jQuery(async () => {
       });
 
       initFloatingButton();
+
+      if (window.ST_API && window.ST_API.ui && window.ST_API.ui.registerExtensionsMenuItem) {
+          window.ST_API.ui.registerExtensionsMenuItem({
+              id: 'wb-sync-magic-wand-item',
+              label: '世界书同步器',
+              icon: 'fa-solid fa-book-atlas',
+              onClick: () => {
+                  showPopup();
+              }
+          });
+      } else {
+          const menuId = 'wb-sync-extension-menu-item';
+          if ($(`#${menuId}`).length === 0) {
+              const menuItemHtml = `
+                  <div id="${menuId}" class="list-group-item flex-container flexGap5" title="打开世界书同步器">
+                      <i class="fa-solid fa-book-atlas fa-fw"></i>
+                      <span>世界书同步器</span>
+                  </div>
+              `;
+              $('#extensionsMenu').append(menuItemHtml);
+              $(`#${menuId}`).on('click', () => {
+                  showPopup();
+              });
+          }
+      }
+
+      const qrMenuId = 'wb-sync-qr-menu-item';
+      let qrRetryCount = 0;
+      const qrInterval = setInterval(() => {
+          if ($(`#${qrMenuId}`).length > 0) {
+              clearInterval(qrInterval);
+              return;
+          }
+
+          const $qrBar = $('#quick-reply-btns, .qr--button-row, #qr--button-row, #script-buttons-container, .script-buttons-container').first();
+
+          if ($qrBar.length > 0) {
+              const qrItemHtml = `
+                  <div id="${qrMenuId}" class="menu_button qr--button" title="打开世界书同步器" style="cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; margin-right: 5px; background: rgba(255,255,255,0.1); border-radius: 5px;">
+                      <i class="fa-solid fa-book-atlas"></i>
+                  </div>
+              `;
+              $qrBar.append(qrItemHtml);
+              $(`#${qrMenuId}`).on('click', () => {
+                  showPopup();
+              });
+              clearInterval(qrInterval);
+          } else {
+              qrRetryCount++;
+              if (qrRetryCount > 20) {
+                  clearInterval(qrInterval);
+                  const $sendTextarea = $('#send_textarea, #user_input').first();
+                  if ($sendTextarea.length > 0) {
+                       const qrItemHtml = `
+                          <div id="${qrMenuId}" class="menu_button" title="打开世界书同步器" style="cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; margin-bottom: 5px; background: rgba(255,255,255,0.1); border-radius: 5px;">
+                              <i class="fa-solid fa-book-atlas"></i>
+                          </div>
+                      `;
+                      $sendTextarea.parent().prepend(qrItemHtml);
+                      $(`#${qrMenuId}`).on('click', () => {
+                          showPopup();
+                      });
+                  }
+              }
+          }
+      }, 500);
 
       showMainView();
       console.log(`[${MODULE_NAME}] 初始化完成`);
