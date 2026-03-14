@@ -1055,7 +1055,8 @@ jQuery(async () => {
         applySettings(settings);
       }
 
-      function saveSettings() {
+      function saveSettings(event) {
+        const $changedCheckbox = $(event.target);
         const settings = {
           showFloatingBtn: $showFloatingBtn.is(':checked'),
           showMagicWandBtn: $showMagicWandBtn.is(':checked'),
@@ -1064,10 +1065,7 @@ jQuery(async () => {
 
         if (!settings.showFloatingBtn && !settings.showMagicWandBtn && !settings.showQrBtn) {
           toastr.warning('至少需要保留一个插件入口！');
-          const lastChecked = $(this).data('last-checked');
-          if (lastChecked) {
-            $(this).prop('checked', true);
-          }
+          $changedCheckbox.prop('checked', true);
           return;
         }
 
@@ -1078,7 +1076,27 @@ jQuery(async () => {
 
       function applySettings(settings) {
         $('#wb-sync-floating-btn').toggle(settings.showFloatingBtn !== false);
-        $('#wb-sync-magic-wand-item').toggle(settings.showMagicWandBtn !== false);
+
+        const menuId = 'wb-sync-extension-menu-item';
+        if (settings.showMagicWandBtn !== false) {
+            if ($(`#${menuId}`).length === 0) {
+                const menuItemHtml = `
+                    <div id="${menuId}" class="list-group-item flex-container flexGap5" title="打开世界书同步器">
+                        <i class="fa-solid fa-book-atlas fa-fw"></i>
+                        <span>世界书同步器</span>
+                    </div>
+                `;
+                $('#extensionsMenu').append(menuItemHtml);
+                $(`#${menuId}`).on('click', () => {
+                    showPopup();
+                });
+            } else {
+                $(`#${menuId}`).show();
+            }
+        } else {
+            $(`#${menuId}`).hide();
+        }
+
         $('#wb-sync-qr-menu-item').toggle(settings.showQrBtn !== false);
       }
 
@@ -1948,31 +1966,6 @@ jQuery(async () => {
       });
 
       initFloatingButton();
-
-      if (window.ST_API && window.ST_API.ui && window.ST_API.ui.registerExtensionsMenuItem) {
-          window.ST_API.ui.registerExtensionsMenuItem({
-              id: 'wb-sync-magic-wand-item',
-              label: '世界书同步器',
-              icon: 'fa-solid fa-book-atlas',
-              onClick: () => {
-                  showPopup();
-              }
-          });
-      } else {
-          const menuId = 'wb-sync-extension-menu-item';
-          if ($(`#${menuId}`).length === 0) {
-              const menuItemHtml = `
-                  <div id="${menuId}" class="list-group-item flex-container flexGap5" title="打开世界书同步器">
-                      <i class="fa-solid fa-book-atlas fa-fw"></i>
-                      <span>世界书同步器</span>
-                  </div>
-              `;
-              $('#extensionsMenu').append(menuItemHtml);
-              $(`#${menuId}`).on('click', () => {
-                  showPopup();
-              });
-          }
-      }
 
       const qrMenuId = 'wb-sync-qr-menu-item';
       let qrRetryCount = 0;
