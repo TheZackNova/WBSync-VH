@@ -353,144 +353,19 @@
                 <span class="wb-sync-label">结束标签:</span>
                 <input type="text" id="wb-sync-fe-tag-end" class="wb-sync-input" value="```" style="width: 80px" />
               </div>
+              <div class="wb-sync-group">
+                <span class="wb-sync-label">指定楼层:</span>
+                <input type="text" id="wb-sync-fe-floor" class="wb-sync-input" placeholder="如: 1,5,8" style="width: 80px" />
+              </div>
               <button class="wb-sync-button" id="wb-sync-fe-extract-btn">
                 <i class="fa-solid fa-magnifying-glass"></i> 提取最新消息
               </button>
             </div>
           </div>
 
-          <div class="wb-sync-controls-box" style="border-style: dashed">
-            <span class="wb-sync-batch-title">正则脚本设置:</span>
-            <div class="wb-sync-row">
-              <div class="wb-sync-group" style="flex: 1">
-                <span class="wb-sync-label">脚本名称:</span>
-                <input
-                  type="text"
-                  id="wb-sync-fe-script-name"
-                  class="wb-sync-input"
-                  style="width: 100%"
-                  value="新前端脚本"
-                />
-              </div>
-              <div class="wb-sync-group" style="flex: 1">
-                <span class="wb-sync-label">查找正则:</span>
-                <input
-                  type="text"
-                  id="wb-sync-fe-find-regex"
-                  class="wb-sync-input"
-                  style="width: 100%"
-                  value="<打开面板>"
-                />
-              </div>
-            </div>
-            <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px">
-              <div style="display: flex; flex-direction: column; gap: 5px">
-                <span class="wb-sync-label" style="font-weight: bold">作用范围</span>
-                <label class="wb-sync-checkbox-label"
-                  ><input type="checkbox" class="wb-sync-fe-placement-cb" value="1" /> 用户输入</label
-                >
-                <label class="wb-sync-checkbox-label"
-                  ><input type="checkbox" class="wb-sync-fe-placement-cb" value="2" checked /> AI输出</label
-                >
-                <label class="wb-sync-checkbox-label"
-                  ><input type="checkbox" class="wb-sync-fe-placement-cb" value="4" /> 快捷命令</label
-                >
-                <label class="wb-sync-checkbox-label"
-                  ><input type="checkbox" class="wb-sync-fe-placement-cb" value="3" /> 世界信息</label
-                >
-                <label class="wb-sync-checkbox-label"
-                  ><input type="checkbox" class="wb-sync-fe-placement-cb" value="5" /> 推理</label
-                >
-              </div>
-
-              <div style="display: flex; flex-direction: column; gap: 5px">
-                <span class="wb-sync-label" style="font-weight: bold">其他选项</span>
-                <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-fe-disabled" /> 已禁用</label>
-                <label class="wb-sync-checkbox-label"
-                  ><input type="checkbox" id="wb-sync-fe-run-on-edit" checked /> 在编辑时运行</label
-                >
-
-                <span class="wb-sync-label" style="font-weight: bold; margin-top: 5px">正则表达式查找时的宏</span>
-                <select id="wb-sync-fe-substitute-regex" class="wb-sync-select" style="width: 120px">
-                  <option value="0" selected>不替换</option>
-                  <option value="1">替换</option>
-                </select>
-              </div>
-
-              <div style="display: flex; flex-direction: column; gap: 5px">
-                <span class="wb-sync-label" style="font-weight: bold">短暂</span>
-                <label class="wb-sync-checkbox-label"
-                  ><input type="checkbox" id="wb-sync-fe-markdown-only" checked /> 仅格式显示</label
-                >
-                <label class="wb-sync-checkbox-label"
-                  ><input type="checkbox" id="wb-sync-fe-prompt-only" /> 仅格式提示词</label
-                >
-
-                <div style="display: flex; gap: 10px; margin-top: 5px">
-                  <div style="display: flex; flex-direction: column; gap: 2px">
-                    <span class="wb-sync-label">最小深度</span>
-                    <input
-                      type="number"
-                      id="wb-sync-fe-min-depth"
-                      class="wb-sync-input"
-                      style="width: 70px"
-                      placeholder="无限"
-                    />
-                  </div>
-                  <div style="display: flex; flex-direction: column; gap: 2px">
-                    <span class="wb-sync-label">最大深度</span>
-                    <input
-                      type="number"
-                      id="wb-sync-fe-max-depth"
-                      class="wb-sync-input"
-                      style="width: 70px"
-                      placeholder="无限"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div id="wb-sync-fe-cards-container" style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
+            <div class="wb-sync-empty-msg">点击上方“提取最新消息”按钮，从聊天记录中提取前端代码。</div>
           </div>
-
-          <div class="wb-sync-controls-box" style="flex-grow: 1; display: flex; flex-direction: column">
-            <span class="wb-sync-label">修剪掉:</span>
-            <textarea
-              id="wb-sync-fe-trim-strings"
-              class="wb-sync-textarea"
-              style="min-height: 60px; margin-bottom: 10px"
-              placeholder="在替换之前全局修剪正则表达式匹配中任何不需要的部分。用回车键分隔每个元素。"
-            ></textarea>
-
-            <span class="wb-sync-label">替换为 (提取的 HTML 代码):</span>
-            <textarea
-              id="wb-sync-fe-content"
-              class="wb-sync-textarea"
-              style="flex-grow: 1; font-family: monospace"
-            ></textarea>
-
-            <div class="wb-sync-actions" style="justify-content: flex-end; margin-top: 10px">
-              <button id="wb-sync-fe-import-global-btn" class="wb-sync-button">导入至全局正则</button>
-              <button id="wb-sync-fe-import-preset-btn" class="wb-sync-button">导入至预设正则</button>
-              <button id="wb-sync-fe-import-character-btn" class="wb-sync-button">导入至局部正则</button>
-              <button id="wb-sync-fe-render-btn" class="wb-sync-button">👁️ 渲染前端</button>
-              <button id="wb-sync-fe-download-btn" class="wb-sync-button wb-sync-btn-primary">⬇️ 下载成正则脚本</button>
-            </div>
-          </div>
-
-          <div
-            id="wb-sync-fe-preview-container"
-            style="
-              display: none;
-              margin-top: 15px;
-              border: 1px solid var(--wb-sync-border);
-              border-radius: 5px;
-              padding: 10px;
-              background: #fff;
-              color: #000;
-              overflow: auto;
-              min-height: 300px;
-            "
-          ></div>
         </div>
       </div>
 
@@ -521,74 +396,18 @@
                 <span class="wb-sync-label">结束标签:</span>
                 <input type="text" id="wb-sync-ss-tag-end" class="wb-sync-input" value="```" style="width: 80px" />
               </div>
+              <div class="wb-sync-group">
+                <span class="wb-sync-label">指定楼层:</span>
+                <input type="text" id="wb-sync-ss-floor" class="wb-sync-input" placeholder="如: 1,5,8" style="width: 80px" />
+              </div>
               <button class="wb-sync-button" id="wb-sync-ss-extract-btn">
                 <i class="fa-solid fa-magnifying-glass"></i> 提取最新消息
               </button>
             </div>
           </div>
 
-          <div class="wb-sync-controls-box" style="border-style: dashed">
-            <div class="wb-sync-row">
-              <div class="wb-sync-group" style="flex: 1">
-                <span class="wb-sync-label">脚本名称:</span>
-                <input
-                  type="text"
-                  id="wb-sync-ss-script-name"
-                  class="wb-sync-input"
-                  style="width: 100%"
-                  value="新助手脚本"
-                />
-              </div>
-            </div>
-            <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px">
-              <div style="display: flex; flex-direction: column; gap: 5px">
-                <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-ss-disabled" /> 已禁用</label>
-              </div>
-            </div>
-          </div>
-
-          <div class="wb-sync-controls-box" style="flex-grow: 1; display: flex; flex-direction: column">
-            <span class="wb-sync-label">提取的脚本内容 (JS/TS):</span>
-            <textarea
-              id="wb-sync-ss-content"
-              class="wb-sync-textarea"
-              style="flex-grow: 1; font-family: monospace"
-            ></textarea>
-
-            <span class="wb-sync-label" style="margin-top: 10px">作者备注:</span>
-            <textarea
-              id="wb-sync-ss-info"
-              class="wb-sync-textarea"
-              style="min-height: 60px"
-              placeholder="脚本备注，例如作者名、版本和注意事项等，支持简单的 markdown 和 html"
-            ></textarea>
-
-            <div class="wb-sync-actions" style="justify-content: flex-end; margin-top: 10px; flex-wrap: wrap">
-              <button
-                id="wb-sync-ss-import-global-script-btn"
-                class="wb-sync-button"
-                style="background-color: var(--wb-sync-primary); color: #000; opacity: 1"
-              >
-                导入至全局脚本库
-              </button>
-              <button
-                id="wb-sync-ss-import-preset-script-btn"
-                class="wb-sync-button"
-                style="background-color: var(--wb-sync-primary); color: #000; opacity: 1"
-              >
-                导入至预设脚本库
-              </button>
-              <button
-                id="wb-sync-ss-import-character-script-btn"
-                class="wb-sync-button"
-                style="background-color: var(--wb-sync-primary); color: #000; opacity: 1"
-              >
-                导入至角色脚本库
-              </button>
-              <button id="wb-sync-ss-download-btn" class="wb-sync-button wb-sync-btn-primary" style="opacity: 1">
-                ⬇️ 下载脚本
-              </button>
-            </div>
+          <div id="wb-sync-ss-cards-container" style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
+            <div class="wb-sync-empty-msg">点击上方“提取最新消息”按钮，从聊天记录中提取脚本代码。</div>
           </div>
         </div>
       </div>
@@ -622,6 +441,10 @@
               <div class="wb-sync-group">
                 <span class="wb-sync-label">结束标签:</span>
                 <input type="text" id="wb-sync-tag-end" class="wb-sync-input" value="" style="width: 80px" />
+              </div>
+              <div class="wb-sync-group">
+                <span class="wb-sync-label">指定楼层:</span>
+                <input type="text" id="wb-sync-floor" class="wb-sync-input" placeholder="如: 1,5,8" style="width: 80px" />
               </div>
               <button class="wb-sync-button" id="wb-sync-extract-btn">
                 <i class="fa-solid fa-magnifying-glass"></i> 提取最新消息
@@ -1033,6 +856,12 @@
                 <label class="wb-sync-checkbox-label">
                     <input type="checkbox" id="wb-sync-setting-show-qr-btn" />
                     在快捷回复栏中显示入口
+                </label>
+            </div>
+            <div class="wb-sync-row">
+                <label class="wb-sync-checkbox-label">
+                    <input type="checkbox" id="wb-sync-setting-default-collapse" />
+                    提取卡片时默认折叠内容
                 </label>
             </div>
           </div>
