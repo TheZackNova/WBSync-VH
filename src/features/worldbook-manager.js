@@ -1,6 +1,5 @@
 import { getAllLorebooks, getLorebookEntries, setLorebookEntries, getLorebookSettings, getTavernHelper } from '../api.js';
 import { escapeHtml } from '../utils.js';
-import { createDraggableList } from './draggable.js';
 import { isManageWbCollapsed } from './settings.js';
 
 let $manageWbList;
@@ -9,8 +8,6 @@ let $manageWbEditPanel;
 let currentEntries = [];
 let currentBookName = '';
 let renderDebounceTimer = null;
-let saveOrderDebounceTimer = null;
-let draggableList = null;
 
 export function initManageWorldbook() {
   $manageWbList = $('#wb-sync-manage-wb-list');
@@ -80,16 +77,6 @@ export function initManageWorldbook() {
   $('#wb-sync-manage-wb-entry-position').on('change', function() {
     const val = $(this).val();
     $('#wb-sync-manage-wb-entry-depth-container').css('display', val.startsWith('at_depth') ? 'flex' : 'none');
-  });
-
-  draggableList = createDraggableList({
-    $container: $manageWbEntriesList,
-    itemSelector: '.wb-sync-manage-entry-item',
-    getItems: () => currentEntries,
-    setItems: (items) => {
-      currentEntries = items;
-    },
-    onReorder: updateEntriesOrder,
   });
 }
 
@@ -163,14 +150,37 @@ async function loadWorldbookEntries(bookName) {
 
   try {
     const entries = await getLorebookEntries(bookName);
-    currentEntries = entries;
+    const savedOrder = JSON.parse(localStorage.getItem(`wb-sync-entries-order-${bookName}`) || '[]');
+    
+    if (savedOrder.length > 0) {
+      const entryMap = new Map();
+      entries.forEach(entry => entryMap.set(String(entry.uid), entry));
+      const sortedEntries = [];
+      savedOrder.forEach(uid => {
+        const entry = entryMap.get(String(uid));
+        if (entry) sortedEntries.push(entry);
+      });
+      entries.forEach(entry => {
+        if (!sortedEntries.find(e => e.uid === entry.uid)) {
+          sortedEntries.push(entry);
+        }
+      });
+      currentEntries = sortedEntries;
+    } else {
+      entries.sort((a, b) => {
+        const orderA = a.position?.order ?? a.order ?? 100;
+        const orderB = b.position?.order ?? b.order ?? 100;
+        return orderA - orderB;
+      });
+      currentEntries = entries;
+    }
 
-    if (entries.length === 0) {
+    if (currentEntries.length === 0) {
       $manageWbEntriesList.html('<div class="wb-sync-empty-msg">该世界书没有条目。</div>');
       return;
     }
 
-    renderEntriesList(entries);
+    renderEntriesList(currentEntries);
   } catch (e) {
     $manageWbEntriesList.html(`<div class="wb-sync-empty-msg" style="color:red;">加载失败：${e.message}</div>`);
   }
@@ -202,7 +212,6 @@ function renderEntriesList(entries) {
     const div = document.createElement('div');
     div.className = 'wb-sync-manage-entry-item';
     div.setAttribute('data-uid', entry.uid);
-    div.setAttribute('draggable', 'true');
     div.innerHTML = `
       <div class="wb-sync-manage-entry-info">
         <input type="checkbox" class="wb-sync-manage-entry-checkbox" data-uid="${entry.uid}">
@@ -458,27 +467,6 @@ function toggleSelectAllEntries() {
   checkboxes.prop('checked', !allChecked);
 }
 
-function updateEntriesOrder(entries) {
-  if (saveOrderDebounceTimer) clearTimeout(saveOrderDebounceTimer);
-  
-  saveOrderDebounceTimer = setTimeout(async () => {
-    try {
-      entries.forEach((entry, index) => {
-        entry.position.order = (index + 1) * 100;
-        entry.order = entry.position.order;
-      });
-      
-      await setLorebookEntries(currentBookName, entries);
-      renderEntriesList(entries);
-      toastr.success('排序已更新');
-    } catch (e) {
-      toastr.error('更新排序失败：' + e.message);
-    }
-  }, 300);
-}
-
 export function cleanup() {
   if (renderDebounceTimer) clearTimeout(renderDebounceTimer);
-  if (saveOrderDebounceTimer) clearTimeout(saveOrderDebounceTimer);
-  if (draggableList) draggableList.destroy();
 }

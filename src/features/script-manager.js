@@ -1,5 +1,4 @@
 import { escapeHtml } from '../utils.js';
-import { createDraggableList } from './draggable.js';
 import { isManageScriptCollapsed } from './settings.js';
 
 let $manageScriptGlobalList;
@@ -10,8 +9,6 @@ let currentScripts = [];
 let currentScriptId = '';
 let currentScriptType = '';
 let renderDebounceTimer = null;
-let saveOrderDebounceTimer = null;
-let draggableInstances = {};
 
 export function initManageScripts() {
   $manageScriptGlobalList = $('#wb-sync-manage-script-global-list');
@@ -65,38 +62,6 @@ export function initManageScripts() {
     const type = $(this).closest('.wb-sync-manage-script-card-content').attr('id').replace('wb-sync-manage-script-', '').replace('-list', '');
     deleteScript(scriptId, type);
   });
-
-  initDraggableLists();
-}
-
-function initDraggableLists() {
-  const configs = [
-    {
-      $container: $manageScriptGlobalList,
-      type: 'global',
-      getItems: () => window.TavernHelper.getScriptTrees({ type: 'global' }) || [],
-    },
-    {
-      $container: $manageScriptPresetList,
-      type: 'preset',
-      getItems: () => window.TavernHelper.getScriptTrees({ type: 'preset' }) || [],
-    },
-    {
-      $container: $manageScriptCharacterList,
-      type: 'character',
-      getItems: () => window.TavernHelper.getScriptTrees({ type: 'character' }) || [],
-    },
-  ];
-
-  configs.forEach(config => {
-    draggableInstances[config.type] = createDraggableList({
-      $container: config.$container,
-      itemSelector: '.wb-sync-manage-script-item',
-      getItems: config.getItems,
-      setItems: () => {},
-      onReorder: (items) => updateScriptsOrder(config.type, items),
-    });
-  });
 }
 
 function debouncedRender() {
@@ -125,9 +90,9 @@ export function renderManageScriptLists() {
   }
 
   try {
-    const globalScripts = window.TavernHelper.getScriptTrees({ type: 'global' }) || [];
-    const presetScripts = window.TavernHelper.getScriptTrees({ type: 'preset' }) || [];
-    const characterScripts = window.TavernHelper.getScriptTrees({ type: 'character' }) || [];
+    const globalScripts = loadScriptsWithCache('global');
+    const presetScripts = loadScriptsWithCache('preset');
+    const characterScripts = loadScriptsWithCache('character');
 
     renderScriptList($manageScriptGlobalList, globalScripts, 'global');
     renderScriptList($manageScriptPresetList, presetScripts, 'preset');
@@ -143,6 +108,37 @@ export function renderManageScriptLists() {
   }
 }
 
+function loadScriptsWithCache(type) {
+  let scripts = [];
+  if (type === 'global') {
+    scripts = window.TavernHelper.getScriptTrees({ type: 'global' }) || [];
+  } else if (type === 'preset') {
+    scripts = window.TavernHelper.getScriptTrees({ type: 'preset' }) || [];
+  } else if (type === 'character') {
+    scripts = window.TavernHelper.getScriptTrees({ type: 'character' }) || [];
+  }
+  
+  const savedOrder = JSON.parse(localStorage.getItem(`wb-sync-scripts-order-${type}`) || '[]');
+  
+  if (savedOrder.length > 0) {
+    const scriptMap = new Map();
+    scripts.forEach(script => scriptMap.set(String(script.id), script));
+    const sortedScripts = [];
+    savedOrder.forEach(id => {
+      const script = scriptMap.get(String(id));
+      if (script) sortedScripts.push(script);
+    });
+    scripts.forEach(script => {
+      if (!sortedScripts.find(s => s.id === script.id)) {
+        sortedScripts.push(script);
+      }
+    });
+    return sortedScripts;
+  } else {
+    return scripts.sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
+  }
+}
+
 function renderScriptList($container, scripts, type) {
   if (scripts.length === 0) {
     $container.html('<div class="wb-sync-empty-msg">没有脚本。</div>');
@@ -154,7 +150,6 @@ function renderScriptList($container, scripts, type) {
     const div = document.createElement('div');
     div.className = 'wb-sync-manage-script-item';
     div.setAttribute('data-script-id', script.id);
-    div.setAttribute('draggable', 'true');
     div.innerHTML = `
       <div class="wb-sync-manage-script-info">
         <input type="checkbox" class="wb-sync-manage-script-enabled" ${script.enabled !== false ? 'checked' : ''}>
@@ -268,28 +263,6 @@ async function deleteScript(scriptId, type) {
   }
 }
 
-function updateScriptsOrder(type, scripts) {
-  if (saveOrderDebounceTimer) clearTimeout(saveOrderDebounceTimer);
-  
-  saveOrderDebounceTimer = setTimeout(async () => {
-    try {
-      await window.TavernHelper.updateScriptTreesWith(() => {
-        return scripts;
-      }, { type: type });
-      
-      toastr.success('排序已更新');
-      renderManageScriptLists();
-    } catch (e) {
-      toastr.error('更新排序失败：' + e.message);
-    }
-  }, 300);
-}
-
 export function cleanup() {
   if (renderDebounceTimer) clearTimeout(renderDebounceTimer);
-  if (saveOrderDebounceTimer) clearTimeout(saveOrderDebounceTimer);
-  Object.values(draggableInstances).forEach(instance => {
-    if (instance) instance.destroy();
-  });
-  draggableInstances = {};
 }

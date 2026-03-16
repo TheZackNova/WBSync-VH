@@ -1,5 +1,4 @@
 import { escapeHtml } from '../utils.js';
-import { createDraggableList } from './draggable.js';
 import { isManageRegexCollapsed } from './settings.js';
 
 let $manageRegexGlobalList;
@@ -10,8 +9,6 @@ let currentRegexes = [];
 let currentRegexId = '';
 let currentRegexType = '';
 let renderDebounceTimer = null;
-let saveOrderDebounceTimer = null;
-let draggableInstances = {};
 
 export function initManageRegex() {
   $manageRegexGlobalList = $('#wb-sync-manage-regex-global-list');
@@ -72,38 +69,6 @@ export function initManageRegex() {
     $('#wb-sync-manage-regex-min-depth-container').css('display', val === '1' ? 'flex' : 'none');
     $('#wb-sync-manage-regex-max-depth-container').css('display', val === '1' ? 'flex' : 'none');
   });
-
-  initDraggableLists();
-}
-
-function initDraggableLists() {
-  const configs = [
-    {
-      $container: $manageRegexGlobalList,
-      type: 'global',
-      getTargetOpt: { type: 'global' },
-    },
-    {
-      $container: $manageRegexPresetList,
-      type: 'preset',
-      getTargetOpt: { type: 'preset', name: 'in_use' },
-    },
-    {
-      $container: $manageRegexCharacterList,
-      type: 'character',
-      getTargetOpt: { type: 'character', name: 'current' },
-    },
-  ];
-
-  configs.forEach(config => {
-    draggableInstances[config.type] = createDraggableList({
-      $container: config.$container,
-      itemSelector: '.wb-sync-manage-regex-item',
-      getItems: () => window.TavernHelper.getTavernRegexes(config.getTargetOpt) || [],
-      setItems: () => {},
-      onReorder: (items) => updateRegexesOrder(config.getTargetOpt, items),
-    });
-  });
 }
 
 function debouncedRender() {
@@ -132,9 +97,9 @@ export function renderManageRegexLists() {
   }
 
   try {
-    const globalRegexes = window.TavernHelper.getTavernRegexes({ type: 'global' }) || [];
-    const presetRegexes = window.TavernHelper.getTavernRegexes({ type: 'preset', name: 'in_use' }) || [];
-    const characterRegexes = window.TavernHelper.getTavernRegexes({ type: 'character', name: 'current' }) || [];
+    const globalRegexes = loadRegexsWithCache('global');
+    const presetRegexes = loadRegexsWithCache('preset');
+    const characterRegexes = loadRegexsWithCache('character');
 
     renderRegexList($manageRegexGlobalList, globalRegexes, 'global');
     renderRegexList($manageRegexPresetList, presetRegexes, 'preset');
@@ -150,6 +115,37 @@ export function renderManageRegexLists() {
   }
 }
 
+function loadRegexsWithCache(type) {
+  let regexes = [];
+  if (type === 'global') {
+    regexes = window.TavernHelper.getTavernRegexes({ type: 'global' }) || [];
+  } else if (type === 'preset') {
+    regexes = window.TavernHelper.getTavernRegexes({ type: 'preset', name: 'in_use' }) || [];
+  } else if (type === 'character') {
+    regexes = window.TavernHelper.getTavernRegexes({ type: 'character', name: 'current' }) || [];
+  }
+  
+  const savedOrder = JSON.parse(localStorage.getItem(`wb-sync-regexes-order-${type}`) || '[]');
+  
+  if (savedOrder.length > 0) {
+    const regexMap = new Map();
+    regexes.forEach(regex => regexMap.set(String(regex.id), regex));
+    const sortedRegexes = [];
+    savedOrder.forEach(id => {
+      const regex = regexMap.get(String(id));
+      if (regex) sortedRegexes.push(regex);
+    });
+    regexes.forEach(regex => {
+      if (!sortedRegexes.find(r => r.id === regex.id)) {
+        sortedRegexes.push(regex);
+      }
+    });
+    return sortedRegexes;
+  } else {
+    return regexes.sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
+  }
+}
+
 function renderRegexList($container, regexes, type) {
   if (regexes.length === 0) {
     $container.html('<div class="wb-sync-empty-msg">没有正则脚本。</div>');
@@ -161,7 +157,6 @@ function renderRegexList($container, regexes, type) {
     const div = document.createElement('div');
     div.className = 'wb-sync-manage-regex-item';
     div.setAttribute('data-regex-id', regex.id);
-    div.setAttribute('draggable', 'true');
     div.innerHTML = `
       <div class="wb-sync-manage-regex-info">
         <input type="checkbox" class="wb-sync-manage-regex-enabled" ${regex.enabled !== false ? 'checked' : ''}>
@@ -356,28 +351,6 @@ async function deleteRegex(regexId, type) {
   }
 }
 
-function updateRegexesOrder(targetOpt, regexes) {
-  if (saveOrderDebounceTimer) clearTimeout(saveOrderDebounceTimer);
-  
-  saveOrderDebounceTimer = setTimeout(async () => {
-    try {
-      await window.TavernHelper.updateTavernRegexesWith(() => {
-        return regexes;
-      }, targetOpt);
-      
-      toastr.success('排序已更新');
-      renderManageRegexLists();
-    } catch (e) {
-      toastr.error('更新排序失败：' + e.message);
-    }
-  }, 300);
-}
-
 export function cleanup() {
   if (renderDebounceTimer) clearTimeout(renderDebounceTimer);
-  if (saveOrderDebounceTimer) clearTimeout(saveOrderDebounceTimer);
-  Object.values(draggableInstances).forEach(instance => {
-    if (instance) instance.destroy();
-  });
-  draggableInstances = {};
 }
