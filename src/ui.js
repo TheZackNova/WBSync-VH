@@ -6,6 +6,9 @@ import { populateModifyWorldbookSelect } from './features/entries.js';
 import { populateTransferSelects } from './features/entries.js';
 import { populateSyncWorldbooks } from './features/sync.js';
 import { populateDuplicateSelect, populateRenameSelect, renderDeleteView } from './features/worldbook.js';
+import { renderManageWorldbookList } from './features/worldbook-manager.js';
+import { renderManageScriptLists } from './features/script-manager.js';
+import { renderManageRegexLists } from './features/regex-manager.js';
 
 export const STORAGE_KEY_LAST_VIEW = 'wb-sync-last-view';
 
@@ -27,6 +30,9 @@ export function initUIElements() {
     createRegexView: $('#wb-sync-create-regex-view'),
     createScriptView: $('#wb-sync-create-script-view'),
     settingsView: $('#wb-sync-settings-view'),
+    manageWbView: $('#wb-sync-manage-wb-view'),
+    manageScriptView: $('#wb-sync-manage-script-view'),
+    manageRegexView: $('#wb-sync-manage-regex-view'),
     overlay: $('#wb-sync-popup-overlay'),
   };
 }
@@ -68,6 +74,9 @@ export function showMainView() {
     elements.createScriptView,
     elements.scriptSyncView,
     elements.settingsView,
+    elements.manageWbView,
+    elements.manageScriptView,
+    elements.manageRegexView,
   ].forEach(v => v && v.hide());
   
   renderPresets();
@@ -83,6 +92,14 @@ export function showMainView() {
   } else {
     $('#wb-sync-main-import-script-character-btn').hide();
     $('#wb-sync-main-import-regex-character-btn').hide();
+  }
+  
+  if (isCharacterSelected) {
+    $('.wb-sync-manage-script-card-header[data-target="wb-sync-manage-script-character-list"]').closest('.wb-sync-manage-script-card').show();
+    $('.wb-sync-manage-script-card-header[data-target="wb-sync-manage-regex-character-list"]').closest('.wb-sync-manage-script-card').show();
+  } else {
+    $('.wb-sync-manage-script-card-header[data-target="wb-sync-manage-script-character-list"]').closest('.wb-sync-manage-script-card').hide();
+    $('.wb-sync-manage-script-card-header[data-target="wb-sync-manage-regex-character-list"]').closest('.wb-sync-manage-script-card').hide();
   }
 }
 
@@ -101,6 +118,9 @@ export async function showSubView(viewId) {
     elements.createScriptView,
     elements.scriptSyncView,
     elements.settingsView,
+    elements.manageWbView,
+    elements.manageScriptView,
+    elements.manageRegexView,
   ].forEach(v => v && v.hide());
 
   let title = '世界书同步器';
@@ -137,6 +157,27 @@ export async function showSubView(viewId) {
   if (viewId === 'wb-sync-create-regex-view') title = '💻 创建正则脚本';
   if (viewId === 'wb-sync-create-script-view') title = '💻 创建酒馆助手脚本';
   if (viewId === 'wb-sync-settings-view') title = '⚙️ 插件设置';
+  if (viewId === 'wb-sync-manage-wb-view') {
+    title = '📚 世界书管理';
+    renderManageWorldbookList();
+    $('#wb-sync-manage-wb-refresh-btn').show();
+  } else {
+    $('#wb-sync-manage-wb-refresh-btn').hide();
+  }
+  if (viewId === 'wb-sync-manage-script-view') {
+    title = '🤖 酒馆助手脚本管理';
+    renderManageScriptLists();
+    $('#wb-sync-manage-script-refresh-btn').show();
+  } else {
+    $('#wb-sync-manage-script-refresh-btn').hide();
+  }
+  if (viewId === 'wb-sync-manage-regex-view') {
+    title = '📋 正则脚本管理';
+    renderManageRegexLists();
+    $('#wb-sync-manage-regex-refresh-btn').show();
+  } else {
+    $('#wb-sync-manage-regex-refresh-btn').hide();
+  }
 
   $('#wb-sync-header-title').text(title);
   $('#wb-sync-popup-back-btn').show();

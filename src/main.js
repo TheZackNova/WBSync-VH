@@ -5,6 +5,9 @@ import { initSync } from "./features/sync.js";
 import { initWorldbook, handleCreateWorldbook } from "./features/worldbook.js";
 import { initPresets } from "./features/presets.js";
 import { populateSyncWorldbooks } from "./features/sync.js";
+import { initManageWorldbook, cleanup as cleanupWorldbookManager } from "./features/worldbook-manager.js";
+import { initManageScripts, cleanup as cleanupScriptManager } from "./features/script-manager.js";
+import { initManageRegex, cleanup as cleanupRegexManager } from "./features/regex-manager.js";
 import {
   closePopup,
   elements,
@@ -90,6 +93,15 @@ async function init() {
     $("#wb-sync-goto-sync-btn").on("click", () =>
       showSubView("wb-sync-sync-view"),
     );
+    $("#wb-sync-goto-manage-wb-btn").on("click", () =>
+      showSubView("wb-sync-manage-wb-view"),
+    );
+    $("#wb-sync-goto-manage-script-btn").on("click", () =>
+      showSubView("wb-sync-manage-script-view"),
+    );
+    $("#wb-sync-goto-manage-regex-btn").on("click", () =>
+      showSubView("wb-sync-manage-regex-view"),
+    );
 
     $("#wb-sync-create-wb-btn").on("click", () => handleCreateWorldbook());
 
@@ -121,8 +133,24 @@ async function init() {
     initSync();
     initWorldbook();
     initPresets();
+    initManageWorldbook();
+    initManageScripts();
+    initManageRegex();
 
     showMainView();
+    
+    $(document).on('tavern:character_loaded', () => {
+      if ($('#wb-sync-main-view').is(':visible')) {
+        showMainView();
+      } else if ($('#wb-sync-manage-script-view').is(':visible')) {
+        renderManageScriptLists();
+      } else if ($('#wb-sync-manage-regex-view').is(':visible')) {
+        renderManageRegexLists();
+      } else if ($('#wb-sync-manage-wb-view').is(':visible')) {
+        renderManageWorldbookList();
+      }
+    });
+    
     console.log(`[${MODULE_NAME}] 初始化完成`);
   } catch (e) {
     console.error(`[${MODULE_NAME}] 初始化失败:`, e);

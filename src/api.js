@@ -4,7 +4,7 @@ let tavernHelperApi;
 
 export async function waitForTavernHelper(retries = 10, interval = 300) {
   for (let i = 0; i < retries; i++) {
-    if (window.TavernHelper && typeof window.TavernHelper.getLorebooks === 'function') {
+    if (window.TavernHelper) {
       return window.TavernHelper;
     }
     await delay(interval);
@@ -19,7 +19,7 @@ export async function getTavernHelper() {
 
 export async function getAllLorebooks() {
   const api = await getTavernHelper();
-  const names = await api.getLorebooks();
+  const names = await api.getWorldbookNames();
   return names.map(name => ({ name, file_name: name }));
 }
 
@@ -35,15 +35,16 @@ export async function setLorebookSettings(settings) {
 
 export async function getLorebookEntries(bookName) {
   const api = await getTavernHelper();
-  return await api.getLorebookEntries(bookName);
+  return await api.getWorldbook(bookName);
 }
 
 export async function setLorebookEntries(bookName, entries) {
   const api = await getTavernHelper();
-  await api.replaceLorebookEntries(bookName, entries);
+  await api.replaceWorldbook(bookName, entries, { render: 'debounced' });
 }
 
 export async function createLorebookEntry(bookName, entryData) {
   const api = await getTavernHelper();
-  return await api.createLorebookEntry(bookName, entryData);
+  const result = await api.createWorldbookEntries(bookName, [entryData], { render: 'debounced' });
+  return result.new_entries[0];
 }

@@ -7,12 +7,18 @@ let $showFloatingBtn;
 let $showMagicWandBtn;
 let $showQrBtn;
 let $defaultCollapseBtn;
+let $manageWbCollapsedBtn;
+let $manageScriptCollapsedBtn;
+let $manageRegexCollapsedBtn;
 
 export function initSettings() {
   $showFloatingBtn = $('#wb-sync-setting-show-floating-btn');
   $showMagicWandBtn = $('#wb-sync-setting-show-magic-wand-btn');
   $showQrBtn = $('#wb-sync-setting-show-qr-btn');
   $defaultCollapseBtn = $('#wb-sync-setting-default-collapse');
+  $manageWbCollapsedBtn = $('#wb-sync-setting-manage-wb-collapsed');
+  $manageScriptCollapsedBtn = $('#wb-sync-setting-manage-script-collapsed');
+  $manageRegexCollapsedBtn = $('#wb-sync-setting-manage-regex-collapsed');
 
   $showFloatingBtn
     .on('mousedown', function () {
@@ -30,6 +36,9 @@ export function initSettings() {
     })
     .on('change', saveSettings);
   $defaultCollapseBtn.on('change', saveSettings);
+  $manageWbCollapsedBtn.on('change', saveSettings);
+  $manageScriptCollapsedBtn.on('change', saveSettings);
+  $manageRegexCollapsedBtn.on('change', saveSettings);
 
   loadSettings();
   initFloatingButton();
@@ -106,6 +115,9 @@ export function loadSettings() {
     $showMagicWandBtn = $('#wb-sync-setting-show-magic-wand-btn');
     $showQrBtn = $('#wb-sync-setting-show-qr-btn');
     $defaultCollapseBtn = $('#wb-sync-setting-default-collapse');
+    $manageWbCollapsedBtn = $('#wb-sync-setting-manage-wb-collapsed');
+    $manageScriptCollapsedBtn = $('#wb-sync-setting-manage-script-collapsed');
+    $manageRegexCollapsedBtn = $('#wb-sync-setting-manage-regex-collapsed');
   }
 
   const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)) || {};
@@ -113,6 +125,9 @@ export function loadSettings() {
   $showMagicWandBtn.prop('checked', settings.showMagicWandBtn !== false);
   $showQrBtn.prop('checked', settings.showQrBtn !== false);
   $defaultCollapseBtn.prop('checked', settings.defaultCollapse !== false);
+  $manageWbCollapsedBtn.prop('checked', settings.manageWbCollapsed === true);
+  $manageScriptCollapsedBtn.prop('checked', settings.manageScriptCollapsed === true);
+  $manageRegexCollapsedBtn.prop('checked', settings.manageRegexCollapsed === true);
   applySettings(settings);
 }
 
@@ -123,6 +138,9 @@ export function saveSettings(event) {
     showMagicWandBtn: $showMagicWandBtn.is(':checked'),
     showQrBtn: $showQrBtn.is(':checked'),
     defaultCollapse: $defaultCollapseBtn.is(':checked'),
+    manageWbCollapsed: $manageWbCollapsedBtn.is(':checked'),
+    manageScriptCollapsed: $manageScriptCollapsedBtn.is(':checked'),
+    manageRegexCollapsed: $manageRegexCollapsedBtn.is(':checked'),
   };
 
   if (!settings.showFloatingBtn && !settings.showMagicWandBtn && !settings.showQrBtn) {
@@ -139,6 +157,21 @@ export function saveSettings(event) {
 export function isDefaultCollapse() {
   const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)) || {};
   return settings.defaultCollapse !== false;
+}
+
+export function isManageWbCollapsed() {
+  const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)) || {};
+  return settings.manageWbCollapsed === true;
+}
+
+export function isManageScriptCollapsed() {
+  const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)) || {};
+  return settings.manageScriptCollapsed === true;
+}
+
+export function isManageRegexCollapsed() {
+  const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)) || {};
+  return settings.manageRegexCollapsed === true;
 }
 
 export function applySettings(settings) {

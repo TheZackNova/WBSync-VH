@@ -582,6 +582,10 @@ export async function handleExtractFrontend() {
   toastr.success(`成功提取 ${extractedFrontendCards.length} 个前端代码`);
 }
 
+export function addFrontendCard(cardData) {
+  extractedFrontendCards.unshift(cardData);
+}
+
 export function handleFrontendRender(cardId) {
   const $container = $(`#wb-sync-fe-preview-container-${cardId}`);
   const $btn = $(`.fe-render-btn[data-id="${cardId}"]`);
