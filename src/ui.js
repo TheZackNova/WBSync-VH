@@ -6,9 +6,9 @@ import { populateModifyWorldbookSelect } from './features/entries.js';
 import { populateTransferSelects } from './features/entries.js';
 import { populateSyncWorldbooks } from './features/sync.js';
 import { populateDuplicateSelect, populateRenameSelect, renderDeleteView } from './features/worldbook.js';
-import { renderManageWorldbookList } from './features/worldbook-manager.js';
-import { renderManageScriptLists } from './features/script-manager.js';
-import { renderManageRegexLists } from './features/regex-manager.js';
+import { renderManageWorldbookList } from './features/manage-worldbook.js';
+import { renderManageScriptLists } from './features/manage-scripts.js';
+import { renderManageRegexLists } from './features/manage-regex.js';
 
 export const STORAGE_KEY_LAST_VIEW = 'wb-sync-last-view';
 
@@ -93,14 +93,6 @@ export function showMainView() {
     $('#wb-sync-main-import-script-character-btn').hide();
     $('#wb-sync-main-import-regex-character-btn').hide();
   }
-  
-  if (isCharacterSelected) {
-    $('.wb-sync-manage-script-card-header[data-target="wb-sync-manage-script-character-list"]').closest('.wb-sync-manage-script-card').show();
-    $('.wb-sync-manage-script-card-header[data-target="wb-sync-manage-regex-character-list"]').closest('.wb-sync-manage-script-card').show();
-  } else {
-    $('.wb-sync-manage-script-card-header[data-target="wb-sync-manage-script-character-list"]').closest('.wb-sync-manage-script-card').hide();
-    $('.wb-sync-manage-script-card-header[data-target="wb-sync-manage-regex-character-list"]').closest('.wb-sync-manage-script-card').hide();
-  }
 }
 
 export async function showSubView(viewId) {
@@ -154,8 +146,24 @@ export async function showSubView(viewId) {
   }
   if (viewId === 'wb-sync-frontend-view') title = '💻 前端同步器';
   if (viewId === 'wb-sync-script-sync-view') title = '💻 脚本同步器';
-  if (viewId === 'wb-sync-create-regex-view') title = '💻 创建正则脚本';
-  if (viewId === 'wb-sync-create-script-view') title = '💻 创建酒馆助手脚本';
+  if (viewId === 'wb-sync-create-regex-view') {
+    title = '💻 创建正则脚本';
+    const isCharacterSelected = SillyTavern.getContext().characterId !== undefined;
+    if (isCharacterSelected) {
+      $('#wb-sync-cr-import-character-btn').show();
+    } else {
+      $('#wb-sync-cr-import-character-btn').hide();
+    }
+  }
+  if (viewId === 'wb-sync-create-script-view') {
+    title = '💻 创建酒馆助手脚本';
+    const isCharacterSelected = SillyTavern.getContext().characterId !== undefined;
+    if (isCharacterSelected) {
+      $('#wb-sync-cs-import-character-script-btn').show();
+    } else {
+      $('#wb-sync-cs-import-character-script-btn').hide();
+    }
+  }
   if (viewId === 'wb-sync-settings-view') title = '⚙️ 插件设置';
   if (viewId === 'wb-sync-manage-wb-view') {
     title = '📚 世界书管理';
@@ -168,6 +176,12 @@ export async function showSubView(viewId) {
     title = '🤖 酒馆助手脚本管理';
     renderManageScriptLists();
     $('#wb-sync-manage-script-refresh-btn').show();
+    const isCharacterSelected = SillyTavern.getContext().characterId !== undefined;
+    if (isCharacterSelected) {
+      $('#wb-sync-manage-script-character-list').closest('.wb-sync-manage-script-card').show();
+    } else {
+      $('#wb-sync-manage-script-character-list').closest('.wb-sync-manage-script-card').hide();
+    }
   } else {
     $('#wb-sync-manage-script-refresh-btn').hide();
   }
@@ -175,6 +189,12 @@ export async function showSubView(viewId) {
     title = '📋 正则脚本管理';
     renderManageRegexLists();
     $('#wb-sync-manage-regex-refresh-btn').show();
+    const isCharacterSelected = SillyTavern.getContext().characterId !== undefined;
+    if (isCharacterSelected) {
+      $('#wb-sync-manage-regex-character-list').closest('.wb-sync-manage-script-card').show();
+    } else {
+      $('#wb-sync-manage-regex-character-list').closest('.wb-sync-manage-script-card').hide();
+    }
   } else {
     $('#wb-sync-manage-regex-refresh-btn').hide();
   }

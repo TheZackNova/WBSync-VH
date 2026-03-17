@@ -1,4 +1,4 @@
-import { getAllLorebooks, getLorebookSettings, setLorebookSettings, getLorebookEntries, getTavernHelper } from '../api.js';
+import { getAllLorebooks, getLorebookSettings, setLorebookSettings, getLorebookEntries, getTavernHelper, deleteWorldbook, createWorldbook, getWorldbook } from '../api.js';
 import { escapeHtml } from '../utils.js';
 import { showLoader, hideLoader } from '../ui.js';
 import { loadEntriesForSelectedBooks } from './entries.js';
@@ -98,13 +98,12 @@ export async function renderDeleteView() {
 export async function handleDeleteWorldbooks() {
   const selected = $worldbookListContainer
     .find('.selected')
-    .map((_, el) => $(el).data('book-name'))
+    .map((_, el) => $(el).attr('data-book-name'))
     .get();
   if (selected.length === 0) return toastr.warning('请选择要删除的世界书');
   if (confirm(`确定永久删除 ${selected.length} 个世界书？`)) {
     try {
-      const api = await getTavernHelper();
-      for (const name of selected) await api.deleteLorebook(name);
+      for (const name of selected) await deleteWorldbook(name);
       toastr.success('删除成功');
       renderDeleteView();
     } catch (e) {
@@ -132,10 +131,7 @@ export async function handleDuplicateWorldbook() {
   showLoader();
   $dupSubmitBtn.prop('disabled', true).text('复制中...');
   try {
-    const api = await getTavernHelper();
-    const entries = await getLorebookEntries(source);
-
-    await api.createLorebook(target);
+    const entries = await getWorldbook(source);
 
     const newEntries = entries.map(e => {
       const newE = { ...e };
@@ -143,7 +139,7 @@ export async function handleDuplicateWorldbook() {
       return newE;
     });
 
-    await api.replaceLorebookEntries(target, newEntries);
+    await createWorldbook(target, newEntries);
 
     toastr.success(`成功复制世界书为 "${target}"`);
     $dupTargetInput.val('');
@@ -174,16 +170,14 @@ export async function handleRenameWorldbook() {
   showLoader();
   $renameSubmitBtn.prop('disabled', true).text('重命名中...');
   try {
-    const api = await getTavernHelper();
-    const entries = await getLorebookEntries(source);
-    await api.createLorebook(newName);
+    const entries = await getWorldbook(source);
     const newEntries = entries.map(e => {
       const newE = { ...e };
       delete newE.uid;
       return newE;
     });
-    await api.replaceLorebookEntries(newName, newEntries);
-    await api.deleteLorebook(source);
+    await createWorldbook(newName, newEntries);
+    await deleteWorldbook(source);
 
     toastr.success(`成功将 "${source}" 重命名为 "${newName}"`);
     $renameTargetInput.val('');
@@ -200,8 +194,7 @@ export async function handleCreateWorldbook(callback) {
   const name = prompt('请输入新世界书的名称：');
   if (!name || !name.trim()) return;
   try {
-    const api = await getTavernHelper();
-    await api.createLorebook(name.trim());
+    await createWorldbook(name.trim());
     toastr.success(`世界书 "${name}" 创建成功！`);
     if (callback) await callback(name.trim());
   } catch (e) {

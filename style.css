@@ -271,6 +271,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  white-space: nowrap;
 }
 
 .wb-sync-button:hover {
@@ -687,6 +688,7 @@
 .wb-sync-manage-script-item,
 .wb-sync-manage-regex-item {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   padding: 10px 12px;
@@ -695,6 +697,7 @@
   cursor: pointer;
   transition: background-color 0.2s;
   border: 1px solid transparent;
+  gap: 10px;
 }
 
 .wb-sync-manage-wb-item:hover,
@@ -711,31 +714,6 @@
   border-color: var(--wb-sync-primary);
 }
 
-.wb-sync-manage-wb-item.dragging,
-.wb-sync-manage-entry-item.dragging,
-.wb-sync-manage-script-item.dragging,
-.wb-sync-manage-regex-item.dragging {
-  opacity: 0.5;
-  border: 2px dashed var(--wb-sync-primary);
-}
-
-.wb-sync-manage-wb-item.drag-over,
-.wb-sync-manage-entry-item.drag-over,
-.wb-sync-manage-script-item.drag-over,
-.wb-sync-manage-regex-item.drag-over {
-  border-top: 2px solid var(--wb-sync-primary);
-}
-
-.wb-sync-manage-wb-item.touch-dragging,
-.wb-sync-manage-entry-item.touch-dragging,
-.wb-sync-manage-script-item.touch-dragging,
-.wb-sync-manage-regex-item.touch-dragging {
-  position: relative;
-  z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  transform: scale(1.02);
-}
-
 .wb-sync-manage-wb-info,
 .wb-sync-manage-entry-info,
 .wb-sync-manage-script-info,
@@ -743,7 +721,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  flex: 1;
+  flex: 1 1 200px;
   min-width: 0;
 }
 
@@ -762,7 +740,10 @@
 .wb-sync-manage-script-actions,
 .wb-sync-manage-regex-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 5px;
+  justify-content: flex-end;
+  flex: 0 0 auto;
 }
 
 .wb-sync-manage-wb-checkbox,
@@ -836,7 +817,9 @@
 .wb-sync-card-header-actions {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
+  justify-content: flex-end;
 }
 
 .wb-sync-card-header-actions .wb-sync-button {
@@ -1005,5 +988,13 @@
 
   .wb-sync-card-label {
     margin-bottom: 2px;
+  }
+
+  .wb-sync-manage-wb-actions,
+  .wb-sync-manage-entry-actions,
+  .wb-sync-manage-script-actions,
+  .wb-sync-manage-regex-actions {
+    width: 100%;
+    justify-content: flex-end;
   }
 }

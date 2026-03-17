@@ -48,3 +48,57 @@ export async function createLorebookEntry(bookName, entryData) {
   const result = await api.createWorldbookEntries(bookName, [entryData], { render: 'debounced' });
   return result.new_entries[0];
 }
+
+export async function createLorebookEntries(bookName, entriesData) {
+  const api = await getTavernHelper();
+  return await api.createWorldbookEntries(bookName, entriesData, { render: 'debounced' });
+}
+
+export async function getTavernRegexes(targetOpt) {
+  const api = await getTavernHelper();
+  return await api.getTavernRegexes(targetOpt);
+}
+
+export async function updateTavernRegexesWith(updater, targetOpt) {
+  const api = await getTavernHelper();
+  return await api.updateTavernRegexesWith(updater, targetOpt);
+}
+
+export async function getScriptTrees(targetOpt) {
+  const api = await getTavernHelper();
+  return await api.getScriptTrees(targetOpt);
+}
+
+export async function updateScriptTreesWith(updater, targetOpt) {
+  const api = await getTavernHelper();
+  return await api.updateScriptTreesWith(updater, targetOpt);
+}
+
+export async function createWorldbook(name, entries = []) {
+  const api = await getTavernHelper();
+  return await api.createWorldbook(name, entries);
+}
+
+export async function deleteWorldbook(name) {
+  const api = await getTavernHelper();
+  return await api.deleteWorldbook(name);
+}
+
+export async function deleteWorldbookEntries(bookName, predicate, options = {}) {
+  const api = await getTavernHelper();
+  return await api.deleteWorldbookEntries(bookName, predicate, options);
+}
+
+export async function deleteLorebookEntriesByUids(bookName, uids) {
+  const api = await getTavernHelper();
+  return await api.deleteLorebookEntries(bookName, uids);
+}
+
+export async function getWorldbook(name) {
+  return await getLorebookEntries(name);
+}
+
+export async function getChatMessages(floor) {
+  const api = await getTavernHelper();
+  return await api.getChatMessages(floor);
+}

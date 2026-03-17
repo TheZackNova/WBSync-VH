@@ -5,9 +5,10 @@ import { initSync } from "./features/sync.js";
 import { initWorldbook, handleCreateWorldbook } from "./features/worldbook.js";
 import { initPresets } from "./features/presets.js";
 import { populateSyncWorldbooks } from "./features/sync.js";
-import { initManageWorldbook, cleanup as cleanupWorldbookManager } from "./features/worldbook-manager.js";
-import { initManageScripts, cleanup as cleanupScriptManager } from "./features/script-manager.js";
-import { initManageRegex, cleanup as cleanupRegexManager } from "./features/regex-manager.js";
+import { initManageWorldbook, renderManageWorldbookList } from "./features/manage-worldbook.js";
+import { initManageScripts, renderManageScriptLists } from "./features/manage-scripts.js";
+import { initManageRegex, renderManageRegexLists } from "./features/manage-regex.js";
+import { checkUpdateStatus, executeUpdate } from "./features/update.js";
 import {
   closePopup,
   elements,
@@ -138,20 +139,17 @@ async function init() {
     initManageRegex();
 
     showMainView();
-    
-    $(document).on('tavern:character_loaded', () => {
-      if ($('#wb-sync-main-view').is(':visible')) {
-        showMainView();
-      } else if ($('#wb-sync-manage-script-view').is(':visible')) {
-        renderManageScriptLists();
-      } else if ($('#wb-sync-manage-regex-view').is(':visible')) {
-        renderManageRegexLists();
-      } else if ($('#wb-sync-manage-wb-view').is(':visible')) {
-        renderManageWorldbookList();
-      }
-    });
-    
     console.log(`[${MODULE_NAME}] 初始化完成`);
+    
+    const updateStatus = await checkUpdateStatus();
+    if (updateStatus.hasUpdate) {
+      if (updateStatus.isNewInstall) {
+        executeUpdate(updateStatus);
+      } else {
+        $("#wb-sync-update-section").show();
+        $("#wb-sync-update-btn").on("click", () => executeUpdate(updateStatus));
+      }
+    }
   } catch (e) {
     console.error(`[${MODULE_NAME}] 初始化失败:`, e);
   }

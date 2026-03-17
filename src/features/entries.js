@@ -1,4 +1,4 @@
-import { getAllLorebooks, getLorebookEntries, setLorebookEntries, getTavernHelper } from '../api.js';
+import { getAllLorebooks, getLorebookEntries, setLorebookEntries, createLorebookEntries, deleteLorebookEntriesByUids } from '../api.js';
 import { escapeHtml } from '../utils.js';
 import { showLoader, hideLoader } from '../ui.js';
 
@@ -106,7 +106,7 @@ export async function loadEntriesForSelectedBooks() {
   }
 
   try {
-    const bookNames = selectedBooks.map((_, el) => $(el).data('book-name')).get();
+    const bookNames = selectedBooks.map((_, el) => $(el).attr('data-book-name')).get();
     const allEntriesPromises = bookNames.map(bookName => getLorebookEntries(bookName).then(entries => ({ bookName, entries })));
     const results = await Promise.all(allEntriesPromises);
 
@@ -115,8 +115,9 @@ export async function loadEntriesForSelectedBooks() {
 
     results.forEach(({ bookName, entries }) => {
       entries.forEach(e => {
-        const buttonHtml = `<button class="wb-sync-book-button" data-uid="${e.uid}" data-book-name="${escapeHtml(bookName)}" title="${escapeHtml(e.comment || `UID:${e.uid}`)}">${escapeHtml(e.comment || `UID:${e.uid}`)}</button>`;
-        if (e.type === 'constant') {
+        const entryName = e.name || e.comment || (e.key && e.key.length > 0 ? e.key.join(', ') : '未命名条目');
+        const buttonHtml = `<button class="wb-sync-book-button" data-uid="${e.uid}" data-book-name="${escapeHtml(bookName)}" title="${escapeHtml(entryName)}">${escapeHtml(entryName)}</button>`;
+        if (e.type === 'constant' || e.constant === true || (e.strategy && e.strategy.type === 'constant')) {
           constantHtml += buttonHtml;
         } else {
           normalHtml += buttonHtml;
@@ -139,15 +140,14 @@ export async function handleDeleteEntries() {
   if (selected.length === 0) return toastr.warning('请选择要删除的条目');
   const toDelete = {};
   selected.each((_, el) => {
-    const b = $(el).data('book-name'),
+    const b = $(el).attr('data-book-name'),
       u = parseInt($(el).data('uid'));
     if (!toDelete[b]) toDelete[b] = [];
     toDelete[b].push(u);
   });
   if (confirm(`确定永久删除 ${selected.length} 个条目？`)) {
     try {
-      const api = await getTavernHelper();
-      for (const b in toDelete) await api.deleteLorebookEntries(b, toDelete[b]);
+      for (const b in toDelete) await deleteLorebookEntriesByUids(b, toDelete[b]);
       toastr.success('删除成功');
       loadEntriesForSelectedBooks();
     } catch (e) {
@@ -180,7 +180,7 @@ export async function populateModifyEntrySelect() {
     if (entries.length === 0) return $modifyEntrySelect.append('<option value="">无条目</option>');
     $modifyEntrySelect.append('<option value="">--选择条目--</option>');
     entries.forEach(e =>
-      $modifyEntrySelect.append(`<option value="${e.uid}">${escapeHtml(e.comment || `UID:${e.uid}`)}</option>`),
+      $modifyEntrySelect.append(`<option value="${e.uid}">${escapeHtml(e.name || e.comment || (e.key && e.key.length > 0 ? e.key.join(', ') : '未命名条目'))}</option>`),
     );
   } catch (e) {
     $modifyEntrySelect.empty().append('<option value="">加载失败</option>');
@@ -200,7 +200,7 @@ export function handleModifyEntryChange() {
       );
       $modContent.val(e.content || '');
 
-      const mode = e.strategy && e.strategy.type ? e.strategy.type : e.type === 'constant' ? 'constant' : 'selective';
+      const mode = e.strategy && e.strategy.type ? e.strategy.type : (e.type === 'constant' || e.constant === true) ? 'constant' : 'selective';
       $modMode.val(mode);
 
       let posVal = 'before_author_note';
@@ -273,6 +273,7 @@ export async function handleManualSave() {
     e.strategy.type = $modMode.val();
     e.strategy.keys = keysArr;
     e.type = e.strategy.type === 'constant' ? 'constant' : 'Normal';
+    e.constant = e.strategy.type === 'constant';
     e.key = keysArr;
 
     const posVal = $modPosition.val();
@@ -355,8 +356,9 @@ export async function renderSourceEntries() {
       const id = `trans-entry-${e.uid}`;
       const blueIcon = '<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid black; background-color: #0078d7; margin-right: 6px; vertical-align: middle;" title="蓝灯 (常驻)"></span>';
       const greenIcon = '<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid black; background-color: #00cc00; margin-right: 6px; vertical-align: middle;" title="绿灯 (条件触发)"></span>';
-      const typeTag = e.type === 'constant' ? blueIcon : greenIcon;
-      const displayName = escapeHtml(e.comment || `UID:${e.uid}`);
+      const isConstant = e.type === 'constant' || e.constant === true || (e.strategy && e.strategy.type === 'constant');
+      const typeTag = isConstant ? blueIcon : greenIcon;
+      const displayName = escapeHtml(e.name || e.comment || (e.key && e.key.length > 0 ? e.key.join(', ') : '未命名条目'));
       html += `
                   <div class="wb-sync-checkbox-item" title="${displayName}">
                       <input type="checkbox" id="${id}" value="${e.uid}">
@@ -398,8 +400,9 @@ export async function renderCopySourceEntries() {
       const id = `copy-entry-${e.uid}`;
       const blueIcon = '<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid black; background-color: #0078d7; margin-right: 6px; vertical-align: middle;" title="蓝灯 (常驻)"></span>';
       const greenIcon = '<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid black; background-color: #00cc00; margin-right: 6px; vertical-align: middle;" title="绿灯 (条件触发)"></span>';
-      const typeTag = e.type === 'constant' ? blueIcon : greenIcon;
-      const displayName = escapeHtml(e.comment || `UID:${e.uid}`);
+      const isConstant = e.type === 'constant' || e.constant === true || (e.strategy && e.strategy.type === 'constant');
+      const typeTag = isConstant ? blueIcon : greenIcon;
+      const displayName = escapeHtml(e.name || e.comment || (e.key && e.key.length > 0 ? e.key.join(', ') : '未命名条目'));
       html += `
                   <div class="wb-sync-checkbox-item" title="${displayName}">
                       <input type="checkbox" id="${id}" value="${e.uid}">
@@ -437,10 +440,8 @@ export async function handleTransferEntries() {
       return newE;
     });
 
-    const api = await getTavernHelper();
-
-    await api.createLorebookEntries(tgt, newEntries);
-    await api.deleteLorebookEntries(src, uids.map(uid => parseInt(uid)));
+    await createLorebookEntries(tgt, newEntries);
+    await deleteLorebookEntriesByUids(src, uids.map(uid => parseInt(uid)));
 
     toastr.success(`成功迁移 ${toTrans.length} 个条目`);
     $transEntriesContainer.find('input:checked').prop('checked', false);
@@ -476,9 +477,7 @@ export async function handleCopyEntries() {
       return newE;
     });
 
-    const api = await getTavernHelper();
-
-    await api.createLorebookEntries(tgt, newEntries);
+    await createLorebookEntries(tgt, newEntries);
 
     toastr.success(`成功复制 ${toCopy.length} 个条目`);
     $copyEntriesContainer.find('input:checked').prop('checked', false);

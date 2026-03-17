@@ -28,6 +28,17 @@
     </div>
     <div class="wb-sync-popup-body" id="wb-sync-popup-body">
       <div id="wb-sync-main-view" style="display: flex; flex-direction: column; gap: 15px; min-height: min-content">
+        <div class="wb-sync-section" id="wb-sync-update-section" style="display: none;">
+          <div class="wb-sync-section-header">
+            <h4><i class="fa-solid fa-arrows-rotate"></i> 自动更新</h4>
+          </div>
+          <div class="wb-sync-section-content">
+            <div class="wb-sync-actions">
+              <button id="wb-sync-update-btn" class="wb-sync-button wb-sync-btn-primary">更新</button>
+            </div>
+          </div>
+        </div>
+
         <div class="wb-sync-section">
           <div class="wb-sync-section-header">
             <h4><i class="fa-solid fa-globe"></i> 载入全局世界书</h4>
@@ -973,7 +984,7 @@
                   </div>
                   <i class="fa-solid fa-chevron-up wb-sync-manage-script-collapse-icon"></i>
                 </div>
-                <div id="wb-sync-manage-script-global-list" class="wb-sync-manage-list wb-sync-manage-script-card-content">
+                <div id="wb-sync-manage-script-global-list" class="wb-sync-manage-list wb-sync-manage-script-card-content wb-sync-sortable-list">
                   <div class="wb-sync-empty-msg">点击刷新加载脚本列表。</div>
                 </div>
               </div>
@@ -984,7 +995,7 @@
                   </div>
                   <i class="fa-solid fa-chevron-up wb-sync-manage-script-collapse-icon"></i>
                 </div>
-                <div id="wb-sync-manage-script-preset-list" class="wb-sync-manage-list wb-sync-manage-script-card-content">
+                <div id="wb-sync-manage-script-preset-list" class="wb-sync-manage-list wb-sync-manage-script-card-content wb-sync-sortable-list">
                   <div class="wb-sync-empty-msg">点击刷新加载脚本列表。</div>
                 </div>
               </div>
@@ -995,7 +1006,7 @@
                   </div>
                   <i class="fa-solid fa-chevron-up wb-sync-manage-script-collapse-icon"></i>
                 </div>
-                <div id="wb-sync-manage-script-character-list" class="wb-sync-manage-list wb-sync-manage-script-card-content">
+                <div id="wb-sync-manage-script-character-list" class="wb-sync-manage-list wb-sync-manage-script-card-content wb-sync-sortable-list">
                   <div class="wb-sync-empty-msg">点击刷新加载脚本列表。</div>
                 </div>
               </div>

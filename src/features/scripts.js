@@ -1,6 +1,7 @@
 import { generateUUID } from '../utils.js';
 import { extractContentFromMessage } from './sync.js';
 import { isDefaultCollapse } from './settings.js';
+import { updateTavernRegexesWith, updateScriptTreesWith } from '../api.js';
 
 export let extractedFrontendCards = [];
 export let extractedScriptCards = [];
@@ -115,15 +116,35 @@ export function initScripts() {
     reader.onload = async function (e) {
       try {
         const data = JSON.parse(e.target.result);
-        if (!window.TavernHelper) throw new Error('TavernHelper 未加载');
 
-        const tavernRegex = data.id ? data : convertToTavernRegex(data);
+        const tavernRegex = data.id ? data : {
+          id: data.id || generateUUID(),
+          script_name: data.scriptName || data.script_name || data.name || '未命名正则',
+          enabled: data.disabled !== undefined ? !data.disabled : (data.enabled !== false),
+          find_regex: data.findRegex || data.find_regex || '<打开面板>',
+          replace_string: data.replaceString || data.replace_string || data.content || '',
+          trim_strings: Array.isArray(data.trimStrings) ? data.trimStrings.join('\n') : (data.trim_strings || ''),
+          source: data.source || {
+            user_input: false,
+            ai_output: true,
+            slash_command: false,
+            world_info: false,
+            reasoning: false,
+          },
+          destination: data.destination || {
+            display: true,
+            prompt: false,
+          },
+          run_on_edit: data.runOnEdit || data.run_on_edit || false,
+          min_depth: data.minDepth || data.min_depth || null,
+          max_depth: data.maxDepth || data.max_depth || null,
+        };
 
         let targetOpt = { type: 'global' };
         if (currentRegexImportTarget === 'preset') targetOpt = { type: 'preset', name: 'in_use' };
         if (currentRegexImportTarget === 'character') targetOpt = { type: 'character', name: 'current' };
 
-        await window.TavernHelper.updateTavernRegexesWith(regexes => {
+        await updateTavernRegexesWith(regexes => {
           regexes.push(tavernRegex);
           return regexes;
         }, targetOpt);
@@ -236,7 +257,6 @@ export function initScripts() {
     reader.onload = async function (e) {
       try {
         const data = JSON.parse(e.target.result);
-        if (!window.TavernHelper) throw new Error('TavernHelper 未加载');
 
         const scriptObj =
           data.type === 'script'
@@ -262,7 +282,7 @@ export function initScripts() {
         if (currentScriptImportTarget === 'preset') targetOpt = { type: 'preset' };
         if (currentScriptImportTarget === 'character') targetOpt = { type: 'character' };
 
-        await window.TavernHelper.updateScriptTreesWith(scripts => {
+        await updateScriptTreesWith(scripts => {
           scripts.push(scriptObj);
           return scripts;
         }, targetOpt);
@@ -281,10 +301,14 @@ export function initScripts() {
 
 export function getRegexObjFromUI(prefix, cardId = null) {
   const suffix = cardId ? `-${cardId}` : '';
-  const htmlContent = $(`#wb-sync-${prefix}-content${suffix}`).val();
-  if (!htmlContent) return null;
+  const htmlContent = $(`#wb-sync-${prefix}-content${suffix}`).val() || '';
+  if (prefix !== 'cr' && !htmlContent) return null;
 
-  const scriptName = $(`#wb-sync-${prefix}-script-name${suffix}`).val().trim() || '新前端脚本';
+  const scriptNameInput = $(`#wb-sync-${prefix}-script-name${suffix}`).val();
+  const scriptNameTrimmed = scriptNameInput ? scriptNameInput.trim() : '';
+  if (prefix === 'cr' && !scriptNameTrimmed) return { error: '请输入名称' };
+
+  const scriptName = scriptNameTrimmed || '新前端脚本';
   const findRegex = $(`#wb-sync-${prefix}-find-regex${suffix}`).val() || '<打开面板>';
 
   const placementInts = [];
@@ -335,19 +359,20 @@ export function getRegexObjFromUI(prefix, cardId = null) {
 }
 
 export function convertToTavernRegex(regexObj) {
+  const placement = regexObj.placement || [];
   return {
     id: regexObj.id,
     script_name: regexObj.scriptName,
     enabled: !regexObj.disabled,
     find_regex: regexObj.findRegex,
     replace_string: regexObj.replaceString,
-    trim_strings: regexObj.trimStrings.join('\n'),
+    trim_strings: regexObj.trimStrings ? regexObj.trimStrings.join('\n') : '',
     source: {
-      user_input: regexObj.placement.includes(1),
-      ai_output: regexObj.placement.includes(2),
-      slash_command: regexObj.placement.includes(4),
-      world_info: regexObj.placement.includes(3),
-      reasoning: regexObj.placement.includes(5),
+      user_input: placement.includes(1),
+      ai_output: placement.includes(2),
+      slash_command: placement.includes(4),
+      world_info: placement.includes(3),
+      reasoning: placement.includes(5),
     },
     destination: {
       display: regexObj.markdownOnly,
@@ -361,10 +386,14 @@ export function convertToTavernRegex(regexObj) {
 
 export function getScriptSyncObjFromUI(prefix, cardId = null) {
   const suffix = cardId ? `-${cardId}` : '';
-  const content = $(`#wb-sync-${prefix}-content${suffix}`).val();
-  if (!content) return null;
+  const content = $(`#wb-sync-${prefix}-content${suffix}`).val() || '';
+  if (prefix !== 'cs' && !content) return null;
 
-  const scriptName = $(`#wb-sync-${prefix}-script-name${suffix}`).val().trim() || '新助手脚本';
+  const scriptNameInput = $(`#wb-sync-${prefix}-script-name${suffix}`).val();
+  const scriptNameTrimmed = scriptNameInput ? scriptNameInput.trim() : '';
+  if (prefix === 'cs' && !scriptNameTrimmed) return { error: '请输入名称' };
+
+  const scriptName = scriptNameTrimmed || '新助手脚本';
   const isDisabled = $(`#wb-sync-${prefix}-disabled${suffix}`).is(':checked');
   const info = $(`#wb-sync-${prefix}-info${suffix}`).val() || '';
 
@@ -386,15 +415,15 @@ export function getScriptSyncObjFromUI(prefix, cardId = null) {
 export async function handleRegexImport(prefix, targetType, cardId = null) {
   const regexObj = getRegexObjFromUI(prefix, cardId);
   if (!regexObj) return toastr.warning('没有可导入的内容');
+  if (regexObj.error) return toastr.warning(regexObj.error);
   try {
-    if (!window.TavernHelper) throw new Error('TavernHelper 未加载');
     const tavernRegex = convertToTavernRegex(regexObj);
     
     let targetOpt = { type: targetType };
     if (targetType === 'preset') targetOpt = { type: 'preset', name: 'in_use' };
     if (targetType === 'character') targetOpt = { type: 'character', name: 'current' };
 
-    await window.TavernHelper.updateTavernRegexesWith(
+    await updateTavernRegexesWith(
       regexes => {
         regexes.push(tavernRegex);
         return regexes;
@@ -411,6 +440,7 @@ export async function handleRegexImport(prefix, targetType, cardId = null) {
 export function handleRegexDownload(prefix, cardId = null) {
   const regexObj = getRegexObjFromUI(prefix, cardId);
   if (!regexObj) return toastr.warning('没有可下载的内容');
+  if (regexObj.error) return toastr.warning(regexObj.error);
 
   const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(regexObj, null, 4));
   const downloadAnchorNode = document.createElement('a');
@@ -486,9 +516,9 @@ export function handleRegexFileLoad(e, prefix) {
 export async function handleScriptImport(prefix, targetType, cardId = null) {
   const scriptObj = getScriptSyncObjFromUI(prefix, cardId);
   if (!scriptObj) return toastr.warning('没有可导入的内容');
+  if (scriptObj.error) return toastr.warning(scriptObj.error);
   try {
-    if (!window.TavernHelper) throw new Error('TavernHelper 未加载');
-    await window.TavernHelper.updateScriptTreesWith(
+    await updateScriptTreesWith(
       scripts => {
         scripts.push(scriptObj);
         return scripts;
@@ -505,6 +535,7 @@ export async function handleScriptImport(prefix, targetType, cardId = null) {
 export function handleScriptDownload(prefix, cardId = null) {
   const scriptObj = getScriptSyncObjFromUI(prefix, cardId);
   if (!scriptObj) return toastr.warning('没有可下载的内容');
+  if (scriptObj.error) return toastr.warning(scriptObj.error);
 
   const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(scriptObj, null, 4));
   const downloadAnchorNode = document.createElement('a');

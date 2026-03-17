@@ -1,4 +1,4 @@
-import { getAllLorebooks, getTavernHelper } from '../api.js';
+import { getAllLorebooks, createLorebookEntries, getChatMessages } from '../api.js';
 import { escapeHtml, escapeRegExp } from '../utils.js';
 import { isDefaultCollapse } from './settings.js';
 
@@ -120,10 +120,9 @@ function parseFloorInput(input) {
 }
 
 async function fetchMessages(floors) {
-  const api = await getTavernHelper();
   const messages = [];
   for (const floor of floors) {
-    const msgs = await api.getChatMessages(floor);
+    const msgs = await getChatMessages(floor);
     if (msgs && msgs.length > 0) {
       messages.push(msgs[0].message);
     }
@@ -355,9 +354,8 @@ export async function syncEntries(cardsToSync, $btn = null) {
   if (cardsToSync.length === 0) return toastr.warning('没有可同步的条目');
   if ($btn) $btn.prop('disabled', true).text('同步中...');
   try {
-    const api = await getTavernHelper();
     const newEntries = cardsToSync.map(c => buildEntryData(c));
-    await api.createLorebookEntries(targetWb, newEntries);
+    await createLorebookEntries(targetWb, newEntries);
     toastr.success(`成功同步 ${newEntries.length} 个条目`);
     if ($btn) $btn.text('已同步').css({ 'border-color': 'var(--wb-sync-primary)', color: 'var(--wb-sync-primary)' });
   } catch (e) {
