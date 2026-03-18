@@ -1,5 +1,5 @@
 const STORAGE_KEY_VERSION = 'wb-sync-version';
-const extensionBaseUrl = new URL('../', import.meta.url);
+const extensionBaseUrl = new URL('../../', import.meta.url);
 
 export async function checkUpdateStatus() {
   try {
