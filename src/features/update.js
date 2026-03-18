@@ -14,16 +14,16 @@ export async function checkUpdateStatus() {
     }
     return { hasUpdate: false };
   } catch (e) {
-    console.error('[世界书同步器] 检查更新状态失败:', e);
+    console.error('[Đồng bộ Sổ thế giới] Kiểm tra trạng thái cập nhật thất bại:', e);
     return { hasUpdate: false };
   }
 }
 
 export function executeUpdate(status) {
   if (status.isNewInstall) {
-    toastr.success('世界书同步器安装已完成5秒后刷新网页');
+    toastr.success('Đồng bộ Sổ thế giới đã cài đặt xong, trang sẽ tự làm mới sau 5 giây');
   } else {
-    toastr.success('世界书同步器更新已完成5秒后刷新网页');
+    toastr.success('Đồng bộ Sổ thế giới đã cập nhật xong, trang sẽ tự làm mới sau 5 giây');
   }
   localStorage.setItem(STORAGE_KEY_VERSION, status.version);
   setTimeout(() => {

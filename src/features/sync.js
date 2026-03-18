@@ -46,7 +46,7 @@ export function initSync() {
       () =>
         $(this)
           .prop('disabled', false)
-          .html('<i class="fa-solid fa-cloud-arrow-up"></i> 一键同步全部'),
+          .html('<i class="fa-solid fa-cloud-arrow-up"></i> Đồng bộ tất cả'),
       2000,
     );
   });
@@ -105,10 +105,10 @@ export function initSync() {
 export async function populateSyncWorldbooks() {
   try {
     const books = await getAllLorebooks();
-    $targetWbSelect.empty().append('<option value="">-- 请选择目标世界书 --</option>');
+    $targetWbSelect.empty().append('<option value="">-- Hãy chọn Sổ thế giới đích --</option>');
     books.forEach(book => $targetWbSelect.append(`<option value="${escapeHtml(book.file_name)}">${escapeHtml(book.name)}</option>`));
   } catch (error) {
-    $targetWbSelect.empty().append('<option value="">加载失败</option>');
+    $targetWbSelect.empty().append('<option value="">Tải thất bại</option>');
   }
 }
 
@@ -143,7 +143,7 @@ function extractTextWithTags(text, startTag, endTag) {
 
 export async function extractContentFromMessage(startTag, endTag, floorInput) {
   if (!startTag || !endTag) {
-    toastr.warning('请填写起始和结束标签');
+    toastr.warning('Vui lòng nhập thẻ bắt đầu và kết thúc');
     return null;
   }
   try {
@@ -151,7 +151,7 @@ export async function extractContentFromMessage(startTag, endTag, floorInput) {
     const messages = await fetchMessages(floors);
     
     if (messages.length === 0) {
-      toastr.warning('未找到指定楼层的消息');
+      toastr.warning('Không tìm thấy tin nhắn ở tầng chỉ định');
       return null;
     }
 
@@ -162,12 +162,12 @@ export async function extractContentFromMessage(startTag, endTag, floorInput) {
     }
 
     if (allExtractedTexts.length === 0) {
-      toastr.info(`未找到被 ${startTag} 和 ${endTag} 包裹的内容`);
+      toastr.info(`Không tìm thấy phần được ${startTag} và ${endTag} bao bọc`);
       return null;
     }
     return allExtractedTexts;
   } catch (error) {
-    toastr.error('提取失败: ' + error.message);
+    toastr.error('Trích xuất thất bại: ' + error.message);
     return null;
   }
 }
@@ -182,22 +182,22 @@ export async function extractMessages() {
 
   extractedCards = extractedTexts.map((text, index) => parseExtractedText(text, index));
   renderCards();
-  toastr.success(`成功提取 ${extractedCards.length} 个条目`);
+  toastr.success(`Trích xuất thành công ${extractedCards.length}  mục`);
 }
 
 export function parseExtractedText(text, index) {
-  let name = `提取条目 ${index + 1}`,
+  let name = `Trích xuất mục ${index + 1}`,
     keys = '',
     content = text;
   const lines = text.split('\n'),
     contentLines = [];
   for (let line of lines) {
     const trimmed = line.trim();
-    if (trimmed.startsWith('名称:') || trimmed.startsWith('名称：')) name = trimmed.substring(3).trim();
-    else if (trimmed.startsWith('关键字:') || trimmed.startsWith('关键字：')) keys = trimmed.substring(4).trim();
+    if (trimmed.startsWith('Tên:') || trimmed.startsWith('Tên:')) name = trimmed.substring(3).trim();
+    else if (trimmed.startsWith('Từ khóa:') || trimmed.startsWith('Từ khóa:')) keys = trimmed.substring(4).trim();
     else contentLines.push(line);
   }
-  if (name !== `提取条目 ${index + 1}` || keys !== '') content = contentLines.join('\n').trim();
+  if (name !== `Trích xuất mục ${index + 1}` || keys !== '') content = contentLines.join('\n').trim();
 
   return {
     id: Date.now() + index,
@@ -214,7 +214,7 @@ export function parseExtractedText(text, index) {
 
 export function renderCards() {
   if (extractedCards.length === 0) {
-      $cardsContainer.html('<div class="wb-sync-empty-msg">没有提取到任何条目。</div>');
+      $cardsContainer.html('<div class="wb-sync-empty-msg">Không trích xuất được mục nào.</div>');
       return;
   }
 
@@ -231,44 +231,44 @@ export function renderCards() {
                   <i class="fa-solid ${iconClass} wb-sync-collapse-icon"></i>
               </div>
               <div class="wb-sync-card-content" style="${contentStyle}">
-                  <div class="wb-sync-card-row"><span class="wb-sync-card-label">名称</span><input type="text" class="wb-sync-card-input card-name" value="${escapeHtml(card.name)}"></div>
-                  <div class="wb-sync-card-row" style="margin-top: 10px;"><span class="wb-sync-card-label">关键字</span><input type="text" class="wb-sync-card-input card-keys" value="${escapeHtml(card.keys)}" placeholder="逗号分隔"></div>
-                  <div class="wb-sync-card-row col" style="margin-top: 10px;"><span class="wb-sync-card-label">内容</span><textarea class="wb-sync-card-textarea card-content">${escapeHtml(card.content)}</textarea></div>
+                  <div class="wb-sync-card-row"><span class="wb-sync-card-label">Tên</span><input type="text" class="wb-sync-card-input card-name" value="${escapeHtml(card.name)}"></div>
+                  <div class="wb-sync-card-row" style="margin-top: 10px;"><span class="wb-sync-card-label">Từ khóa</span><input type="text" class="wb-sync-card-input card-keys" value="${escapeHtml(card.keys)}" placeholder="Phân tách bằng dấu phẩy"></div>
+                  <div class="wb-sync-card-row col" style="margin-top: 10px;"><span class="wb-sync-card-label">Nội dung</span><textarea class="wb-sync-card-textarea card-content">${escapeHtml(card.content)}</textarea></div>
                   <div style="border-top: 1px solid var(--wb-sync-card-border); margin: 5px 0;"></div>
                   <div class="wb-sync-card-row">
-                      <span class="wb-sync-card-label">触发模式</span>
+                      <span class="wb-sync-card-label">Chế độ kích hoạt</span>
                       <select class="wb-sync-card-select card-mode">
-                          <option value="constant" ${card.mode === 'constant' ? 'selected' : ''}>常驻 (蓝灯)</option>
-                          <option value="selective" ${card.mode === 'selective' ? 'selected' : ''}>条件触发 (绿灯)</option>
+                          <option value="constant" ${card.mode === 'constant' ? 'selected' : ''}>Luôn hiển thị (đèn xanh dương)</option>
+                          <option value="selective" ${card.mode === 'selective' ? 'selected' : ''}>Kích hoạt có điều kiện (đèn xanh lá)</option>
                       </select>
                   </div>
                   <div class="wb-sync-card-row">
-                      <span class="wb-sync-card-label">插入位置</span>
+                      <span class="wb-sync-card-label">Vị trí chèn</span>
                       <select class="wb-sync-card-select card-position">
-                          <option value="0" ${card.position == 0 ? 'selected' : ''}>角色定义之前</option>
-                          <option value="1" ${card.position == 1 ? 'selected' : ''}>角色定义之后</option>
-                          <option value="2" ${card.position == 2 ? 'selected' : ''}>示例消息前 (↑EM)</option>
-                          <option value="3" ${card.position == 3 ? 'selected' : ''}>示例消息后 (↓EM)</option>
-                          <option value="4" ${card.position == 4 ? 'selected' : ''}>作者说明之前</option>
-                          <option value="5" ${card.position == 5 ? 'selected' : ''}>作者说明之后</option>
-                          <option value="6" ${card.position == 6 ? 'selected' : ''}>@D◆[系统]在深度</option>
-                          <option value="7" ${card.position == 7 ? 'selected' : ''}>@D[用户]在深度</option>
-                          <option value="8" ${card.position == 8 ? 'selected' : ''}>@D[AI]在深度</option>
+                          <option value="0" ${card.position == 0 ? 'selected' : ''}>Trước định nghĩa nhân vật</option>
+                          <option value="1" ${card.position == 1 ? 'selected' : ''}>Sau định nghĩa nhân vật</option>
+                          <option value="2" ${card.position == 2 ? 'selected' : ''}>Trước tin nhắn ví dụ (↑EM)</option>
+                          <option value="3" ${card.position == 3 ? 'selected' : ''}>Sau tin nhắn ví dụ (↓EM)</option>
+                          <option value="4" ${card.position == 4 ? 'selected' : ''}>Trước ghi chú tác giả</option>
+                          <option value="5" ${card.position == 5 ? 'selected' : ''}>Sau ghi chú tác giả</option>
+                          <option value="6" ${card.position == 6 ? 'selected' : ''}>@D◆[Hệ thống] ở độ sâu</option>
+                          <option value="7" ${card.position == 7 ? 'selected' : ''}>@D[Người dùng] ở độ sâu</option>
+                          <option value="8" ${card.position == 8 ? 'selected' : ''}>@D[AI]ở độ sâu</option>
                       </select>
                   </div>
                   <div class="wb-sync-card-row card-depth-row" style="display: ${isDepthVisible ? 'flex' : 'none'};">
-                      <span class="wb-sync-card-label">插入深度</span><input type="number" class="wb-sync-card-input card-depth" value="${card.depth}" min="0">
+                      <span class="wb-sync-card-label">Độ sâu chèn</span><input type="number" class="wb-sync-card-input card-depth" value="${card.depth}" min="0">
                   </div>
                   <div class="wb-sync-card-row">
-                      <span class="wb-sync-card-label">递归设置</span>
+                      <span class="wb-sync-card-label">Thiết lập đệ quy</span>
                       <div style="display: flex; gap: 10px;">
-                          <label class="wb-sync-checkbox-label"><input type="checkbox" class="card-prevent-in" ${card.preventIncoming ? 'checked' : ''}> 不可被递归</label>
-                          <label class="wb-sync-checkbox-label"><input type="checkbox" class="card-prevent-out" ${card.preventOutgoing ? 'checked' : ''}> 防止进一步递归</label>
+                          <label class="wb-sync-checkbox-label"><input type="checkbox" class="card-prevent-in" ${card.preventIncoming ? 'checked' : ''}> Không bị đệ quy</label>
+                          <label class="wb-sync-checkbox-label"><input type="checkbox" class="card-prevent-out" ${card.preventOutgoing ? 'checked' : ''}> Ngăn đệ quy thêm</label>
                       </div>
                   </div>
                   <div class="wb-sync-card-actions">
-                      <button class="wb-sync-button wb-sync-btn-small sync-single-btn">同步此条目</button>
-                      <button class="wb-sync-button wb-sync-btn-small abandon delete-card-btn">删除</button>
+                      <button class="wb-sync-button wb-sync-btn-small sync-single-btn">Đồng bộ mục này</button>
+                      <button class="wb-sync-button wb-sync-btn-small abandon delete-card-btn">Xóa</button>
                   </div>
               </div>
           </div>
@@ -304,7 +304,7 @@ export function applyBatchSettings() {
   });
   if (updated) {
     renderCards();
-    toastr.success('批量设置已应用');
+    toastr.success('Đã áp dụng cài đặt hàng loạt');
   }
 }
 
@@ -333,7 +333,7 @@ export function buildEntryData(cardData) {
           .filter(k => k)
       : [];
   return {
-    name: cardData.name || '未命名条目',
+    name: cardData.name || 'Mục chưa có tên',
     content: cardData.content || '',
     enabled: true,
     strategy: { type: isConstant ? 'constant' : 'selective', keys: keysArray, scan_depth: 'same_as_global' },
@@ -350,20 +350,20 @@ export function buildEntryData(cardData) {
 
 export async function syncEntries(cardsToSync, $btn = null) {
   const targetWb = $targetWbSelect.val();
-  if (!targetWb) return toastr.warning('请先选择目标世界书');
-  if (cardsToSync.length === 0) return toastr.warning('没有可同步的条目');
-  if ($btn) $btn.prop('disabled', true).text('同步中...');
+  if (!targetWb) return toastr.warning('Hãy chọn Sổ thế giới đích trước');
+  if (cardsToSync.length === 0) return toastr.warning('Không có mục để đồng bộ');
+  if ($btn) $btn.prop('disabled', true).text('Đang đồng bộ...');
   try {
     const newEntries = cardsToSync.map(c => buildEntryData(c));
     await createLorebookEntries(targetWb, newEntries);
-    toastr.success(`成功同步 ${newEntries.length} 个条目`);
-    if ($btn) $btn.text('已同步').css({ 'border-color': 'var(--wb-sync-primary)', color: 'var(--wb-sync-primary)' });
+    toastr.success(`Đồng bộ thành công ${newEntries.length}  mục`);
+    if ($btn) $btn.text('Đã đồng bộ').css({ 'border-color': 'var(--wb-sync-primary)', color: 'var(--wb-sync-primary)' });
   } catch (e) {
-    toastr.error(`同步失败: ${e.message}`);
+    toastr.error(`Đồng bộ thất bại: ${e.message}`);
     if ($btn)
       $btn
         .prop('disabled', false)
-        .text('同步失败')
+        .text('Đồng bộ thất bại')
         .css({ 'border-color': 'var(--wb-sync-danger)', color: 'var(--wb-sync-danger)' });
   }
 }

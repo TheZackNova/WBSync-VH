@@ -46,7 +46,7 @@ export function initWorldbook() {
       await setLorebookSettings({ selected_global_lorebooks: enabled });
     } catch (e) {
       $this.toggleClass('selected');
-      toastr.error('更新世界书状态失败');
+      toastr.error('Cập nhật trạng thái Sổ thế giới thất bại');
     }
   });
 
@@ -57,13 +57,13 @@ export function initWorldbook() {
 }
 
 export async function renderWorldBooks() {
-  $bookList.empty().append('<p>加载中...</p>');
+  $bookList.empty().append('<p>Đang tải...</p>');
   try {
     const [allBooks, settings] = await Promise.all([getAllLorebooks(), getLorebookSettings()]);
     const enabledBooks = new Set(settings.selected_global_lorebooks);
 
     if (allBooks.length === 0) {
-      $bookList.html('<p>未找到任何世界书。</p>');
+      $bookList.html('<p>Không tìm thấy Sổ thế giới nào.</p>');
       return;
     }
 
@@ -75,7 +75,7 @@ export async function renderWorldBooks() {
     $bookList.html(buttonsHtml);
 
   } catch (e) {
-    $bookList.empty().append(`<p style="color:red;">加载失败: ${e.message}</p>`);
+    $bookList.empty().append(`<p style="color:red;">Tải thất bại: ${e.message}</p>`);
   }
 }
 
@@ -83,14 +83,14 @@ export async function renderDeleteView() {
   try {
     const books = await getAllLorebooks();
     $worldbookListContainer.empty();
-    if (books.length === 0) return $worldbookListContainer.append('<p>没有找到世界书。</p>');
+    if (books.length === 0) return $worldbookListContainer.append('<p>Không tìm thấy Sổ thế giới.</p>');
     let html = '';
     books.forEach(b => {
       html += `<button class="wb-sync-book-button" data-book-name="${escapeHtml(b.file_name)}">${escapeHtml(b.name)}</button>`;
     });
     $worldbookListContainer.html(html);
   } catch (e) {
-    toastr.error('加载失败');
+    toastr.error('Tải thất bại');
   }
   loadEntriesForSelectedBooks();
 }
@@ -100,14 +100,14 @@ export async function handleDeleteWorldbooks() {
     .find('.selected')
     .map((_, el) => $(el).attr('data-book-name'))
     .get();
-  if (selected.length === 0) return toastr.warning('请选择要删除的世界书');
-  if (confirm(`确定永久删除 ${selected.length} 个世界书？`)) {
+  if (selected.length === 0) return toastr.warning('Hãy chọn Sổ thế giới cần xóa');
+  if (confirm(`Xác nhận xóa vĩnh viễn ${selected.length} Sổ thế giới?`)) {
     try {
       for (const name of selected) await deleteWorldbook(name);
-      toastr.success('删除成功');
+      toastr.success('Xóa thành công');
       renderDeleteView();
     } catch (e) {
-      toastr.error('删除失败');
+      toastr.error('Xóa thất bại');
     }
   }
 }
@@ -115,21 +115,21 @@ export async function handleDeleteWorldbooks() {
 export async function populateDuplicateSelect() {
   try {
     const books = await getAllLorebooks();
-    $dupSourceSelect.empty().append('<option value="">--请选择源世界书--</option>');
+    $dupSourceSelect.empty().append('<option value="">--Hãy chọn Sổ thế giới nguồn--</option>');
     books.forEach(b => $dupSourceSelect.append(`<option value="${escapeHtml(b.file_name)}">${escapeHtml(b.name)}</option>`));
   } catch (e) {
-    toastr.error('加载失败');
+    toastr.error('Tải thất bại');
   }
 }
 
 export async function handleDuplicateWorldbook() {
   const source = $dupSourceSelect.val();
   const target = $dupTargetInput.val().trim();
-  if (!source) return toastr.warning('请选择源世界书');
-  if (!target) return toastr.warning('请输入新世界书名称');
+  if (!source) return toastr.warning('Hãy chọn Sổ thế giới nguồn');
+  if (!target) return toastr.warning('Hãy nhập tên Sổ thế giới mới');
 
   showLoader();
-  $dupSubmitBtn.prop('disabled', true).text('复制中...');
+  $dupSubmitBtn.prop('disabled', true).text('Đang sao chép...');
   try {
     const entries = await getWorldbook(source);
 
@@ -141,34 +141,34 @@ export async function handleDuplicateWorldbook() {
 
     await createWorldbook(target, newEntries);
 
-    toastr.success(`成功复制世界书为 "${target}"`);
+    toastr.success(`Sao chép Sổ thế giới thành "${target}" thành công`);
     $dupTargetInput.val('');
   } catch (e) {
-    toastr.error(`复制失败: ${e.message}`);
+    toastr.error(`Sao chép thất bại: ${e.message}`);
   } finally {
     hideLoader();
-    $dupSubmitBtn.prop('disabled', false).text('确认复制');
+    $dupSubmitBtn.prop('disabled', false).text('Xác nhận sao chép');
   }
 }
 
 export async function populateRenameSelect() {
   try {
     const books = await getAllLorebooks();
-    $renameSourceSelect.empty().append('<option value="">--请选择要重命名的世界书--</option>');
+    $renameSourceSelect.empty().append('<option value="">--Hãy chọn Sổ thế giới cần đổi tên--</option>');
     books.forEach(b => $renameSourceSelect.append(`<option value="${escapeHtml(b.file_name)}">${escapeHtml(b.name)}</option>`));
   } catch (e) {
-    toastr.error('加载世界书列表失败');
+    toastr.error('Tải danh sách Sổ thế giới thất bại');
   }
 }
 
 export async function handleRenameWorldbook() {
   const source = $renameSourceSelect.val();
   const newName = $renameTargetInput.val().trim();
-  if (!source) return toastr.warning('请选择要重命名的世界书');
-  if (!newName) return toastr.warning('请输入新名称');
+  if (!source) return toastr.warning('Hãy chọn Sổ thế giới cần đổi tên');
+  if (!newName) return toastr.warning('Hãy nhập tên mới');
 
   showLoader();
-  $renameSubmitBtn.prop('disabled', true).text('重命名中...');
+  $renameSubmitBtn.prop('disabled', true).text('Đang đổi tên...');
   try {
     const entries = await getWorldbook(source);
     const newEntries = entries.map(e => {
@@ -179,25 +179,25 @@ export async function handleRenameWorldbook() {
     await createWorldbook(newName, newEntries);
     await deleteWorldbook(source);
 
-    toastr.success(`成功将 "${source}" 重命名为 "${newName}"`);
+    toastr.success(`Đổi tên "${source}" thành "${newName}" thành công`);
     $renameTargetInput.val('');
     await populateRenameSelect();
   } catch (e) {
-    toastr.error(`重命名失败: ${e.message}`);
+    toastr.error(`Đổi tên thất bại: ${e.message}`);
   } finally {
     hideLoader();
-    $renameSubmitBtn.prop('disabled', false).text('确认修改');
+    $renameSubmitBtn.prop('disabled', false).text('Xác nhận chỉnh sửa');
   }
 }
 
 export async function handleCreateWorldbook(callback) {
-  const name = prompt('请输入新世界书的名称：');
+  const name = prompt('Nhập tên Sổ thế giới mới:');
   if (!name || !name.trim()) return;
   try {
     await createWorldbook(name.trim());
-    toastr.success(`世界书 "${name}" 创建成功！`);
+    toastr.success(`Tạo Sổ thế giới "${name}" thành công!`);
     if (callback) await callback(name.trim());
   } catch (e) {
-    toastr.error(`创建失败: ${e.message}`);
+    toastr.error(`Tạo thất bại: ${e.message}`);
   }
 }

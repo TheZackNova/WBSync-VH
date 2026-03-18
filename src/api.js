@@ -9,7 +9,7 @@ export async function waitForTavernHelper(retries = 10, interval = 300) {
     }
     await delay(interval);
   }
-  throw new Error('TavernHelper API 未加载，请确保已安装并启用 JS-Slash-Runner 扩展。');
+  throw new Error('TavernHelper API Chưa tải, hãy đảm bảo đã cài và bật tiện ích JS-Slash-Runner.');
 }
 
 export async function getTavernHelper() {

@@ -9,14 +9,14 @@ export function initPresets() {
   $presetListContainer = $('#wb-sync-preset-list-container');
   
   $('#wb-sync-save-preset-btn').on('click', () => {
-    const name = prompt('请输入方案名称：');
+    const name = prompt('Nhập tên preset:');
     if (!name) return;
     const books = $('.wb-sync-book-button.selected')
       .map((_, el) => $(el).data('book-filename'))
       .get();
-    if (books.length === 0) return alert('请至少选择一个世界书！');
+    if (books.length === 0) return alert('Hãy chọn ít nhất một Sổ thế giới!');
     savePreset({ name, books });
-    alert('保存成功！');
+    alert('Lưu thành công!');
     renderPresets();
   });
 }
@@ -52,15 +52,15 @@ export function renderPresets() {
         try {
           await setLorebookSettings({ selected_global_lorebooks: [] });
           await setLorebookSettings({ selected_global_lorebooks: p.books });
-          toastr.success('预设加载成功！');
+          toastr.success('Tải preset thành công!');
         } catch (err) {
-          toastr.error('加载失败');
+          toastr.error('Tải thất bại');
         }
       }
     });
     item.find('.wb-sync-delete-preset-btn').on('click', e => {
       e.stopPropagation();
-      if (confirm(`确定删除预设 "${p.name}"?`)) deletePreset(p.name);
+      if (confirm(`Xác nhận xóa preset "${p.name}"?`)) deletePreset(p.name);
     });
     $presetListContainer.append(item);
   });

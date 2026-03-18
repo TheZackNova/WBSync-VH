@@ -80,7 +80,7 @@ function debouncedRender() {
 
 export function renderManageRegexLists() {
   if (!window.TavernHelper) {
-    const msg = '<div class="wb-sync-empty-msg">TavernHelper 未加载</div>';
+    const msg = '<div class="wb-sync-empty-msg">TavernHelper Chưa tải</div>';
     $manageRegexGlobalList.html(msg);
     $manageRegexPresetList.html(msg);
     $manageRegexCharacterList.html(msg);
@@ -108,10 +108,10 @@ export function renderManageRegexLists() {
       renderRegexList($manageRegexCharacterList, characterRegexes, 'character');
     }
   } catch (e) {
-    console.error('加载正则失败:', e);
-    $manageRegexGlobalList.html('<div class="wb-sync-empty-msg">加载失败</div>');
-    $manageRegexPresetList.html('<div class="wb-sync-empty-msg">加载失败</div>');
-    $manageRegexCharacterList.html('<div class="wb-sync-empty-msg">加载失败</div>');
+    console.error('Tải regex thất bại:', e);
+    $manageRegexGlobalList.html('<div class="wb-sync-empty-msg">Tải thất bại</div>');
+    $manageRegexPresetList.html('<div class="wb-sync-empty-msg">Tải thất bại</div>');
+    $manageRegexCharacterList.html('<div class="wb-sync-empty-msg">Tải thất bại</div>');
   }
 }
 
@@ -148,7 +148,7 @@ function loadRegexsWithCache(type) {
 
 function renderRegexList($container, regexes, type) {
   if (regexes.length === 0) {
-    $container.html('<div class="wb-sync-empty-msg">没有正则脚本。</div>');
+    $container.html('<div class="wb-sync-empty-msg">Không có script regex.</div>');
     return;
   }
 
@@ -160,10 +160,10 @@ function renderRegexList($container, regexes, type) {
     div.innerHTML = `
       <div class="wb-sync-manage-regex-info">
         <input type="checkbox" class="wb-sync-manage-regex-enabled" ${regex.enabled !== false ? 'checked' : ''}>
-        <span class="wb-sync-manage-regex-name">${escapeHtml(regex.script_name || '未命名正则')}</span>
+        <span class="wb-sync-manage-regex-name">${escapeHtml(regex.script_name || 'Regex chưa có tên')}</span>
       </div>
       <div class="wb-sync-manage-regex-actions">
-        <button class="wb-sync-button wb-sync-btn-small wb-sync-manage-regex-delete">删除</button>
+        <button class="wb-sync-button wb-sync-btn-small wb-sync-manage-regex-delete">Xóa</button>
       </div>
     `;
     fragment.appendChild(div);
@@ -182,9 +182,9 @@ async function toggleRegexEnabled(regexId, type, isEnabled) {
       if (regex) regex.enabled = isEnabled;
       return regexes;
     }, targetOpt);
-    toastr.success(isEnabled ? '已启用正则' : '已禁用正则');
+    toastr.success(isEnabled ? 'Đã bật regex' : 'Đã tắt regex');
   } catch (e) {
-    toastr.error('更新失败：' + e.message);
+    toastr.error('Cập nhật thất bại:' + e.message);
     renderManageRegexLists();
   }
 }
@@ -231,9 +231,9 @@ async function openRegexEditPanel(regexId, type) {
     $('#wb-sync-manage-regex-max-depth-container').css('display', regex.substitute_regex === 1 ? 'flex' : 'none');
 
     $manageRegexEditPanel.removeClass('collapsed').show();
-    $manageRegexEditPanel.find('.wb-sync-manage-regex-edit-title').text(`编辑${type === 'global' ? '全局' : type === 'preset' ? '预设' : '局部'}正则`);
+    $manageRegexEditPanel.find('.wb-sync-manage-regex-edit-title').text(`Sửa regex ${type === 'global' ? 'Toàn cục' : type === 'preset' ? 'Preset' : 'Cục bộ'}`);
   } catch (e) {
-    toastr.error('加载正则失败：' + e.message);
+    toastr.error('Tải regex thất bại:' + e.message);
   }
 }
 
@@ -280,11 +280,11 @@ async function handleSaveRegex() {
       return regexes;
     }, targetOpt);
 
-    toastr.success('保存成功！');
+    toastr.success('Lưu thành công!');
     hideRegexEditPanel();
     renderManageRegexLists();
   } catch (e) {
-    toastr.error('保存失败：' + e.message);
+    toastr.error('Lưu thất bại:' + e.message);
   }
 }
 
@@ -311,13 +311,13 @@ function handleRenderToFrontend() {
 
   if ($container.is(':visible')) {
     $container.empty().hide();
-    $btn.html('👁️ 渲染');
+    $btn.html('👁️ Render');
     return;
   }
 
   let htmlContent = $('#wb-sync-manage-regex-replace-string').val();
   if (!htmlContent) {
-    toastr.warning('没有可渲染的内容');
+    toastr.warning('Không có nội dung để render');
     return;
   }
 
@@ -328,11 +328,11 @@ function handleRenderToFrontend() {
     style: 'width: 100%; height: 400px; border: none;',
   });
   $container.empty().append(iframe).show();
-  $btn.html('🙈 取消渲染');
+  $btn.html('🙈 Hủy render');
 }
 
 async function deleteRegex(regexId, type) {
-  if (!confirm('确定删除此正则脚本？')) return;
+  if (!confirm('Xác nhận xóa script regex này?')) return;
 
   try {
     let targetOpt = { type: type };
@@ -343,11 +343,11 @@ async function deleteRegex(regexId, type) {
       return regexes.filter(r => r.id !== regexId);
     }, targetOpt);
 
-    toastr.success('删除成功');
+    toastr.success('Xóa thành công');
     renderManageRegexLists();
     if (currentRegexId === regexId) hideRegexEditPanel();
   } catch (e) {
-    toastr.error('删除失败：' + e.message);
+    toastr.error('Xóa thất bại: ' + e.message);
   }
 }
 

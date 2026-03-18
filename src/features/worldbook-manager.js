@@ -88,13 +88,13 @@ function debouncedRender() {
 }
 
 export async function renderManageWorldbookList() {
-  $manageWbList.html('<div class="wb-sync-empty-msg">加载中...</div>');
+  $manageWbList.html('<div class="wb-sync-empty-msg">Đang tải...</div>');
   try {
     const [books, settings] = await Promise.all([getAllLorebooks(), getLorebookSettings()]);
     const enabledBooks = new Set(settings.selected_global_lorebooks);
 
     if (books.length === 0) {
-      $manageWbList.html('<div class="wb-sync-empty-msg">未找到任何世界书。</div>');
+      $manageWbList.html('<div class="wb-sync-empty-msg">Không tìm thấy Sổ thế giới nào.</div>');
       return;
     }
 
@@ -106,11 +106,11 @@ export async function renderManageWorldbookList() {
       div.setAttribute('data-book-name', book.file_name);
       div.innerHTML = `
         <div class="wb-sync-manage-wb-info">
-          <input type="checkbox" class="wb-sync-manage-wb-checkbox" ${isEnabled ? 'checked' : ''} title="启用/禁用">
+          <input type="checkbox" class="wb-sync-manage-wb-checkbox" ${isEnabled ? 'checked' : ''} title="Bật/Tắt">
           <span class="wb-sync-manage-wb-name">${escapeHtml(book.name)}</span>
         </div>
         <div class="wb-sync-manage-wb-actions">
-          <button class="wb-sync-button wb-sync-btn-small wb-sync-manage-wb-delete">删除</button>
+          <button class="wb-sync-button wb-sync-btn-small wb-sync-manage-wb-delete">Xóa</button>
         </div>
       `;
       fragment.appendChild(div);
@@ -118,7 +118,7 @@ export async function renderManageWorldbookList() {
 
     $manageWbList.empty().append(fragment);
   } catch (e) {
-    $manageWbList.html(`<div class="wb-sync-empty-msg" style="color:red;">加载失败：${e.message}</div>`);
+    $manageWbList.html(`<div class="wb-sync-empty-msg" style="color:red;">Tải thất bại: ${e.message}</div>`);
   }
 }
 
@@ -134,16 +134,16 @@ async function toggleWorldbookEnabled(bookName, isEnabled) {
     }
 
     await setLorebookSettings({ selected_global_lorebooks: enabled });
-    toastr.success(isEnabled ? '已启用世界书' : '已禁用世界书');
+    toastr.success(isEnabled ? 'Đã bậtSổ thế giới' : 'Đã tắtSổ thế giới');
   } catch (e) {
-    toastr.error('更新失败：' + e.message);
+    toastr.error('Cập nhật thất bại:' + e.message);
     renderManageWorldbookList();
   }
 }
 
 async function loadWorldbookEntries(bookName) {
   currentBookName = bookName;
-  $manageWbEntriesList.html('<div class="wb-sync-empty-msg">加载中...</div>');
+  $manageWbEntriesList.html('<div class="wb-sync-empty-msg">Đang tải...</div>');
   $manageWbList.find('.wb-sync-manage-wb-item').removeClass('active');
   $manageWbList.find(`[data-book-name="${escapeHtml(bookName)}"]`).addClass('active');
   hideEntryEditPanel();
@@ -176,13 +176,13 @@ async function loadWorldbookEntries(bookName) {
     }
 
     if (currentEntries.length === 0) {
-      $manageWbEntriesList.html('<div class="wb-sync-empty-msg">该世界书没有条目。</div>');
+      $manageWbEntriesList.html('<div class="wb-sync-empty-msg">Sổ thế giới này không có mục.</div>');
       return;
     }
 
     renderEntriesList(currentEntries);
   } catch (e) {
-    $manageWbEntriesList.html(`<div class="wb-sync-empty-msg" style="color:red;">加载失败：${e.message}</div>`);
+    $manageWbEntriesList.html(`<div class="wb-sync-empty-msg" style="color:red;">Tải thất bại: ${e.message}</div>`);
   }
 }
 
@@ -190,12 +190,12 @@ function getPositionLabel(entry) {
   const pos = entry.position || {};
   const type = pos.type || 'before_author_note';
   const labels = {
-    'before_character_definition': '角色定义之前',
-    'after_character_definition': '角色定义之后',
-    'before_example_messages': '示例消息前',
-    'after_example_messages': '示例消息后',
-    'before_author_note': '作者说明之前',
-    'after_author_note': '作者说明之后',
+    'before_character_definition': 'Trước định nghĩa nhân vật',
+    'after_character_definition': 'Sau định nghĩa nhân vật',
+    'before_example_messages': 'Trước tin nhắn ví dụ',
+    'after_example_messages': 'Sau tin nhắn ví dụ',
+    'before_author_note': 'Trước ghi chú tác giả',
+    'after_author_note': 'Sau ghi chú tác giả',
     'at_depth': `@D${pos.depth || 4}`
   };
   return labels[type] || type;
@@ -205,7 +205,7 @@ function renderEntriesList(entries) {
   const fragment = document.createDocumentFragment();
   entries.forEach(entry => {
     const isConstant = entry.type === 'constant' || (entry.strategy && entry.strategy.type === 'constant');
-    const typeLabel = isConstant ? '<span class="wb-sync-badge wb-sync-badge-blue">蓝灯</span>' : '<span class="wb-sync-badge wb-sync-badge-green">绿灯</span>';
+    const typeLabel = isConstant ? '<span class="wb-sync-badge wb-sync-badge-blue">Đèn xanh dương</span>' : '<span class="wb-sync-badge wb-sync-badge-green">Đèn xanh lá</span>';
     const posLabel = getPositionLabel(entry);
     const order = entry.position?.order || entry.order || 100;
     const prob = entry.probability !== undefined ? entry.probability : 100;
@@ -218,11 +218,11 @@ function renderEntriesList(entries) {
         ${typeLabel}
         <span class="wb-sync-manage-entry-name">${escapeHtml(entry.comment || entry.name || `UID:${entry.uid}`)}</span>
         <span class="wb-sync-entry-meta" style="margin-left: 10px; color: var(--wb-sync-text-muted); font-size: 0.85em;">
-          ${posLabel} · 顺序${order} · 概率${prob}%
+          ${posLabel} · Thứ tự${order} · Xác suất${prob}%
         </span>
       </div>
       <div class="wb-sync-manage-entry-actions">
-        <button class="wb-sync-button wb-sync-btn-small wb-sync-manage-entry-delete">删除</button>
+        <button class="wb-sync-button wb-sync-btn-small wb-sync-manage-entry-delete">Xóa</button>
       </div>
     `;
     fragment.appendChild(div);
@@ -281,7 +281,7 @@ async function handleSaveEntry() {
   try {
     const entries = await getLorebookEntries(currentBookName);
     const idx = entries.findIndex(e => e.uid == uid);
-    if (idx === -1) throw new Error('找不到条目');
+    if (idx === -1) throw new Error('Không tìm thấy mục');
 
     const e = entries[idx];
     e.comment = $('#wb-sync-manage-wb-entry-name').val();
@@ -318,18 +318,18 @@ async function handleSaveEntry() {
     e.recursion.prevent_outgoing = $('#wb-sync-manage-wb-entry-prevent-out').is(':checked');
 
     await setLorebookEntries(currentBookName, entries);
-    toastr.success('保存成功！');
+    toastr.success('Lưu thành công!');
     hideEntryEditPanel();
     loadWorldbookEntries(currentBookName);
   } catch (e) {
-    toastr.error('保存失败：' + e.message);
+    toastr.error('Lưu thất bại:' + e.message);
   }
 }
 
 async function handleCreateEntry() {
-  if (!currentBookName) return toastr.warning('请先选择世界书');
+  if (!currentBookName) return toastr.warning('Hãy chọn Sổ thế giới trước');
   
-  const name = prompt('请输入条目名称：');
+  const name = prompt('Nhập tên mục:');
   if (!name) return;
 
   try {
@@ -347,10 +347,10 @@ async function handleCreateEntry() {
     };
     entries.push(newEntry);
     await setLorebookEntries(currentBookName, entries);
-    toastr.success('创建成功！');
+    toastr.success('Tạo thành công!');
     loadWorldbookEntries(currentBookName);
   } catch (e) {
-    toastr.error('创建失败：' + e.message);
+    toastr.error('Tạo thất bại:' + e.message);
   }
 }
 
@@ -371,54 +371,54 @@ function restoreWbCardStates() {
 }
 
 async function handleCreateWorldbook() {
-  const name = prompt('请输入新世界书的名称：');
+  const name = prompt('Nhập tên Sổ thế giới mới:');
   if (!name || !name.trim()) return;
   try {
     const api = await getTavernHelper();
     await api.createWorldbook(name.trim());
-    toastr.success(`世界书 "${name}" 创建成功！`);
+    toastr.success(`Sổ thế giới "${name}" Tạo thành công!`);
     renderManageWorldbookList();
   } catch (e) {
-    toastr.error(`创建失败：${e.message}`);
+    toastr.error(`Tạo thất bại:${e.message}`);
   }
 }
 
 async function deleteSingleWorldbook(bookName) {
-  if (!confirm(`确定删除世界书 "${bookName}"？`)) return;
+  if (!confirm(`Xác nhận xóa Sổ thế giới "${bookName}"?`)) return;
   try {
     const api = await getTavernHelper();
     await api.deleteWorldbook(bookName);
-    toastr.success('删除成功');
+    toastr.success('Xóa thành công');
     renderManageWorldbookList();
-    $manageWbEntriesList.html('<div class="wb-sync-empty-msg">请先在左侧选择世界书。</div>');
+    $manageWbEntriesList.html('<div class="wb-sync-empty-msg">Hãy chọn Sổ thế giới ở bên trái trước.</div>');
     hideEntryEditPanel();
     currentBookName = '';
     currentEntries = [];
   } catch (e) {
-    toastr.error('删除失败：' + e.message);
+    toastr.error('Xóa thất bại: ' + e.message);
   }
 }
 
 async function handleDeleteSelectedWorldbooks() {
   const selected = $manageWbList.find('.wb-sync-manage-wb-checkbox:checked').closest('.wb-sync-manage-wb-item');
-  if (selected.length === 0) return toastr.warning('请选择要删除的世界书');
+  if (selected.length === 0) return toastr.warning('Hãy chọn Sổ thế giới cần xóa');
   
   const bookNames = selected.map((_, el) => $(el).data('book-name')).get();
-  if (!confirm(`确定删除 ${bookNames.length} 个世界书？`)) return;
+  if (!confirm(`Xác nhận xóa ${bookNames.length} Sổ thế giới?`)) return;
 
   try {
     const api = await getTavernHelper();
     for (const name of bookNames) {
       await api.deleteWorldbook(name);
     }
-    toastr.success('删除成功');
+    toastr.success('Xóa thành công');
     renderManageWorldbookList();
-    $manageWbEntriesList.html('<div class="wb-sync-empty-msg">请先在左侧选择世界书。</div>');
+    $manageWbEntriesList.html('<div class="wb-sync-empty-msg">Hãy chọn Sổ thế giới ở bên trái trước.</div>');
     hideEntryEditPanel();
     currentBookName = '';
     currentEntries = [];
   } catch (e) {
-    toastr.error('删除失败：' + e.message);
+    toastr.error('Xóa thất bại: ' + e.message);
   }
 }
 
@@ -430,34 +430,34 @@ function toggleSelectAllWorldbooks() {
 
 async function deleteSingleEntry(uid) {
   if (!currentBookName) return;
-  if (!confirm('确定删除此条目？')) return;
+  if (!confirm('Xác nhận xóa mục này?')) return;
 
   try {
     const api = await getTavernHelper();
     await api.deleteWorldbookEntries(currentBookName, entry => entry.uid === parseInt(uid), { render: 'debounced' });
-    toastr.success('删除成功');
+    toastr.success('Xóa thành công');
     loadWorldbookEntries(currentBookName);
   } catch (e) {
-    toastr.error('删除失败：' + e.message);
+    toastr.error('Xóa thất bại: ' + e.message);
   }
 }
 
 async function handleDeleteSelectedEntries() {
-  if (!currentBookName) return toastr.warning('请先选择世界书');
+  if (!currentBookName) return toastr.warning('Hãy chọn Sổ thế giới trước');
   
   const selected = $manageWbEntriesList.find('.wb-sync-manage-entry-checkbox:checked');
-  if (selected.length === 0) return toastr.warning('请选择要删除的条目');
+  if (selected.length === 0) return toastr.warning('Hãy chọn mục cần xóa');
 
   const uids = selected.map((_, el) => parseInt($(el).data('uid'))).get();
-  if (!confirm(`确定删除 ${uids.length} 个条目？`)) return;
+  if (!confirm(`Xác nhận xóa ${uids.length} mục?`)) return;
 
   try {
     const api = await getTavernHelper();
     await api.deleteWorldbookEntries(currentBookName, entry => uids.includes(entry.uid), { render: 'debounced' });
-    toastr.success('删除成功');
+    toastr.success('Xóa thành công');
     loadWorldbookEntries(currentBookName);
   } catch (e) {
-    toastr.error('删除失败：' + e.message);
+    toastr.error('Xóa thất bại: ' + e.message);
   }
 }
 

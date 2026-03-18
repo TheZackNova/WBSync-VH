@@ -73,7 +73,7 @@ function debouncedRender() {
 
 export function renderManageScriptLists() {
   if (!window.TavernHelper) {
-    const msg = '<div class="wb-sync-empty-msg">TavernHelper 未加载</div>';
+    const msg = '<div class="wb-sync-empty-msg">TavernHelper Chưa tải</div>';
     $manageScriptGlobalList.html(msg);
     $manageScriptPresetList.html(msg);
     $manageScriptCharacterList.html(msg);
@@ -101,10 +101,10 @@ export function renderManageScriptLists() {
       renderScriptList($manageScriptCharacterList, characterScripts, 'character');
     }
   } catch (e) {
-    console.error('加载脚本失败:', e);
-    $manageScriptGlobalList.html('<div class="wb-sync-empty-msg">加载失败</div>');
-    $manageScriptPresetList.html('<div class="wb-sync-empty-msg">加载失败</div>');
-    $manageScriptCharacterList.html('<div class="wb-sync-empty-msg">加载失败</div>');
+    console.error('Tải script thất bại:', e);
+    $manageScriptGlobalList.html('<div class="wb-sync-empty-msg">Tải thất bại</div>');
+    $manageScriptPresetList.html('<div class="wb-sync-empty-msg">Tải thất bại</div>');
+    $manageScriptCharacterList.html('<div class="wb-sync-empty-msg">Tải thất bại</div>');
   }
 }
 
@@ -141,7 +141,7 @@ function loadScriptsWithCache(type) {
 
 function renderScriptList($container, scripts, type) {
   if (scripts.length === 0) {
-    $container.html('<div class="wb-sync-empty-msg">没有脚本。</div>');
+    $container.html('<div class="wb-sync-empty-msg">Không có script.</div>');
     return;
   }
 
@@ -153,10 +153,10 @@ function renderScriptList($container, scripts, type) {
     div.innerHTML = `
       <div class="wb-sync-manage-script-info">
         <input type="checkbox" class="wb-sync-manage-script-enabled" ${script.enabled !== false ? 'checked' : ''}>
-        <span class="wb-sync-manage-script-name">${escapeHtml(script.name || '未命名脚本')}</span>
+        <span class="wb-sync-manage-script-name">${escapeHtml(script.name || 'Script chưa có tên')}</span>
       </div>
       <div class="wb-sync-manage-script-actions">
-        <button class="wb-sync-button wb-sync-btn-small wb-sync-manage-script-delete">删除</button>
+        <button class="wb-sync-button wb-sync-btn-small wb-sync-manage-script-delete">Xóa</button>
       </div>
     `;
     fragment.appendChild(div);
@@ -171,9 +171,9 @@ async function toggleScriptEnabled(scriptId, type, isEnabled) {
       if (script) script.enabled = isEnabled;
       return scripts;
     }, { type: type });
-    toastr.success(isEnabled ? '已启用脚本' : '已禁用脚本');
+    toastr.success(isEnabled ? 'Đã bật script' : 'Đã tắt script');
   } catch (e) {
-    toastr.error('更新失败：' + e.message);
+    toastr.error('Cập nhật thất bại:' + e.message);
     renderManageScriptLists();
   }
 }
@@ -195,9 +195,9 @@ async function openScriptEditPanel(scriptId, type) {
     $('#wb-sync-manage-script-enabled').prop('checked', script.enabled !== false);
 
     $manageScriptEditPanel.removeClass('collapsed').show();
-    $manageScriptEditPanel.find('.wb-sync-manage-script-edit-title').text(`编辑${type === 'global' ? '全局' : type === 'preset' ? '预设' : '角色'}脚本`);
+    $manageScriptEditPanel.find('.wb-sync-manage-script-edit-title').text(`Sửa script ${type === 'global' ? 'Toàn cục' : type === 'preset' ? 'Preset' : 'Nhân vật'}`);
   } catch (e) {
-    toastr.error('加载脚本失败：' + e.message);
+    toastr.error('Tải script thất bại:' + e.message);
   }
 }
 
@@ -222,11 +222,11 @@ async function handleSaveScript() {
       return scripts;
     }, { type: currentScriptType });
 
-    toastr.success('保存成功！');
+    toastr.success('Lưu thành công!');
     hideScriptEditPanel();
     renderManageScriptLists();
   } catch (e) {
-    toastr.error('保存失败：' + e.message);
+    toastr.error('Lưu thất bại:' + e.message);
   }
 }
 
@@ -248,18 +248,18 @@ function restoreScriptCardStates() {
 }
 
 async function deleteScript(scriptId, type) {
-  if (!confirm('确定删除此脚本？')) return;
+  if (!confirm('Xác nhận xóa script này?')) return;
 
   try {
     await window.TavernHelper.updateScriptTreesWith(scripts => {
       return scripts.filter(s => s.id !== scriptId);
     }, { type: type });
 
-    toastr.success('删除成功');
+    toastr.success('Xóa thành công');
     renderManageScriptLists();
     if (currentScriptId === scriptId) hideScriptEditPanel();
   } catch (e) {
-    toastr.error('删除失败：' + e.message);
+    toastr.error('Xóa thất bại: ' + e.message);
   }
 }
 

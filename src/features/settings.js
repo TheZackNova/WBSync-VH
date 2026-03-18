@@ -144,14 +144,14 @@ export function saveSettings(event) {
   };
 
   if (!settings.showFloatingBtn && !settings.showMagicWandBtn && !settings.showQrBtn) {
-    toastr.warning('至少需要保留一个插件入口！');
+    toastr.warning('Cần giữ lại ít nhất một lối vào tiện ích!');
     $changedCheckbox.prop('checked', true);
     return;
   }
 
   localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(settings));
   applySettings(settings);
-  toastr.success('设置已保存!');
+  toastr.success('Đã lưu cài đặt!');
 }
 
 export function isDefaultCollapse() {
@@ -181,9 +181,9 @@ export function applySettings(settings) {
   if (settings.showMagicWandBtn !== false) {
       if ($(`#${menuId}`).length === 0) {
           const menuItemHtml = `
-              <div id="${menuId}" class="list-group-item flex-container flexGap5" title="打开世界书同步器">
+              <div id="${menuId}" class="list-group-item flex-container flexGap5" title="Mở Đồng bộ Sổ thế giới">
                   <i class="fa-solid fa-book-atlas fa-fw"></i>
-                  <span>世界书同步器</span>
+                  <span>Đồng bộ Sổ thế giới</span>
               </div>
           `;
           $('#extensionsMenu').append(menuItemHtml);
@@ -213,7 +213,7 @@ export function initQrMenu() {
 
       if ($qrBar.length > 0) {
           const qrItemHtml = `
-              <div id="${qrMenuId}" class="menu_button qr--button" title="打开世界书同步器" style="cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; margin-right: 5px; background: rgba(255,255,255,0.1); border-radius: 5px;">
+              <div id="${qrMenuId}" class="menu_button qr--button" title="Mở Đồng bộ Sổ thế giới" style="cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; margin-right: 5px; background: rgba(255,255,255,0.1); border-radius: 5px;">
                   <i class="fa-solid fa-book-atlas"></i>
               </div>
           `;
@@ -231,7 +231,7 @@ export function initQrMenu() {
               const $sendTextarea = $('#send_textarea, #user_input').first();
               if ($sendTextarea.length > 0) {
                    const qrItemHtml = `
-                      <div id="${qrMenuId}" class="menu_button" title="打开世界书同步器" style="cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; margin-bottom: 5px; background: rgba(255,255,255,0.1); border-radius: 5px;">
+                      <div id="${qrMenuId}" class="menu_button" title="Mở Đồng bộ Sổ thế giới" style="cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; margin-bottom: 5px; background: rgba(255,255,255,0.1); border-radius: 5px;">
                           <i class="fa-solid fa-book-atlas"></i>
                       </div>
                   `;

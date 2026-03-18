@@ -1,4 +1,4 @@
-<div id="wb-sync-floating-btn" title="世界书同步器">
+<div id="wb-sync-floating-btn" title="Đồng bộ Sổ thế giới">
   <i class="fa-solid fa-book-atlas"></i>
 </div>
 
@@ -6,47 +6,47 @@
   <div id="wb-sync-popup" class="wb-sync-popup-container">
     <div id="wb-sync-loader" class="wb-sync-loader" style="display: none">
       <div class="wb-sync-spinner"></div>
-      <p>处理中...</p>
+      <p>Đang xử lý...</p>
     </div>
     <div id="wb-sync-popup-header" class="wb-sync-popup-header">
-      <div id="wb-sync-header-title" class="wb-sync-header-title">世界书同步器 - 主菜单</div>
+      <div id="wb-sync-header-title" class="wb-sync-header-title">Đồng bộ Sổ thế giới - Menu chính</div>
       <div class="wb-sync-header-controls">
-        <button id="wb-sync-manage-script-refresh-btn" class="wb-sync-header-btn" title="刷新" style="display: none">
+        <button id="wb-sync-manage-script-refresh-btn" class="wb-sync-header-btn" title="Làm mới" style="display: none">
           <i class="fa-solid fa-rotate-right"></i>
         </button>
-        <button id="wb-sync-manage-wb-refresh-btn" class="wb-sync-header-btn" title="刷新" style="display: none">
+        <button id="wb-sync-manage-wb-refresh-btn" class="wb-sync-header-btn" title="Làm mới" style="display: none">
           <i class="fa-solid fa-rotate-right"></i>
         </button>
-        <button id="wb-sync-manage-regex-refresh-btn" class="wb-sync-header-btn" title="刷新" style="display: none">
+        <button id="wb-sync-manage-regex-refresh-btn" class="wb-sync-header-btn" title="Làm mới" style="display: none">
           <i class="fa-solid fa-rotate-right"></i>
         </button>
-        <button id="wb-sync-popup-back-btn" class="wb-sync-header-btn" title="返回主菜单" style="display: none">
+        <button id="wb-sync-popup-back-btn" class="wb-sync-header-btn" title="Về menu chính" style="display: none">
           <i class="fa-solid fa-arrow-left"></i>
         </button>
-        <button id="wb-sync-popup-close-button" class="wb-sync-header-btn close-btn" title="关闭">&times;</button>
+        <button id="wb-sync-popup-close-button" class="wb-sync-header-btn close-btn" title="Đóng">&times;</button>
       </div>
     </div>
     <div class="wb-sync-popup-body" id="wb-sync-popup-body">
       <div id="wb-sync-main-view" style="display: flex; flex-direction: column; gap: 15px; min-height: min-content">
         <div class="wb-sync-section" id="wb-sync-update-section" style="display: none;">
           <div class="wb-sync-section-header">
-            <h4><i class="fa-solid fa-arrows-rotate"></i> 自动更新</h4>
+            <h4><i class="fa-solid fa-arrows-rotate"></i> Tự động cập nhật</h4>
           </div>
           <div class="wb-sync-section-content">
             <div class="wb-sync-actions">
-              <button id="wb-sync-update-btn" class="wb-sync-button wb-sync-btn-primary">更新</button>
+              <button id="wb-sync-update-btn" class="wb-sync-button wb-sync-btn-primary">Cập nhật</button>
             </div>
           </div>
         </div>
 
         <div class="wb-sync-section">
           <div class="wb-sync-section-header">
-            <h4><i class="fa-solid fa-globe"></i> 载入全局世界书</h4>
+            <h4><i class="fa-solid fa-globe"></i> Tải Sổ thế giới toàn cục</h4>
           </div>
           <div class="wb-sync-section-content">
             <div class="wb-sync-actions">
-              <button id="wb-sync-select-book-btn" class="wb-sync-button">选择世界书 (全局)</button>
-              <button id="wb-sync-load-preset-btn" class="wb-sync-button">载入方案</button>
+              <button id="wb-sync-select-book-btn" class="wb-sync-button">Chọn Sổ thế giới (toàn cục)</button>
+              <button id="wb-sync-load-preset-btn" class="wb-sync-button">Tải preset</button>
             </div>
             <div id="wb-sync-preset-list-container" class="wb-sync-preset-list-container" style="display: none"></div>
           </div>
@@ -54,30 +54,30 @@
 
         <div class="wb-sync-section">
           <div class="wb-sync-section-header">
-            <h4><i class="fa-solid fa-pen-to-square"></i> 世界书管理</h4>
+            <h4><i class="fa-solid fa-pen-to-square"></i> Quản lý Sổ thế giới</h4>
           </div>
           <div class="wb-sync-section-content">
             <div id="wb-sync-edit-actions-container" class="wb-sync-actions">
-              <button id="wb-sync-goto-manage-wb-btn" class="wb-sync-button">📚 世界书管理</button>
-              <button id="wb-sync-create-wb-btn" class="wb-sync-button">➕ 新建世界书</button>
-              <button id="wb-sync-goto-rename-btn" class="wb-sync-button">✏️ 修改名称</button>
-              <button id="wb-sync-goto-duplicate-btn" class="wb-sync-button">📑 复制世界书</button>
-              <button id="wb-sync-goto-modify-btn" class="wb-sync-button">📝 修改条目</button>
-              <button id="wb-sync-goto-delete-btn" class="wb-sync-button">🗑️ 删除世界书和条目</button>
-              <button id="wb-sync-goto-transfer-btn" class="wb-sync-button">🔄 条目迁移</button>
+              <button id="wb-sync-goto-manage-wb-btn" class="wb-sync-button">📚 Quản lý Sổ thế giới</button>
+              <button id="wb-sync-create-wb-btn" class="wb-sync-button">➕ Tạo Sổ thế giới</button>
+              <button id="wb-sync-goto-rename-btn" class="wb-sync-button">✏️ Đổi tên</button>
+              <button id="wb-sync-goto-duplicate-btn" class="wb-sync-button">📑 Sao chép Sổ thế giới</button>
+              <button id="wb-sync-goto-modify-btn" class="wb-sync-button">📝 Sửa mục</button>
+              <button id="wb-sync-goto-delete-btn" class="wb-sync-button">🗑️ Xóa Sổ thế giới và mục</button>
+              <button id="wb-sync-goto-transfer-btn" class="wb-sync-button">🔄 Chuyển mục</button>
             </div>
           </div>
         </div>
 
         <div class="wb-sync-section">
           <div class="wb-sync-section-header">
-            <h4><i class="fa-solid fa-robot"></i> 酒馆助手功能</h4>
+            <h4><i class="fa-solid fa-robot"></i> Tính năng Trợ lý Tavern</h4>
           </div>
           <div class="wb-sync-section-content">
             <div class="wb-sync-actions">
-              <button id="wb-sync-goto-manage-script-btn" class="wb-sync-button">🤖 酒馆助手脚本管理</button>
-              <button id="wb-sync-goto-create-script-btn" class="wb-sync-button">💻 创建酒馆助手脚本</button>
-              <button id="wb-sync-main-import-script-btn" class="wb-sync-button">📂 导入脚本</button>
+              <button id="wb-sync-goto-manage-script-btn" class="wb-sync-button">🤖 Quản lý script Trợ lý Tavern</button>
+              <button id="wb-sync-goto-create-script-btn" class="wb-sync-button">💻 Tạo script Trợ lý Tavern</button>
+              <button id="wb-sync-main-import-script-btn" class="wb-sync-button">📂 Nhập script</button>
             </div>
             <div
               id="wb-sync-main-import-script-options"
@@ -90,16 +90,16 @@
                 border: 1px dashed var(--wb-sync-border);
               "
             >
-              <span class="wb-sync-label" style="display: block; margin-bottom: 8px">选择导入目标:</span>
+              <span class="wb-sync-label" style="display: block; margin-bottom: 8px">Chọn đích nhập:</span>
               <div class="wb-sync-actions" style="margin-top: 0">
                 <button id="wb-sync-main-import-script-global-btn" class="wb-sync-button wb-sync-btn-small">
-                  全局脚本库
+                  Thư viện script toàn cục
                 </button>
                 <button id="wb-sync-main-import-script-preset-btn" class="wb-sync-button wb-sync-btn-small">
-                  预设脚本库
+                  Thư viện script preset
                 </button>
                 <button id="wb-sync-main-import-script-character-btn" class="wb-sync-button wb-sync-btn-small">
-                  角色脚本库
+                  Thư viện script nhân vật
                 </button>
               </div>
               <input type="file" id="wb-sync-main-script-file-input" style="display: none" accept=".json" />
@@ -109,13 +109,13 @@
 
         <div class="wb-sync-section">
           <div class="wb-sync-section-header">
-            <h4><i class="fa-solid fa-code"></i> 正则功能</h4>
+            <h4><i class="fa-solid fa-code"></i> Tính năng regex</h4>
           </div>
           <div class="wb-sync-section-content">
             <div class="wb-sync-actions">
-              <button id="wb-sync-goto-manage-regex-btn" class="wb-sync-button">📋 正则脚本管理</button>
-              <button id="wb-sync-goto-create-regex-btn" class="wb-sync-button">💻 创建正则脚本</button>
-              <button id="wb-sync-main-import-regex-btn" class="wb-sync-button">📂 导入正则</button>
+              <button id="wb-sync-goto-manage-regex-btn" class="wb-sync-button">📋 Quản lý script regex</button>
+              <button id="wb-sync-goto-create-regex-btn" class="wb-sync-button">💻 Tạo script regex</button>
+              <button id="wb-sync-main-import-regex-btn" class="wb-sync-button">📂 Nhập regex</button>
             </div>
             <div
               id="wb-sync-main-import-regex-options"
@@ -128,16 +128,16 @@
                 border: 1px dashed var(--wb-sync-border);
               "
             >
-              <span class="wb-sync-label" style="display: block; margin-bottom: 8px">选择导入目标:</span>
+              <span class="wb-sync-label" style="display: block; margin-bottom: 8px">Chọn đích nhập:</span>
               <div class="wb-sync-actions" style="margin-top: 0">
                 <button id="wb-sync-main-import-regex-global-btn" class="wb-sync-button wb-sync-btn-small">
-                  全局正则脚本
+                  Script regex toàn cục
                 </button>
                 <button id="wb-sync-main-import-regex-preset-btn" class="wb-sync-button wb-sync-btn-small">
-                  预设正则脚本
+                  Script regex preset
                 </button>
                 <button id="wb-sync-main-import-regex-character-btn" class="wb-sync-button wb-sync-btn-small">
-                  局部正则脚本
+                  Script regex cục bộ
                 </button>
               </div>
               <input type="file" id="wb-sync-main-regex-file-input" style="display: none" accept=".json" />
@@ -147,14 +147,14 @@
 
         <div class="wb-sync-section">
           <div class="wb-sync-section-header">
-            <h4><i class="fa-solid fa-plug"></i> 插件功能</h4>
+            <h4><i class="fa-solid fa-plug"></i> Tính năng tiện ích</h4>
           </div>
           <div class="wb-sync-section-content">
             <div class="wb-sync-actions">
-              <button id="wb-sync-goto-sync-btn" class="wb-sync-button">⚡ 世界书同步器</button>
-              <button id="wb-sync-goto-frontend-btn" class="wb-sync-button">💻 前端同步器</button>
-              <button id="wb-sync-goto-script-sync-btn" class="wb-sync-button">💻 脚本同步器</button>
-              <button id="wb-sync-goto-settings-btn" class="wb-sync-button">⚙️ 插件设置</button>
+              <button id="wb-sync-goto-sync-btn" class="wb-sync-button">⚡ Đồng bộ Sổ thế giới</button>
+              <button id="wb-sync-goto-frontend-btn" class="wb-sync-button">💻 Trình đồng bộ frontend</button>
+              <button id="wb-sync-goto-script-sync-btn" class="wb-sync-button">💻 Trình đồng bộ script</button>
+              <button id="wb-sync-goto-settings-btn" class="wb-sync-button">⚙️ Cài đặt tiện ích</button>
             </div>
           </div>
         </div>
@@ -163,7 +163,7 @@
       <div id="wb-sync-create-regex-view" class="wb-sync-section" style="display: none; height: 100%">
         <div class="wb-sync-section-header">
           <h4>
-            <i class="fa-solid fa-code"></i> 创建正则脚本
+            <i class="fa-solid fa-code"></i> Tạo script regex
             <i
               class="fa-solid fa-chevron-up wb-sync-collapse-icon"
               style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
@@ -172,79 +172,79 @@
         </div>
         <div class="wb-sync-section-content">
           <div class="wb-sync-controls-box" style="border-style: dashed">
-            <span class="wb-sync-batch-title">正则脚本设置:</span>
+            <span class="wb-sync-batch-title">Thiết lập script regex:</span>
             <div class="wb-sync-row">
               <div class="wb-sync-group" style="flex: 1">
-                <span class="wb-sync-label">脚本名称:</span>
+                <span class="wb-sync-label">Tên script:</span>
                 <input type="text" id="wb-sync-cr-script-name" class="wb-sync-input" style="width: 100%" value="" />
               </div>
               <div class="wb-sync-group" style="flex: 1">
-                <span class="wb-sync-label">查找正则:</span>
+                <span class="wb-sync-label">Regex tìm kiếm:</span>
                 <input type="text" id="wb-sync-cr-find-regex" class="wb-sync-input" style="width: 100%" value="" />
               </div>
             </div>
             <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px">
               <div style="display: flex; flex-direction: column; gap: 5px">
-                <span class="wb-sync-label" style="font-weight: bold">作用范围</span>
+                <span class="wb-sync-label" style="font-weight: bold">Phạm vi áp dụng</span>
                 <label class="wb-sync-checkbox-label"
-                  ><input type="checkbox" class="wb-sync-cr-placement-cb" value="1" /> 用户输入</label
+                  ><input type="checkbox" class="wb-sync-cr-placement-cb" value="1" /> Đầu vào người dùng</label
                 >
                 <label class="wb-sync-checkbox-label"
-                  ><input type="checkbox" class="wb-sync-cr-placement-cb" value="2" checked /> AI输出</label
+                  ><input type="checkbox" class="wb-sync-cr-placement-cb" value="2" checked /> Đầu ra AI</label
                 >
                 <label class="wb-sync-checkbox-label"
-                  ><input type="checkbox" class="wb-sync-cr-placement-cb" value="4" /> 快捷命令</label
+                  ><input type="checkbox" class="wb-sync-cr-placement-cb" value="4" /> Lệnh nhanh</label
                 >
                 <label class="wb-sync-checkbox-label"
-                  ><input type="checkbox" class="wb-sync-cr-placement-cb" value="3" /> 世界信息</label
+                  ><input type="checkbox" class="wb-sync-cr-placement-cb" value="3" /> Thông tin thế giới</label
                 >
                 <label class="wb-sync-checkbox-label"
-                  ><input type="checkbox" class="wb-sync-cr-placement-cb" value="5" /> 推理</label
+                  ><input type="checkbox" class="wb-sync-cr-placement-cb" value="5" /> Suy luận</label
                 >
               </div>
 
               <div style="display: flex; flex-direction: column; gap: 5px">
-                <span class="wb-sync-label" style="font-weight: bold">其他选项</span>
-                <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-cr-disabled" /> 已禁用</label>
+                <span class="wb-sync-label" style="font-weight: bold">Tùy chọn khác</span>
+                <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-cr-disabled" /> Đã tắt</label>
                 <label class="wb-sync-checkbox-label"
-                  ><input type="checkbox" id="wb-sync-cr-run-on-edit" checked /> 在编辑时运行</label
+                  ><input type="checkbox" id="wb-sync-cr-run-on-edit" checked /> Chạy khi chỉnh sửa</label
                 >
 
-                <span class="wb-sync-label" style="font-weight: bold; margin-top: 5px">正则表达式查找时的宏</span>
+                <span class="wb-sync-label" style="font-weight: bold; margin-top: 5px">Macro khi tìm regex</span>
                 <select id="wb-sync-cr-substitute-regex" class="wb-sync-select" style="width: 120px">
-                  <option value="0" selected>不替换</option>
-                  <option value="1">替换</option>
+                  <option value="0" selected>Không thay</option>
+                  <option value="1">Thay</option>
                 </select>
               </div>
 
               <div style="display: flex; flex-direction: column; gap: 5px">
-                <span class="wb-sync-label" style="font-weight: bold">短暂</span>
+                <span class="wb-sync-label" style="font-weight: bold">Tạm thời</span>
                 <label class="wb-sync-checkbox-label"
-                  ><input type="checkbox" id="wb-sync-cr-markdown-only" checked /> 仅格式显示</label
+                  ><input type="checkbox" id="wb-sync-cr-markdown-only" checked /> Chỉ hiển thị định dạng</label
                 >
                 <label class="wb-sync-checkbox-label"
-                  ><input type="checkbox" id="wb-sync-cr-prompt-only" /> 仅格式提示词</label
+                  ><input type="checkbox" id="wb-sync-cr-prompt-only" /> Chỉ định dạng prompt</label
                 >
 
                 <div style="display: flex; gap: 10px; margin-top: 5px">
                   <div style="display: flex; flex-direction: column; gap: 2px">
-                    <span class="wb-sync-label">最小深度</span>
+                    <span class="wb-sync-label">Độ sâu tối thiểu</span>
                     <input
                       type="number"
                       id="wb-sync-cr-min-depth"
                       class="wb-sync-input"
                       style="width: 70px"
-                      placeholder="无限"
+                      placeholder="Vô hạn"
                     />
                   </div>
                   <div style="display: flex; flex-direction: column; gap: 2px">
-                    <span class="wb-sync-label">最大深度</span>
+                    <span class="wb-sync-label">Độ sâu tối đa</span>
                     <input
                       type="number"
                       id="wb-sync-cr-max-depth"
                       class="wb-sync-input"
                       style="width: 70px"
-                      placeholder="无限"
+                      placeholder="Vô hạn"
                     />
                   </div>
                 </div>
@@ -253,15 +253,15 @@
           </div>
 
           <div class="wb-sync-controls-box" style="flex-grow: 1; display: flex; flex-direction: column">
-            <span class="wb-sync-label">修剪掉:</span>
+            <span class="wb-sync-label">Cắt bỏ:</span>
             <textarea
               id="wb-sync-cr-trim-strings"
               class="wb-sync-textarea"
               style="min-height: 60px; margin-bottom: 10px"
-              placeholder="在替换之前全局修剪正则表达式匹配中任何不需要的部分。用回车键分隔每个元素。"
+              placeholder="Cắt toàn cục các phần không cần thiết trong kết quả khớp regex trước khi thay thế. Mỗi mục cách nhau bằng xuống dòng."
             ></textarea>
 
-            <span class="wb-sync-label">替换为 (正则替换内容):</span>
+            <span class="wb-sync-label">Thay bằng (nội dung thay regex):</span>
             <textarea
               id="wb-sync-cr-content"
               class="wb-sync-textarea"
@@ -269,10 +269,10 @@
             ></textarea>
 
             <div class="wb-sync-actions" style="justify-content: flex-end; margin-top: 10px; flex-wrap: wrap">
-              <button id="wb-sync-cr-import-global-btn" class="wb-sync-button">导入至全局正则</button>
-              <button id="wb-sync-cr-import-preset-btn" class="wb-sync-button">导入至预设正则</button>
-              <button id="wb-sync-cr-import-character-btn" class="wb-sync-button">导入至局部正则</button>
-              <button id="wb-sync-cr-download-btn" class="wb-sync-button wb-sync-btn-primary">⬇️ 下载成正则脚本</button>
+              <button id="wb-sync-cr-import-global-btn" class="wb-sync-button">Nhập vào regex toàn cục</button>
+              <button id="wb-sync-cr-import-preset-btn" class="wb-sync-button">Nhập vào regex preset</button>
+              <button id="wb-sync-cr-import-character-btn" class="wb-sync-button">Nhập vào regex cục bộ</button>
+              <button id="wb-sync-cr-download-btn" class="wb-sync-button wb-sync-btn-primary">⬇️ Tải xuống thành script regex</button>
             </div>
           </div>
         </div>
@@ -281,7 +281,7 @@
       <div id="wb-sync-create-script-view" class="wb-sync-section" style="display: none; height: 100%">
         <div class="wb-sync-section-header">
           <h4>
-            <i class="fa-solid fa-code"></i> 创建酒馆助手脚本
+            <i class="fa-solid fa-code"></i> Tạo script Trợ lý Tavern
             <i
               class="fa-solid fa-chevron-up wb-sync-collapse-icon"
               style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
@@ -292,31 +292,31 @@
           <div class="wb-sync-controls-box" style="border-style: dashed">
             <div class="wb-sync-row">
               <div class="wb-sync-group" style="flex: 1">
-                <span class="wb-sync-label">脚本名称:</span>
+                <span class="wb-sync-label">Tên script:</span>
                 <input type="text" id="wb-sync-cs-script-name" class="wb-sync-input" style="width: 100%" value="" />
               </div>
             </div>
             <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px">
               <div style="display: flex; flex-direction: column; gap: 5px">
-                <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-cs-disabled" /> 已禁用</label>
+                <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-cs-disabled" /> Đã tắt</label>
               </div>
             </div>
           </div>
 
           <div class="wb-sync-controls-box" style="flex-grow: 1; display: flex; flex-direction: column">
-            <span class="wb-sync-label">脚本内容 (JS/TS):</span>
+            <span class="wb-sync-label">Nội dung script (JS/TS):</span>
             <textarea
               id="wb-sync-cs-content"
               class="wb-sync-textarea"
               style="flex-grow: 1; font-family: monospace"
             ></textarea>
 
-            <span class="wb-sync-label" style="margin-top: 10px">作者备注:</span>
+            <span class="wb-sync-label" style="margin-top: 10px">Ghi chú tác giả:</span>
             <textarea
               id="wb-sync-cs-info"
               class="wb-sync-textarea"
               style="min-height: 60px"
-              placeholder="脚本备注，例如作者名、版本和注意事项等，支持简单的 markdown 和 html"
+              placeholder="Ghi chú script, ví dụ tác giả, phiên bản và lưu ý; hỗ trợ markdown và html cơ bản"
             ></textarea>
 
             <div class="wb-sync-actions" style="justify-content: flex-end; margin-top: 10px; flex-wrap: wrap">
@@ -325,24 +325,24 @@
                 class="wb-sync-button"
                 style="background-color: var(--wb-sync-primary); color: #000; opacity: 1"
               >
-                导入至全局脚本库
+                Nhập vào thư viện script toàn cục
               </button>
               <button
                 id="wb-sync-cs-import-preset-script-btn"
                 class="wb-sync-button"
                 style="background-color: var(--wb-sync-primary); color: #000; opacity: 1"
               >
-                导入至预设脚本库
+                Nhập vào thư viện script preset
               </button>
               <button
                 id="wb-sync-cs-import-character-script-btn"
                 class="wb-sync-button"
                 style="background-color: var(--wb-sync-primary); color: #000; opacity: 1"
               >
-                导入至角色脚本库
+                Nhập vào thư viện script nhân vật
               </button>
               <button id="wb-sync-cs-download-btn" class="wb-sync-button wb-sync-btn-primary" style="opacity: 1">
-                ⬇️ 下载脚本
+                ⬇️ Tải script
               </button>
             </div>
           </div>
@@ -352,7 +352,7 @@
       <div id="wb-sync-frontend-view" class="wb-sync-section" style="display: none; height: 100%">
         <div class="wb-sync-section-header">
           <h4>
-            <i class="fa-solid fa-code"></i> 前端同步器
+            <i class="fa-solid fa-code"></i> Trình đồng bộ frontend
             <i
               class="fa-solid fa-chevron-up wb-sync-collapse-icon"
               style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
@@ -363,7 +363,7 @@
           <div class="wb-sync-controls-box">
             <div class="wb-sync-row">
               <div class="wb-sync-group">
-                <span class="wb-sync-label">起始标签:</span>
+                <span class="wb-sync-label">Thẻ bắt đầu:</span>
                 <input
                   type="text"
                   id="wb-sync-fe-tag-start"
@@ -373,21 +373,21 @@
                 />
               </div>
               <div class="wb-sync-group">
-                <span class="wb-sync-label">结束标签:</span>
+                <span class="wb-sync-label">Thẻ kết thúc:</span>
                 <input type="text" id="wb-sync-fe-tag-end" class="wb-sync-input" value="```" style="width: 80px" />
               </div>
               <div class="wb-sync-group">
-                <span class="wb-sync-label">指定楼层:</span>
-                <input type="text" id="wb-sync-fe-floor" class="wb-sync-input" placeholder="如: 1,5,8" style="width: 80px" />
+                <span class="wb-sync-label">Chỉ định tầng:</span>
+                <input type="text" id="wb-sync-fe-floor" class="wb-sync-input" placeholder="Ví dụ: 1,5,8" style="width: 80px" />
               </div>
               <button class="wb-sync-button" id="wb-sync-fe-extract-btn">
-                <i class="fa-solid fa-magnifying-glass"></i> 提取最新消息
+                <i class="fa-solid fa-magnifying-glass"></i> Trích xuất tin nhắn mới nhất
               </button>
             </div>
           </div>
 
           <div id="wb-sync-fe-cards-container" style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
-            <div class="wb-sync-empty-msg">点击上方“提取最新消息”按钮，从聊天记录中提取前端代码。</div>
+            <div class="wb-sync-empty-msg">Nhấn "Trích xuất tin nhắn mới nhất" ở trên để trích mã frontend từ lịch sử chat.</div>
           </div>
         </div>
       </div>
@@ -395,7 +395,7 @@
       <div id="wb-sync-script-sync-view" class="wb-sync-section" style="display: none; height: 100%">
         <div class="wb-sync-section-header">
           <h4>
-            <i class="fa-solid fa-code"></i> 脚本同步器
+            <i class="fa-solid fa-code"></i> Trình đồng bộ script
             <i
               class="fa-solid fa-chevron-up wb-sync-collapse-icon"
               style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
@@ -406,7 +406,7 @@
           <div class="wb-sync-controls-box">
             <div class="wb-sync-row">
               <div class="wb-sync-group">
-                <span class="wb-sync-label">起始标签:</span>
+                <span class="wb-sync-label">Thẻ bắt đầu:</span>
                 <input
                   type="text"
                   id="wb-sync-ss-tag-start"
@@ -416,21 +416,21 @@
                 />
               </div>
               <div class="wb-sync-group">
-                <span class="wb-sync-label">结束标签:</span>
+                <span class="wb-sync-label">Thẻ kết thúc:</span>
                 <input type="text" id="wb-sync-ss-tag-end" class="wb-sync-input" value="```" style="width: 80px" />
               </div>
               <div class="wb-sync-group">
-                <span class="wb-sync-label">指定楼层:</span>
-                <input type="text" id="wb-sync-ss-floor" class="wb-sync-input" placeholder="如: 1,5,8" style="width: 80px" />
+                <span class="wb-sync-label">Chỉ định tầng:</span>
+                <input type="text" id="wb-sync-ss-floor" class="wb-sync-input" placeholder="Ví dụ: 1,5,8" style="width: 80px" />
               </div>
               <button class="wb-sync-button" id="wb-sync-ss-extract-btn">
-                <i class="fa-solid fa-magnifying-glass"></i> 提取最新消息
+                <i class="fa-solid fa-magnifying-glass"></i> Trích xuất tin nhắn mới nhất
               </button>
             </div>
           </div>
 
           <div id="wb-sync-ss-cards-container" style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
-            <div class="wb-sync-empty-msg">点击上方“提取最新消息”按钮，从聊天记录中提取脚本代码。</div>
+            <div class="wb-sync-empty-msg">Nhấn "Trích xuất tin nhắn mới nhất" ở trên để trích mã script từ lịch sử chat.</div>
           </div>
         </div>
       </div>
@@ -438,7 +438,7 @@
       <div id="wb-sync-sync-view" class="wb-sync-section" style="display: none; height: 100%">
         <div class="wb-sync-section-header">
           <h4>
-            <i class="fa-solid fa-bolt"></i> 世界书同步器
+            <i class="fa-solid fa-bolt"></i> Đồng bộ Sổ thế giới
             <i
               class="fa-solid fa-chevron-up wb-sync-collapse-icon"
               style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
@@ -449,57 +449,57 @@
           <div class="wb-sync-controls-box">
             <div class="wb-sync-row">
               <div class="wb-sync-group">
-                <span class="wb-sync-label">目标世界书:</span>
+                <span class="wb-sync-label">Sổ thế giới đích:</span>
                 <select id="wb-sync-target-wb" class="wb-sync-select">
-                  <option value="">-- 加载中 --</option>
+                  <option value="">-- Đang tải --</option>
                 </select>
-                <button class="wb-sync-button wb-sync-btn-small" id="wb-sync-sync-create-wb-btn" title="新建世界书">
+                <button class="wb-sync-button wb-sync-btn-small" id="wb-sync-sync-create-wb-btn" title="Tạo Sổ thế giới">
                   ➕
                 </button>
               </div>
               <div class="wb-sync-group">
-                <span class="wb-sync-label">起始标签:</span>
+                <span class="wb-sync-label">Thẻ bắt đầu:</span>
                 <input type="text" id="wb-sync-tag-start" class="wb-sync-input" value="" style="width: 80px" />
               </div>
               <div class="wb-sync-group">
-                <span class="wb-sync-label">结束标签:</span>
+                <span class="wb-sync-label">Thẻ kết thúc:</span>
                 <input type="text" id="wb-sync-tag-end" class="wb-sync-input" value="" style="width: 80px" />
               </div>
               <div class="wb-sync-group">
-                <span class="wb-sync-label">指定楼层:</span>
-                <input type="text" id="wb-sync-floor" class="wb-sync-input" placeholder="如: 1,5,8" style="width: 80px" />
+                <span class="wb-sync-label">Chỉ định tầng:</span>
+                <input type="text" id="wb-sync-floor" class="wb-sync-input" placeholder="Ví dụ: 1,5,8" style="width: 80px" />
               </div>
               <button class="wb-sync-button" id="wb-sync-extract-btn">
-                <i class="fa-solid fa-magnifying-glass"></i> 提取最新消息
+                <i class="fa-solid fa-magnifying-glass"></i> Trích xuất tin nhắn mới nhất
               </button>
               <button class="wb-sync-button wb-sync-btn-primary" id="wb-sync-sync-all-btn" style="margin-left: auto">
-                <i class="fa-solid fa-cloud-arrow-up"></i> 一键同步全部
+                <i class="fa-solid fa-cloud-arrow-up"></i> Đồng bộ tất cả
               </button>
             </div>
           </div>
 
           <div class="wb-sync-controls-box" style="border-style: dashed">
             <div class="wb-sync-row">
-              <span class="wb-sync-batch-title">批量设置:</span>
+              <span class="wb-sync-batch-title">Cài đặt hàng loạt:</span>
               <select id="wb-sync-batch-mode" class="wb-sync-select">
-                <option value="">-- 触发模式 --</option>
-                <option value="constant">常驻 (蓝灯)</option>
-                <option value="selective">条件触发 (绿灯)</option>
+                <option value="">-- Chế độ kích hoạt --</option>
+                <option value="constant">Luôn hiển thị (đèn xanh dương)</option>
+                <option value="selective">Kích hoạt có điều kiện (đèn xanh lá)</option>
               </select>
               <select id="wb-sync-batch-position" class="wb-sync-select">
-                <option value="">-- 插入位置 --</option>
-                <option value="0">角色定义之前</option>
-                <option value="1">角色定义之后</option>
-                <option value="2">示例消息前 (↑EM)</option>
-                <option value="3">示例消息后 (↓EM)</option>
-                <option value="4">作者说明之前</option>
-                <option value="5">作者说明之后</option>
-                <option value="6">@D◆[系统]在深度</option>
-                <option value="7">@D[用户]在深度</option>
-                <option value="8">@D[AI]在深度</option>
+                <option value="">-- Vị trí chèn --</option>
+                <option value="0">Trước định nghĩa nhân vật</option>
+                <option value="1">Sau định nghĩa nhân vật</option>
+                <option value="2">Trước tin nhắn ví dụ (↑EM)</option>
+                <option value="3">Sau tin nhắn ví dụ (↓EM)</option>
+                <option value="4">Trước ghi chú tác giả</option>
+                <option value="5">Sau ghi chú tác giả</option>
+                <option value="6">@D◆[Hệ thống] ở độ sâu</option>
+                <option value="7">@D[Người dùng] ở độ sâu</option>
+                <option value="8">@D[AI]ở độ sâu</option>
               </select>
               <div id="wb-sync-batch-depth-container" style="display: none; align-items: center; gap: 5px">
-                <span class="wb-sync-label">深度:</span>
+                <span class="wb-sync-label">Độ sâu:</span>
                 <input
                   type="number"
                   id="wb-sync-batch-depth"
@@ -510,17 +510,17 @@
                 />
               </div>
               <label class="wb-sync-checkbox-label">
-                <input type="checkbox" id="wb-sync-batch-prevent-in" /> 不可被递归
+                <input type="checkbox" id="wb-sync-batch-prevent-in" /> Không bị đệ quy
               </label>
               <label class="wb-sync-checkbox-label">
-                <input type="checkbox" id="wb-sync-batch-prevent-out" /> 防止进一步递归
+                <input type="checkbox" id="wb-sync-batch-prevent-out" /> Ngăn đệ quy thêm
               </label>
-              <button class="wb-sync-button" id="wb-sync-apply-batch-btn">应用批量设置</button>
+              <button class="wb-sync-button" id="wb-sync-apply-batch-btn">Áp dụng cài đặt hàng loạt</button>
             </div>
           </div>
 
           <div id="wb-sync-cards-container" class="wb-sync-cards-grid">
-            <div class="wb-sync-empty-msg">点击上方“提取最新消息”按钮，从聊天记录中提取世界书条目。</div>
+            <div class="wb-sync-empty-msg">Nhấn "Trích xuất tin nhắn mới nhất" ở trên để trích mục Sổ thế giới từ lịch sử chat.</div>
           </div>
         </div>
       </div>
@@ -528,7 +528,7 @@
       <div id="wb-sync-select-view" class="wb-sync-section" style="display: none; height: 100%">
         <div class="wb-sync-section-header">
           <h4>
-            <i class="fa-solid fa-check-to-slot"></i> 选择要启用的世界书
+            <i class="fa-solid fa-check-to-slot"></i> Chọn Sổ thế giới cần bật
             <i
               class="fa-solid fa-chevron-up wb-sync-collapse-icon"
               style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
@@ -538,7 +538,7 @@
         <div class="wb-sync-section-content">
           <div id="wb-sync-book-list" class="wb-sync-book-list-container"></div>
           <div class="wb-sync-actions">
-            <button id="wb-sync-save-preset-btn" class="wb-sync-button">保存方案</button>
+            <button id="wb-sync-save-preset-btn" class="wb-sync-button">Lưu preset</button>
           </div>
         </div>
       </div>
@@ -546,7 +546,7 @@
       <div id="wb-sync-duplicate-view" class="wb-sync-section" style="display: none; height: 100%">
         <div class="wb-sync-section-header">
           <h4>
-            <i class="fa-solid fa-copy"></i> 复制世界书
+            <i class="fa-solid fa-copy"></i> Sao chép Sổ thế giới
             <i
               class="fa-solid fa-chevron-up wb-sync-collapse-icon"
               style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
@@ -556,14 +556,14 @@
         <div class="wb-sync-section-content">
           <div class="wb-sync-modify-controls">
             <div class="wb-sync-grid-container">
-              <label for="wb-sync-dup-source-select">源世界书:</label>
+              <label for="wb-sync-dup-source-select">Sổ thế giới nguồn:</label>
               <select id="wb-sync-dup-source-select" class="wb-sync-select"></select>
-              <label for="wb-sync-dup-target-input">新世界书名称:</label>
-              <input type="text" id="wb-sync-dup-target-input" class="wb-sync-input" placeholder="输入新名称..." />
+              <label for="wb-sync-dup-target-input">Tên Sổ thế giới mới:</label>
+              <input type="text" id="wb-sync-dup-target-input" class="wb-sync-input" placeholder="Nhập tên mới..." />
             </div>
           </div>
           <div class="wb-sync-actions">
-            <button id="wb-sync-duplicate-submit-btn" class="wb-sync-button">确认复制</button>
+            <button id="wb-sync-duplicate-submit-btn" class="wb-sync-button">Xác nhận sao chép</button>
           </div>
         </div>
       </div>
@@ -571,7 +571,7 @@
       <div id="wb-sync-rename-view" class="wb-sync-section" style="display: none; height: 100%">
         <div class="wb-sync-section-header">
           <h4>
-            <i class="fa-solid fa-pen"></i> 修改世界书名称
+            <i class="fa-solid fa-pen"></i> Đổi tên Sổ thế giới
             <i
               class="fa-solid fa-chevron-up wb-sync-collapse-icon"
               style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
@@ -581,14 +581,14 @@
         <div class="wb-sync-section-content">
           <div class="wb-sync-modify-controls">
             <div class="wb-sync-grid-container">
-              <label for="wb-sync-rename-source-select">选择世界书:</label>
+              <label for="wb-sync-rename-source-select">Chọn Sổ thế giới:</label>
               <select id="wb-sync-rename-source-select" class="wb-sync-select"></select>
-              <label for="wb-sync-rename-target-input">新名称:</label>
-              <input type="text" id="wb-sync-rename-target-input" class="wb-sync-input" placeholder="输入新名称..." />
+              <label for="wb-sync-rename-target-input">Tên mới:</label>
+              <input type="text" id="wb-sync-rename-target-input" class="wb-sync-input" placeholder="Nhập tên mới..." />
             </div>
           </div>
           <div class="wb-sync-actions">
-            <button id="wb-sync-rename-submit-btn" class="wb-sync-button">确认修改</button>
+            <button id="wb-sync-rename-submit-btn" class="wb-sync-button">Xác nhận chỉnh sửa</button>
           </div>
         </div>
       </div>
@@ -596,7 +596,7 @@
       <div id="wb-sync-modify-view" class="wb-sync-section" style="display: none; height: 100%">
         <div class="wb-sync-section-header">
           <h4>
-            <i class="fa-solid fa-pen-to-square"></i> 修改世界书条目
+            <i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa mục của Sổ thế giới
             <i
               class="fa-solid fa-chevron-up wb-sync-collapse-icon"
               style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
@@ -606,9 +606,9 @@
         <div class="wb-sync-section-content">
           <div class="wb-sync-modify-controls">
             <div class="wb-sync-grid-container">
-              <label for="wb-sync-worldbook-select">选择世界书:</label>
+              <label for="wb-sync-worldbook-select">Chọn Sổ thế giới:</label>
               <select id="wb-sync-worldbook-select" class="wb-sync-select"></select>
-              <label for="wb-sync-entry-select">选择条目:</label>
+              <label for="wb-sync-entry-select">Chọn mục:</label>
               <select id="wb-sync-entry-select" class="wb-sync-select"></select>
             </div>
 
@@ -627,52 +627,52 @@
             >
               <div class="wb-sync-row">
                 <div class="wb-sync-group" style="flex: 1">
-                  <span class="wb-sync-label">名称:</span>
+                  <span class="wb-sync-label">Tên:</span>
                   <input type="text" id="wb-sync-mod-name" class="wb-sync-input" style="width: 100%" />
                 </div>
                 <div class="wb-sync-group" style="flex: 1">
-                  <span class="wb-sync-label">关键字:</span>
+                  <span class="wb-sync-label">Từ khóa:</span>
                   <input
                     type="text"
                     id="wb-sync-mod-keys"
                     class="wb-sync-input"
                     style="width: 100%"
-                    placeholder="逗号分隔"
+                    placeholder="Phân tách bằng dấu phẩy"
                   />
                 </div>
               </div>
 
-              <span class="wb-sync-label" style="margin-top: 5px">内容:</span>
+              <span class="wb-sync-label" style="margin-top: 5px">Nội dung:</span>
               <textarea id="wb-sync-mod-content" class="wb-sync-textarea" rows="6"></textarea>
 
               <div class="wb-sync-row" style="margin-top: 5px">
                 <div class="wb-sync-group">
-                  <span class="wb-sync-label">触发模式:</span>
+                  <span class="wb-sync-label">Chế độ kích hoạt:</span>
                   <select id="wb-sync-mod-mode" class="wb-sync-select">
-                    <option value="constant">常驻 (蓝灯)</option>
-                    <option value="selective">条件触发 (绿灯)</option>
+                    <option value="constant">Luôn hiển thị (đèn xanh dương)</option>
+                    <option value="selective">Kích hoạt có điều kiện (đèn xanh lá)</option>
                   </select>
                 </div>
                 <div class="wb-sync-group">
-                  <span class="wb-sync-label">插入位置:</span>
+                  <span class="wb-sync-label">Vị trí chèn:</span>
                   <select id="wb-sync-mod-position" class="wb-sync-select">
-                    <option value="before_character_definition">角色定义之前</option>
-                    <option value="after_character_definition">角色定义之后</option>
-                    <option value="before_example_messages">示例消息前 (↑EM)</option>
-                    <option value="after_example_messages">示例消息后 (↓EM)</option>
-                    <option value="before_author_note">作者说明之前</option>
-                    <option value="after_author_note">作者说明之后</option>
-                    <option value="at_depth_system">@D◆[系统]在深度</option>
-                    <option value="at_depth_user">@D[用户]在深度</option>
-                    <option value="at_depth_assistant">@D[AI]在深度</option>
+                    <option value="before_character_definition">Trước định nghĩa nhân vật</option>
+                    <option value="after_character_definition">Sau định nghĩa nhân vật</option>
+                    <option value="before_example_messages">Trước tin nhắn ví dụ (↑EM)</option>
+                    <option value="after_example_messages">Sau tin nhắn ví dụ (↓EM)</option>
+                    <option value="before_author_note">Trước ghi chú tác giả</option>
+                    <option value="after_author_note">Sau ghi chú tác giả</option>
+                    <option value="at_depth_system">@D◆[Hệ thống] ở độ sâu</option>
+                    <option value="at_depth_user">@D[Người dùng] ở độ sâu</option>
+                    <option value="at_depth_assistant">@D[AI]ở độ sâu</option>
                   </select>
                 </div>
                 <div class="wb-sync-group">
-                  <span class="wb-sync-label">顺序:</span>
+                  <span class="wb-sync-label">Thứ tự:</span>
                   <input type="number" id="wb-sync-mod-order" class="wb-sync-input" style="width: 70px" value="" />
                 </div>
                 <div class="wb-sync-group">
-                  <span class="wb-sync-label">触发概率%:</span>
+                  <span class="wb-sync-label">Tỉ lệ kích hoạt %:</span>
                   <input
                     type="number"
                     id="wb-sync-mod-prob"
@@ -696,30 +696,30 @@
                   border: 1px dashed #ffaa00;
                 "
               >
-                <span class="wb-sync-label" style="color: #ffaa00">深度设置:</span>
+                <span class="wb-sync-label" style="color: #ffaa00">Thiết lập độ sâu:</span>
                 <input
                   type="number"
                   id="wb-sync-mod-depth"
                   class="wb-sync-input"
                   style="width: 80px"
                   min="0"
-                  placeholder="例如: 4"
+                  placeholder="Ví dụ: 4"
                 />
-                <span style="font-size: 12px; color: var(--wb-sync-text-muted)">（从最新消息往回数的层数）</span>
+                <span style="font-size: 12px; color: var(--wb-sync-text-muted)">(Số tầng tính ngược từ tin nhắn mới nhất)</span>
               </div>
 
               <div class="wb-sync-row">
-                <span class="wb-sync-label">递归设置:</span>
+                <span class="wb-sync-label">Thiết lập đệ quy:</span>
                 <label class="wb-sync-checkbox-label">
-                  <input type="checkbox" id="wb-sync-mod-prevent-in" /> 不可被递归
+                  <input type="checkbox" id="wb-sync-mod-prevent-in" /> Không bị đệ quy
                 </label>
                 <label class="wb-sync-checkbox-label">
-                  <input type="checkbox" id="wb-sync-mod-prevent-out" /> 防止进一步递归
+                  <input type="checkbox" id="wb-sync-mod-prevent-out" /> Ngăn đệ quy thêm
                 </label>
               </div>
 
               <div class="wb-sync-actions" style="justify-content: flex-end; margin-top: 10px">
-                <button id="wb-sync-save-manual-changes-btn" class="wb-sync-button">保存手动修改</button>
+                <button id="wb-sync-save-manual-changes-btn" class="wb-sync-button">Lưu chỉnh sửa thủ công</button>
               </div>
             </div>
           </div>
@@ -730,7 +730,7 @@
         <div class="wb-sync-section">
           <div class="wb-sync-section-header">
             <h4>
-              <i class="fa-solid fa-trash-can"></i> 删除世界书
+              <i class="fa-solid fa-trash-can"></i> Xóa Sổ thế giới
               <i
                 class="fa-solid fa-chevron-up wb-sync-collapse-icon"
                 style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
@@ -739,18 +739,18 @@
           </div>
           <div class="wb-sync-section-content">
             <p class="wb-sync-description">
-              点击下方的世界书进行选择 (可多选)，再次点击取消选择。选择后，其条目会显示在下方。
+              Nhấn vào Sổ thế giới bên dưới để chọn (có thể chọn nhiều). Nhấn lại để bỏ chọn. Sau khi chọn, các mục sẽ hiển thị bên dưới.
             </p>
             <div id="wb-sync-worldbook-list-container" class="wb-sync-book-list-container"></div>
             <div class="wb-sync-actions">
-              <button id="wb-sync-delete-worldbook-btn" class="wb-sync-button abandon">删除选中的世界书</button>
+              <button id="wb-sync-delete-worldbook-btn" class="wb-sync-button abandon">Xóa Sổ thế giới đã chọn</button>
             </div>
           </div>
         </div>
         <div class="wb-sync-section" style="flex-grow: 1">
           <div class="wb-sync-section-header">
             <h4>
-              <i class="fa-solid fa-file-circle-minus"></i> 删除条目
+              <i class="fa-solid fa-file-circle-minus"></i> Xóa mục
               <i
                 class="fa-solid fa-chevron-up wb-sync-collapse-icon"
                 style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
@@ -758,19 +758,19 @@
             </h4>
           </div>
           <div class="wb-sync-section-content">
-            <p class="wb-sync-description">下方会展示已选择的世界书中的所有条目。点击条目进行选择。</p>
-            <h5>📘 蓝灯条目 (Constant Entry)</h5>
+            <p class="wb-sync-description">Bên dưới sẽ hiển thị tất cả mục trong các Sổ thế giới đã chọn. Nhấn vào mục để chọn.</p>
+            <h5>📘 Mục đèn xanh dương (Constant Entry)</h5>
             <div
               id="wb-sync-constant-entries-container"
               class="wb-sync-book-list-container"
               style="margin-bottom: 15px"
             >
-              <p class="wb-sync-no-tasks">请先在上方选择一个或多个世界书。</p>
+              <p class="wb-sync-no-tasks">Hãy chọn một hoặc nhiều Sổ thế giới ở trên trước.</p>
             </div>
-            <h5>📗 绿灯条目 (Normal Entry)</h5>
+            <h5>📗 Mục đèn xanh lá (Normal Entry)</h5>
             <div id="wb-sync-normal-entries-container" class="wb-sync-book-list-container"></div>
             <div class="wb-sync-actions">
-              <button id="wb-sync-delete-entry-btn" class="wb-sync-button abandon">删除选中的条目</button>
+              <button id="wb-sync-delete-entry-btn" class="wb-sync-button abandon">Xóa mục đã chọn</button>
             </div>
           </div>
         </div>
@@ -780,7 +780,7 @@
         <div class="wb-sync-section">
           <div class="wb-sync-section-header">
             <h4>
-              <i class="fa-solid fa-exchange-alt"></i> 条目迁移
+              <i class="fa-solid fa-exchange-alt"></i> Chuyển mục
               <i
                 class="fa-solid fa-chevron-up wb-sync-collapse-icon"
                 style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
@@ -790,24 +790,24 @@
           <div class="wb-sync-section-content">
             <div class="wb-sync-transfer-controls">
               <div class="wb-sync-grid-container">
-                <label for="wb-sync-source-worldbook-select">源世界书:</label>
+                <label for="wb-sync-source-worldbook-select">Sổ thế giới nguồn:</label>
                 <select id="wb-sync-source-worldbook-select" class="wb-sync-select"></select>
-                <label for="wb-sync-target-worldbook-select">目标世界书:</label>
+                <label for="wb-sync-target-worldbook-select">Sổ thế giới đích:</label>
                 <select id="wb-sync-target-worldbook-select" class="wb-sync-select"></select>
               </div>
               <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
-                <label class="wb-sync-textarea-label" style="margin-top: 0;">选择要迁移的条目:</label>
-                <button id="wb-sync-transfer-select-all-btn" class="wb-sync-button wb-sync-btn-small" style="display: none;">全选 / 反选</button>
+                <label class="wb-sync-textarea-label" style="margin-top: 0;">Chọn mục cần chuyển:</label>
+                <button id="wb-sync-transfer-select-all-btn" class="wb-sync-button wb-sync-btn-small" style="display: none;">Chọn tất cả / Bỏ chọn</button>
               </div>
               <div
                 id="wb-sync-source-entries-container"
                 class="wb-sync-book-list-container"
                 style="height: 200px; overflow-y: auto"
               >
-                <p class="wb-sync-no-tasks">请先选择一个源世界书。</p>
+                <p class="wb-sync-no-tasks">Hãy chọn một Sổ thế giới nguồn trước.</p>
               </div>
               <div class="wb-sync-actions">
-                <button id="wb-sync-transfer-entries-btn" class="wb-sync-button">执行迁移</button>
+                <button id="wb-sync-transfer-entries-btn" class="wb-sync-button">Thực hiện chuyển</button>
               </div>
             </div>
           </div>
@@ -816,7 +816,7 @@
         <div class="wb-sync-section">
           <div class="wb-sync-section-header">
             <h4>
-              <i class="fa-solid fa-copy"></i> 条目复制
+              <i class="fa-solid fa-copy"></i> Sao chép mục
               <i
                 class="fa-solid fa-chevron-up wb-sync-collapse-icon"
                 style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
@@ -826,24 +826,24 @@
           <div class="wb-sync-section-content">
             <div class="wb-sync-transfer-controls">
               <div class="wb-sync-grid-container">
-                <label for="wb-sync-copy-source-worldbook-select">源世界书:</label>
+                <label for="wb-sync-copy-source-worldbook-select">Sổ thế giới nguồn:</label>
                 <select id="wb-sync-copy-source-worldbook-select" class="wb-sync-select"></select>
-                <label for="wb-sync-copy-target-worldbook-select">目标世界书:</label>
+                <label for="wb-sync-copy-target-worldbook-select">Sổ thế giới đích:</label>
                 <select id="wb-sync-copy-target-worldbook-select" class="wb-sync-select"></select>
               </div>
               <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
-                <label class="wb-sync-textarea-label" style="margin-top: 0;">选择要复制的条目:</label>
-                <button id="wb-sync-copy-select-all-btn" class="wb-sync-button wb-sync-btn-small" style="display: none;">全选 / 反选</button>
+                <label class="wb-sync-textarea-label" style="margin-top: 0;">Chọn mục cần sao chép:</label>
+                <button id="wb-sync-copy-select-all-btn" class="wb-sync-button wb-sync-btn-small" style="display: none;">Chọn tất cả / Bỏ chọn</button>
               </div>
               <div
                 id="wb-sync-copy-source-entries-container"
                 class="wb-sync-book-list-container"
                 style="height: 200px; overflow-y: auto"
               >
-                <p class="wb-sync-no-tasks">请先选择一个源世界书。</p>
+                <p class="wb-sync-no-tasks">Hãy chọn một Sổ thế giới nguồn trước.</p>
               </div>
               <div class="wb-sync-actions">
-                <button id="wb-sync-copy-entries-btn" class="wb-sync-button">执行复制</button>
+                <button id="wb-sync-copy-entries-btn" class="wb-sync-button">Thực hiện sao chép</button>
               </div>
             </div>
           </div>
@@ -854,7 +854,7 @@
         <div class="wb-sync-section" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
           <div class="wb-sync-section-header">
             <h4>
-              <i class="fa-solid fa-book"></i> 世界书列表
+              <i class="fa-solid fa-book"></i> Danh sách Sổ thế giới
               <i class="fa-solid fa-chevron-up wb-sync-collapse-icon" style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"></i>
             </h4>
           </div>
@@ -862,36 +862,36 @@
             <div class="wb-sync-manage-script-card" id="wb-sync-manage-wb-books-card">
               <div class="wb-sync-manage-script-card-header" data-target="wb-sync-manage-wb-books-card">
                 <div class="wb-sync-manage-script-card-title">
-                  <i class="fa-solid fa-books"></i> 世界书列表
+                  <i class="fa-solid fa-books"></i> Danh sách Sổ thế giới
                 </div>
                 <div class="wb-sync-card-header-actions">
-                  <button id="wb-sync-manage-wb-create-btn" class="wb-sync-button wb-sync-btn-small">新建世界书</button>
-                  <button id="wb-sync-manage-wb-select-all-btn" class="wb-sync-button wb-sync-btn-small">全选/反选</button>
-                  <button id="wb-sync-manage-wb-delete-btn" class="wb-sync-button wb-sync-btn-small abandon">删除选中</button>
+                  <button id="wb-sync-manage-wb-create-btn" class="wb-sync-button wb-sync-btn-small">Tạo Sổ thế giới</button>
+                  <button id="wb-sync-manage-wb-select-all-btn" class="wb-sync-button wb-sync-btn-small">Chọn tất cả / Bỏ chọn</button>
+                  <button id="wb-sync-manage-wb-delete-btn" class="wb-sync-button wb-sync-btn-small abandon">Xóa đã chọn</button>
                   <i class="fa-solid fa-chevron-up wb-sync-manage-script-collapse-icon"></i>
                 </div>
               </div>
               <div class="wb-sync-manage-script-card-content">
                 <div id="wb-sync-manage-wb-list" class="wb-sync-manage-list">
-                  <div class="wb-sync-empty-msg">点击刷新加载世界书列表。</div>
+                  <div class="wb-sync-empty-msg">Nhấn làm mới để tải danh sách Sổ thế giới.</div>
                 </div>
               </div>
             </div>
             <div class="wb-sync-manage-script-card" id="wb-sync-manage-wb-entries-card">
               <div class="wb-sync-manage-script-card-header" data-target="wb-sync-manage-wb-entries-card">
                 <div class="wb-sync-manage-script-card-title">
-                  <i class="fa-solid fa-file-lines"></i> 条目列表
+                  <i class="fa-solid fa-file-lines"></i> Danh sách mục
                 </div>
                 <div class="wb-sync-card-header-actions">
-                  <button id="wb-sync-manage-wb-entry-create-btn" class="wb-sync-button wb-sync-btn-small">新建条目</button>
-                  <button id="wb-sync-manage-wb-entry-select-all-btn" class="wb-sync-button wb-sync-btn-small">全选/反选</button>
-                  <button id="wb-sync-manage-wb-entry-delete-btn" class="wb-sync-button wb-sync-btn-small abandon">删除选中</button>
+                  <button id="wb-sync-manage-wb-entry-create-btn" class="wb-sync-button wb-sync-btn-small">Tạo mục</button>
+                  <button id="wb-sync-manage-wb-entry-select-all-btn" class="wb-sync-button wb-sync-btn-small">Chọn tất cả / Bỏ chọn</button>
+                  <button id="wb-sync-manage-wb-entry-delete-btn" class="wb-sync-button wb-sync-btn-small abandon">Xóa đã chọn</button>
                   <i class="fa-solid fa-chevron-up wb-sync-manage-script-collapse-icon"></i>
                 </div>
               </div>
               <div class="wb-sync-manage-script-card-content">
                 <div id="wb-sync-manage-wb-entries-list" class="wb-sync-manage-list">
-                  <div class="wb-sync-empty-msg">请先在左侧选择世界书。</div>
+                  <div class="wb-sync-empty-msg">Hãy chọn Sổ thế giới ở bên trái trước.</div>
                 </div>
               </div>
             </div>
@@ -900,10 +900,10 @@
         <div id="wb-sync-manage-wb-edit-panel" class="wb-sync-section wb-sync-edit-panel-collapsible" style="display: none; max-height: 50%;">
           <div class="wb-sync-section-header wb-sync-edit-panel-header" data-target="wb-sync-manage-wb-edit-content">
             <h4 style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-              <span><i class="fa-solid fa-pen-to-square"></i> 编辑条目 <i class="fa-solid fa-chevron-up wb-sync-collapse-icon" style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"></i></span>
+              <span><i class="fa-solid fa-pen-to-square"></i> Sửa mục <i class="fa-solid fa-chevron-up wb-sync-collapse-icon" style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"></i></span>
               <div class="wb-sync-card-header-actions">
-                <button id="wb-sync-manage-wb-save-entry-btn" class="wb-sync-button wb-sync-btn-small wb-sync-btn-primary">保存</button>
-                <button id="wb-sync-manage-wb-cancel-entry-btn" class="wb-sync-button wb-sync-btn-small">取消</button>
+                <button id="wb-sync-manage-wb-save-entry-btn" class="wb-sync-button wb-sync-btn-small wb-sync-btn-primary">Lưu</button>
+                <button id="wb-sync-manage-wb-cancel-entry-btn" class="wb-sync-button wb-sync-btn-small">Hủy</button>
               </div>
             </h4>
           </div>
@@ -911,56 +911,56 @@
             <input type="hidden" id="wb-sync-manage-wb-entry-uid">
             <div class="wb-sync-row">
               <div class="wb-sync-group" style="flex: 1">
-                <span class="wb-sync-label">名称:</span>
+                <span class="wb-sync-label">Tên:</span>
                 <input type="text" id="wb-sync-manage-wb-entry-name" class="wb-sync-input" style="width: 100%">
               </div>
               <div class="wb-sync-group" style="flex: 1">
-                <span class="wb-sync-label">关键字:</span>
-                <input type="text" id="wb-sync-manage-wb-entry-keys" class="wb-sync-input" style="width: 100%" placeholder="逗号分隔">
+                <span class="wb-sync-label">Từ khóa:</span>
+                <input type="text" id="wb-sync-manage-wb-entry-keys" class="wb-sync-input" style="width: 100%" placeholder="Phân tách bằng dấu phẩy">
               </div>
             </div>
             <div class="wb-sync-row" style="margin-top: 10px;">
               <div class="wb-sync-group">
-                <span class="wb-sync-label">触发模式:</span>
+                <span class="wb-sync-label">Chế độ kích hoạt:</span>
                 <select id="wb-sync-manage-wb-entry-mode" class="wb-sync-select">
-                  <option value="constant">常驻 (蓝灯)</option>
-                  <option value="selective">条件触发 (绿灯)</option>
+                  <option value="constant">Luôn hiển thị (đèn xanh dương)</option>
+                  <option value="selective">Kích hoạt có điều kiện (đèn xanh lá)</option>
                 </select>
               </div>
               <div class="wb-sync-group">
-                <span class="wb-sync-label">插入位置:</span>
+                <span class="wb-sync-label">Vị trí chèn:</span>
                 <select id="wb-sync-manage-wb-entry-position" class="wb-sync-select">
-                  <option value="before_character_definition">角色定义之前</option>
-                  <option value="after_character_definition">角色定义之后</option>
-                  <option value="before_example_messages">示例消息前 (↑EM)</option>
-                  <option value="after_example_messages">示例消息后 (↓EM)</option>
-                  <option value="before_author_note">作者说明之前</option>
-                  <option value="after_author_note">作者说明之后</option>
-                  <option value="at_depth_system">@D◆[系统]在深度</option>
-                  <option value="at_depth_user">@D[用户]在深度</option>
-                  <option value="at_depth_assistant">@D[AI]在深度</option>
+                  <option value="before_character_definition">Trước định nghĩa nhân vật</option>
+                  <option value="after_character_definition">Sau định nghĩa nhân vật</option>
+                  <option value="before_example_messages">Trước tin nhắn ví dụ (↑EM)</option>
+                  <option value="after_example_messages">Sau tin nhắn ví dụ (↓EM)</option>
+                  <option value="before_author_note">Trước ghi chú tác giả</option>
+                  <option value="after_author_note">Sau ghi chú tác giả</option>
+                  <option value="at_depth_system">@D◆[Hệ thống] ở độ sâu</option>
+                  <option value="at_depth_user">@D[Người dùng] ở độ sâu</option>
+                  <option value="at_depth_assistant">@D[AI]ở độ sâu</option>
                 </select>
               </div>
               <div class="wb-sync-group" id="wb-sync-manage-wb-entry-depth-container" style="display: none;">
-                <span class="wb-sync-label">深度:</span>
+                <span class="wb-sync-label">Độ sâu:</span>
                 <input type="number" id="wb-sync-manage-wb-entry-depth" class="wb-sync-input" style="width: 70px" min="0" placeholder="4">
               </div>
               <div class="wb-sync-group">
-                <span class="wb-sync-label">顺序:</span>
+                <span class="wb-sync-label">Thứ tự:</span>
                 <input type="number" id="wb-sync-manage-wb-entry-order" class="wb-sync-input" style="width: 70px" value="100">
               </div>
               <div class="wb-sync-group">
-                <span class="wb-sync-label">触发概率%:</span>
+                <span class="wb-sync-label">Tỉ lệ kích hoạt %:</span>
                 <input type="number" id="wb-sync-manage-wb-entry-prob" class="wb-sync-input" style="width: 60px" min="0" max="100" value="100">
               </div>
             </div>
             <div class="wb-sync-row" style="margin-top: 10px;">
-              <span class="wb-sync-label">递归设置:</span>
-              <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-manage-wb-entry-prevent-in"> 不可被递归</label>
-              <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-manage-wb-entry-prevent-out"> 防止进一步递归</label>
+              <span class="wb-sync-label">Thiết lập đệ quy:</span>
+              <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-manage-wb-entry-prevent-in"> Không bị đệ quy</label>
+              <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-manage-wb-entry-prevent-out"> Ngăn đệ quy thêm</label>
             </div>
             <div style="margin-top: 10px;">
-              <span class="wb-sync-label">内容:</span>
+              <span class="wb-sync-label">Nội dung:</span>
               <textarea id="wb-sync-manage-wb-entry-content" class="wb-sync-textarea" rows="4" style="width: 100%;"></textarea>
             </div>
           </div>
@@ -971,7 +971,7 @@
         <div class="wb-sync-section" style="flex: 1; min-height: 0;">
           <div class="wb-sync-section-header">
             <h4>
-              <i class="fa-solid fa-robot"></i> 酒馆助手脚本管理
+              <i class="fa-solid fa-robot"></i> Quản lý script Trợ lý Tavern
               <i class="fa-solid fa-chevron-up wb-sync-collapse-icon" style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"></i>
             </h4>
           </div>
@@ -980,34 +980,34 @@
               <div class="wb-sync-manage-script-card">
                 <div class="wb-sync-manage-script-card-header" data-target="wb-sync-manage-script-global-list">
                   <div class="wb-sync-manage-script-card-title">
-                    <i class="fa-solid fa-globe"></i> 全局脚本
+                    <i class="fa-solid fa-globe"></i> Script toàn cục
                   </div>
                   <i class="fa-solid fa-chevron-up wb-sync-manage-script-collapse-icon"></i>
                 </div>
                 <div id="wb-sync-manage-script-global-list" class="wb-sync-manage-list wb-sync-manage-script-card-content wb-sync-sortable-list">
-                  <div class="wb-sync-empty-msg">点击刷新加载脚本列表。</div>
+                  <div class="wb-sync-empty-msg">Nhấn làm mới để tải danh sách script.</div>
                 </div>
               </div>
               <div class="wb-sync-manage-script-card">
                 <div class="wb-sync-manage-script-card-header" data-target="wb-sync-manage-script-preset-list">
                   <div class="wb-sync-manage-script-card-title">
-                    <i class="fa-solid fa-layer-group"></i> 预设脚本
+                    <i class="fa-solid fa-layer-group"></i> Script preset
                   </div>
                   <i class="fa-solid fa-chevron-up wb-sync-manage-script-collapse-icon"></i>
                 </div>
                 <div id="wb-sync-manage-script-preset-list" class="wb-sync-manage-list wb-sync-manage-script-card-content wb-sync-sortable-list">
-                  <div class="wb-sync-empty-msg">点击刷新加载脚本列表。</div>
+                  <div class="wb-sync-empty-msg">Nhấn làm mới để tải danh sách script.</div>
                 </div>
               </div>
               <div class="wb-sync-manage-script-card">
                 <div class="wb-sync-manage-script-card-header" data-target="wb-sync-manage-script-character-list">
                   <div class="wb-sync-manage-script-card-title">
-                    <i class="fa-solid fa-user"></i> 角色脚本
+                    <i class="fa-solid fa-user"></i> Script nhân vật
                   </div>
                   <i class="fa-solid fa-chevron-up wb-sync-manage-script-collapse-icon"></i>
                 </div>
                 <div id="wb-sync-manage-script-character-list" class="wb-sync-manage-list wb-sync-manage-script-card-content wb-sync-sortable-list">
-                  <div class="wb-sync-empty-msg">点击刷新加载脚本列表。</div>
+                  <div class="wb-sync-empty-msg">Nhấn làm mới để tải danh sách script.</div>
                 </div>
               </div>
             </div>
@@ -1016,10 +1016,10 @@
         <div id="wb-sync-manage-script-edit-panel" class="wb-sync-section wb-sync-edit-panel-collapsible" style="display: none;">
           <div class="wb-sync-section-header wb-sync-edit-panel-header" data-target="wb-sync-manage-script-edit-content">
             <h4 style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-              <span><i class="fa-solid fa-pen-to-square"></i> <span class="wb-sync-manage-script-edit-title">编辑脚本</span> <i class="fa-solid fa-chevron-up wb-sync-collapse-icon" style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"></i></span>
+              <span><i class="fa-solid fa-pen-to-square"></i> <span class="wb-sync-manage-script-edit-title">Sửa script</span> <i class="fa-solid fa-chevron-up wb-sync-collapse-icon" style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"></i></span>
               <div class="wb-sync-card-header-actions">
-                <button id="wb-sync-manage-script-save-btn" class="wb-sync-button wb-sync-btn-small wb-sync-btn-primary">保存</button>
-                <button id="wb-sync-manage-script-cancel-btn" class="wb-sync-button wb-sync-btn-small">取消</button>
+                <button id="wb-sync-manage-script-save-btn" class="wb-sync-button wb-sync-btn-small wb-sync-btn-primary">Lưu</button>
+                <button id="wb-sync-manage-script-cancel-btn" class="wb-sync-button wb-sync-btn-small">Hủy</button>
               </div>
             </h4>
           </div>
@@ -1027,19 +1027,19 @@
             <input type="hidden" id="wb-sync-manage-script-id">
             <div class="wb-sync-row">
               <div class="wb-sync-group" style="flex: 1">
-                <span class="wb-sync-label">脚本名称:</span>
+                <span class="wb-sync-label">Tên script:</span>
                 <input type="text" id="wb-sync-manage-script-name" class="wb-sync-input" style="width: 100%">
               </div>
               <div class="wb-sync-group">
-                <label class="wb-sync-checkbox-label" style="margin-top: 20px;"><input type="checkbox" id="wb-sync-manage-script-enabled"> 已启用</label>
+                <label class="wb-sync-checkbox-label" style="margin-top: 20px;"><input type="checkbox" id="wb-sync-manage-script-enabled"> Đã bật</label>
               </div>
             </div>
             <div style="margin-top: 10px;">
-              <span class="wb-sync-label">脚本内容 (JS/TS):</span>
+              <span class="wb-sync-label">Nội dung script (JS/TS):</span>
               <textarea id="wb-sync-manage-script-content" class="wb-sync-textarea" rows="6" style="width: 100%; font-family: monospace;"></textarea>
             </div>
             <div style="margin-top: 10px;">
-              <span class="wb-sync-label">作者备注:</span>
+              <span class="wb-sync-label">Ghi chú tác giả:</span>
               <textarea id="wb-sync-manage-script-info" class="wb-sync-textarea" rows="2" style="width: 100%;"></textarea>
             </div>
           </div>
@@ -1050,7 +1050,7 @@
         <div class="wb-sync-section" style="flex: 1; min-height: 0;">
           <div class="wb-sync-section-header">
             <h4>
-              <i class="fa-solid fa-code"></i> 正则脚本管理
+              <i class="fa-solid fa-code"></i> Quản lý script regex
               <i class="fa-solid fa-chevron-up wb-sync-collapse-icon" style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"></i>
             </h4>
           </div>
@@ -1059,34 +1059,34 @@
               <div class="wb-sync-manage-script-card">
                 <div class="wb-sync-manage-script-card-header" data-target="wb-sync-manage-regex-global-list">
                   <div class="wb-sync-manage-script-card-title">
-                    <i class="fa-solid fa-globe"></i> 全局正则
+                    <i class="fa-solid fa-globe"></i> Regex toàn cục
                   </div>
                   <i class="fa-solid fa-chevron-up wb-sync-manage-script-collapse-icon"></i>
                 </div>
                 <div id="wb-sync-manage-regex-global-list" class="wb-sync-manage-list wb-sync-manage-script-card-content">
-                  <div class="wb-sync-empty-msg">点击刷新加载正则列表。</div>
+                  <div class="wb-sync-empty-msg">Nhấn làm mới để tải danh sách regex.</div>
                 </div>
               </div>
               <div class="wb-sync-manage-script-card">
                 <div class="wb-sync-manage-script-card-header" data-target="wb-sync-manage-regex-preset-list">
                   <div class="wb-sync-manage-script-card-title">
-                    <i class="fa-solid fa-layer-group"></i> 预设正则
+                    <i class="fa-solid fa-layer-group"></i> Regex preset
                   </div>
                   <i class="fa-solid fa-chevron-up wb-sync-manage-script-collapse-icon"></i>
                 </div>
                 <div id="wb-sync-manage-regex-preset-list" class="wb-sync-manage-list wb-sync-manage-script-card-content">
-                  <div class="wb-sync-empty-msg">点击刷新加载正则列表。</div>
+                  <div class="wb-sync-empty-msg">Nhấn làm mới để tải danh sách regex.</div>
                 </div>
               </div>
               <div class="wb-sync-manage-script-card">
                 <div class="wb-sync-manage-script-card-header" data-target="wb-sync-manage-regex-character-list">
                   <div class="wb-sync-manage-script-card-title">
-                    <i class="fa-solid fa-user"></i> 局部正则
+                    <i class="fa-solid fa-user"></i> Regex cục bộ
                   </div>
                   <i class="fa-solid fa-chevron-up wb-sync-manage-script-collapse-icon"></i>
                 </div>
                 <div id="wb-sync-manage-regex-character-list" class="wb-sync-manage-list wb-sync-manage-script-card-content">
-                  <div class="wb-sync-empty-msg">点击刷新加载正则列表。</div>
+                  <div class="wb-sync-empty-msg">Nhấn làm mới để tải danh sách regex.</div>
                 </div>
               </div>
             </div>
@@ -1095,10 +1095,10 @@
         <div id="wb-sync-manage-regex-edit-panel" class="wb-sync-section wb-sync-edit-panel-collapsible" style="display: none; max-height: 60%; overflow-y: auto;">
           <div class="wb-sync-section-header wb-sync-edit-panel-header" data-target="wb-sync-manage-regex-edit-content">
             <h4 style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-              <span><i class="fa-solid fa-pen-to-square"></i> <span class="wb-sync-manage-regex-edit-title">编辑正则</span> <i class="fa-solid fa-chevron-up wb-sync-collapse-icon" style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"></i></span>
+              <span><i class="fa-solid fa-pen-to-square"></i> <span class="wb-sync-manage-regex-edit-title">Sửa regex</span> <i class="fa-solid fa-chevron-up wb-sync-collapse-icon" style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"></i></span>
               <div class="wb-sync-card-header-actions">
-                <button id="wb-sync-manage-regex-save-btn" class="wb-sync-button wb-sync-btn-small wb-sync-btn-primary">保存</button>
-                <button id="wb-sync-manage-regex-cancel-btn" class="wb-sync-button wb-sync-btn-small">取消</button>
+                <button id="wb-sync-manage-regex-save-btn" class="wb-sync-button wb-sync-btn-small wb-sync-btn-primary">Lưu</button>
+                <button id="wb-sync-manage-regex-cancel-btn" class="wb-sync-button wb-sync-btn-small">Hủy</button>
               </div>
             </h4>
           </div>
@@ -1106,72 +1106,72 @@
             <input type="hidden" id="wb-sync-manage-regex-id">
             <div class="wb-sync-row">
               <div class="wb-sync-group" style="flex: 1">
-                <span class="wb-sync-label">脚本名称:</span>
+                <span class="wb-sync-label">Tên script:</span>
                 <input type="text" id="wb-sync-manage-regex-script-name" class="wb-sync-input" style="width: 100%">
               </div>
               <div class="wb-sync-group" style="flex: 1">
-                <span class="wb-sync-label">查找正则:</span>
+                <span class="wb-sync-label">Regex tìm kiếm:</span>
                 <input type="text" id="wb-sync-manage-regex-find-regex" class="wb-sync-input" style="width: 100%">
               </div>
             </div>
             <div class="wb-sync-row" style="margin-top: 10px;">
               <div style="display: flex; gap: 20px; flex-wrap: wrap;">
                 <div style="display: flex; flex-direction: column; gap: 5px">
-                  <span class="wb-sync-label" style="font-weight: bold">作用范围</span>
-                  <label class="wb-sync-checkbox-label"><input type="checkbox" class="wb-sync-manage-regex-placement-cb" value="1"> 用户输入</label>
-                  <label class="wb-sync-checkbox-label"><input type="checkbox" class="wb-sync-manage-regex-placement-cb" value="2" checked> AI输出</label>
-                  <label class="wb-sync-checkbox-label"><input type="checkbox" class="wb-sync-manage-regex-placement-cb" value="4"> 快捷命令</label>
-                  <label class="wb-sync-checkbox-label"><input type="checkbox" class="wb-sync-manage-regex-placement-cb" value="3"> 世界信息</label>
-                  <label class="wb-sync-checkbox-label"><input type="checkbox" class="wb-sync-manage-regex-placement-cb" value="5"> 推理</label>
+                  <span class="wb-sync-label" style="font-weight: bold">Phạm vi áp dụng</span>
+                  <label class="wb-sync-checkbox-label"><input type="checkbox" class="wb-sync-manage-regex-placement-cb" value="1"> Đầu vào người dùng</label>
+                  <label class="wb-sync-checkbox-label"><input type="checkbox" class="wb-sync-manage-regex-placement-cb" value="2" checked> Đầu ra AI</label>
+                  <label class="wb-sync-checkbox-label"><input type="checkbox" class="wb-sync-manage-regex-placement-cb" value="4"> Lệnh nhanh</label>
+                  <label class="wb-sync-checkbox-label"><input type="checkbox" class="wb-sync-manage-regex-placement-cb" value="3"> Thông tin thế giới</label>
+                  <label class="wb-sync-checkbox-label"><input type="checkbox" class="wb-sync-manage-regex-placement-cb" value="5"> Suy luận</label>
                 </div>
                 <div style="display: flex; flex-direction: column; gap: 5px">
-                  <span class="wb-sync-label" style="font-weight: bold">其他选项</span>
-                  <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-manage-regex-enabled"> 已启用</label>
-                  <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-manage-regex-run-on-edit"> 在编辑时运行</label>
-                  <span class="wb-sync-label" style="font-weight: bold; margin-top: 5px">正则表达式查找时的宏</span>
+                  <span class="wb-sync-label" style="font-weight: bold">Tùy chọn khác</span>
+                  <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-manage-regex-enabled"> Đã bật</label>
+                  <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-manage-regex-run-on-edit"> Chạy khi chỉnh sửa</label>
+                  <span class="wb-sync-label" style="font-weight: bold; margin-top: 5px">Macro khi tìm regex</span>
                   <select id="wb-sync-manage-regex-substitute-regex" class="wb-sync-select" style="width: 120px">
-                    <option value="0" selected>不替换</option>
-                    <option value="1">替换</option>
+                    <option value="0" selected>Không thay</option>
+                    <option value="1">Thay</option>
                   </select>
                 </div>
                 <div style="display: flex; flex-direction: column; gap: 5px">
-                  <span class="wb-sync-label" style="font-weight: bold">短暂</span>
-                  <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-manage-regex-markdown-only"> 仅格式显示</label>
-                  <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-manage-regex-prompt-only"> 仅格式提示词</label>
+                  <span class="wb-sync-label" style="font-weight: bold">Tạm thời</span>
+                  <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-manage-regex-markdown-only"> Chỉ hiển thị định dạng</label>
+                  <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-manage-regex-prompt-only"> Chỉ định dạng prompt</label>
                   <div style="display: flex; gap: 10px; margin-top: 5px">
                     <div class="wb-sync-group" id="wb-sync-manage-regex-min-depth-container" style="display: none;">
-                      <span class="wb-sync-label">最小深度</span>
-                      <input type="number" id="wb-sync-manage-regex-min-depth" class="wb-sync-input" style="width: 70px" placeholder="无限">
+                      <span class="wb-sync-label">Độ sâu tối thiểu</span>
+                      <input type="number" id="wb-sync-manage-regex-min-depth" class="wb-sync-input" style="width: 70px" placeholder="Vô hạn">
                     </div>
                     <div class="wb-sync-group" id="wb-sync-manage-regex-max-depth-container" style="display: none;">
-                      <span class="wb-sync-label">最大深度</span>
-                      <input type="number" id="wb-sync-manage-regex-max-depth" class="wb-sync-input" style="width: 70px" placeholder="无限">
+                      <span class="wb-sync-label">Độ sâu tối đa</span>
+                      <input type="number" id="wb-sync-manage-regex-max-depth" class="wb-sync-input" style="width: 70px" placeholder="Vô hạn">
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             <div style="margin-top: 10px;">
-              <span class="wb-sync-label">修剪掉:</span>
-              <textarea id="wb-sync-manage-regex-trim-strings" class="wb-sync-textarea" rows="2" style="width: 100%;" placeholder="在替换之前全局修剪正则表达式匹配中任何不需要的部分。用回车键分隔每个元素。"></textarea>
+              <span class="wb-sync-label">Cắt bỏ:</span>
+              <textarea id="wb-sync-manage-regex-trim-strings" class="wb-sync-textarea" rows="2" style="width: 100%;" placeholder="Cắt toàn cục các phần không cần thiết trong kết quả khớp regex trước khi thay thế. Mỗi mục cách nhau bằng xuống dòng."></textarea>
             </div>
             <div style="margin-top: 10px;">
-              <span class="wb-sync-label">替换为:</span>
+              <span class="wb-sync-label">Thay bằng:</span>
               <textarea id="wb-sync-manage-regex-replace-string" class="wb-sync-textarea" rows="4" style="width: 100%; font-family: monospace;"></textarea>
             </div>
             <div style="margin-top: 10px;">
-              <button id="wb-sync-manage-regex-render-btn" class="wb-sync-button wb-sync-btn-small">👁️ 渲染</button>
+              <button id="wb-sync-manage-regex-render-btn" class="wb-sync-button wb-sync-btn-small">👁️ Render</button>
             </div>
             <div id="wb-sync-manage-regex-preview-container" style="display: none; margin-top: 15px; border: 1px solid var(--wb-sync-border); border-radius: 5px; background: #fff; min-height: 300px; overflow: auto;"></div>
           </div>
         </div>
       </div>
 
-      <!-- 插件设置子页面 -->
+      <!-- Trang con cài đặt tiện ích -->
       <div id="wb-sync-settings-view" class="wb-sync-section" style="display: none; height: 100%">
         <div class="wb-sync-section-header">
           <h4>
-            <i class="fa-solid fa-cog"></i> 插件设置
+            <i class="fa-solid fa-cog"></i> Cài đặt tiện ích
             <i
               class="fa-solid fa-chevron-up wb-sync-collapse-icon"
               style="margin-left: 8px; font-size: 0.8em; color: var(--wb-sync-text-muted)"
@@ -1183,43 +1183,43 @@
             <div class="wb-sync-row">
                 <label class="wb-sync-checkbox-label">
                     <input type="checkbox" id="wb-sync-setting-show-floating-btn" />
-                    显示悬浮球
+                    Hiển thị nút nổi
                 </label>
             </div>
             <div class="wb-sync-row">
                 <label class="wb-sync-checkbox-label">
                     <input type="checkbox" id="wb-sync-setting-show-magic-wand-btn" />
-                    在魔法棒组件中显示入口
+                    Hiển thị lối vào trong thành phần đũa phép
                 </label>
             </div>
             <div class="wb-sync-row">
                 <label class="wb-sync-checkbox-label">
                     <input type="checkbox" id="wb-sync-setting-show-qr-btn" />
-                    在快捷回复栏中显示入口
+                    Hiển thị lối vào trong thanh trả lời nhanh
                 </label>
             </div>
             <div class="wb-sync-row">
                 <label class="wb-sync-checkbox-label">
                     <input type="checkbox" id="wb-sync-setting-default-collapse" />
-                    提取卡片时默认折叠内容
+                    Mặc định thu gọn nội dung khi trích thẻ
                 </label>
             </div>
             <div class="wb-sync-row">
                 <label class="wb-sync-checkbox-label">
                     <input type="checkbox" id="wb-sync-setting-manage-wb-collapsed" />
-                    世界书管理卡片默认折叠
+                    Mặc định thu gọn thẻ quản lý Sổ thế giới
                 </label>
             </div>
             <div class="wb-sync-row">
                 <label class="wb-sync-checkbox-label">
                     <input type="checkbox" id="wb-sync-setting-manage-script-collapsed" />
-                    酒馆助手脚本管理卡片默认折叠
+                    Mặc định thu gọn thẻ quản lý script Trợ lý Tavern
                 </label>
             </div>
             <div class="wb-sync-row">
                 <label class="wb-sync-checkbox-label">
                     <input type="checkbox" id="wb-sync-setting-manage-regex-collapsed" />
-                    正则脚本管理卡片默认折叠
+                    Mặc định thu gọn thẻ quản lý script regex
                 </label>
             </div>
           </div>

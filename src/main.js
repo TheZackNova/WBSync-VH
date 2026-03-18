@@ -17,7 +17,7 @@ import {
   showSubView,
 } from "./ui.js";
 
-const MODULE_NAME = "世界书同步器";
+const MODULE_NAME = "Đồng bộ Sổ thế giới";
 const extensionFolderPath = `scripts/extensions/third-party/WBSync`;
 
 export const STORAGE_KEY_TAG_START = "wb-sync-tag-start-val";
@@ -139,7 +139,7 @@ async function init() {
     initManageRegex();
 
     showMainView();
-    console.log(`[${MODULE_NAME}] 初始化完成`);
+    console.log(`[${MODULE_NAME}] Khởi tạo hoàn tất`);
     
     const updateStatus = await checkUpdateStatus();
     if (updateStatus.hasUpdate) {
@@ -151,7 +151,7 @@ async function init() {
       }
     }
   } catch (e) {
-    console.error(`[${MODULE_NAME}] 初始化失败:`, e);
+    console.error(`[${MODULE_NAME}] Khởi tạo thất bại:`, e);
   }
 }
 

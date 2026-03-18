@@ -100,7 +100,7 @@ export async function loadEntriesForSelectedBooks() {
   $normalEntriesContainer.empty();
   const selectedBooks = $worldbookListContainer.find('.selected');
   if (selectedBooks.length === 0) {
-    $constantEntriesContainer.html('<p class="wb-sync-no-tasks">请先选择世界书。</p>');
+    $constantEntriesContainer.html('<p class="wb-sync-no-tasks">Hãy chọn Sổ thế giới trước.</p>');
     $normalEntriesContainer.html('');
     return;
   }
@@ -115,7 +115,7 @@ export async function loadEntriesForSelectedBooks() {
 
     results.forEach(({ bookName, entries }) => {
       entries.forEach(e => {
-        const entryName = e.name || e.comment || (e.key && e.key.length > 0 ? e.key.join(', ') : '未命名条目');
+        const entryName = e.name || e.comment || (e.key && e.key.length > 0 ? e.key.join(', ') : 'Mục chưa có tên');
         const buttonHtml = `<button class="wb-sync-book-button" data-uid="${e.uid}" data-book-name="${escapeHtml(bookName)}" title="${escapeHtml(entryName)}">${escapeHtml(entryName)}</button>`;
         if (e.type === 'constant' || e.constant === true || (e.strategy && e.strategy.type === 'constant')) {
           constantHtml += buttonHtml;
@@ -125,19 +125,19 @@ export async function loadEntriesForSelectedBooks() {
       });
     });
 
-    $constantEntriesContainer.html(constantHtml || '<p class="wb-sync-no-tasks">无蓝灯条目。</p>');
-    $normalEntriesContainer.html(normalHtml || '<p class="wb-sync-no-tasks">无绿灯条目。</p>');
+    $constantEntriesContainer.html(constantHtml || '<p class="wb-sync-no-tasks">Không có mục đèn xanh dương.</p>');
+    $normalEntriesContainer.html(normalHtml || '<p class="wb-sync-no-tasks">Không có mục đèn xanh lá.</p>');
 
   } catch (e) {
-    toastr.error('加载条目失败: ' + e.message);
-    $constantEntriesContainer.html('<p style="color:red;">加载失败</p>');
+    toastr.error('Tải mục thất bại: ' + e.message);
+    $constantEntriesContainer.html('<p style="color:red;">Tải thất bại</p>');
     $normalEntriesContainer.html('');
   }
 }
 
 export async function handleDeleteEntries() {
   const selected = $('#wb-sync-constant-entries-container .selected, #wb-sync-normal-entries-container .selected');
-  if (selected.length === 0) return toastr.warning('请选择要删除的条目');
+  if (selected.length === 0) return toastr.warning('Hãy chọn mục cần xóa');
   const toDelete = {};
   selected.each((_, el) => {
     const b = $(el).attr('data-book-name'),
@@ -145,13 +145,13 @@ export async function handleDeleteEntries() {
     if (!toDelete[b]) toDelete[b] = [];
     toDelete[b].push(u);
   });
-  if (confirm(`确定永久删除 ${selected.length} 个条目？`)) {
+  if (confirm(`Xác nhận xóa vĩnh viễn ${selected.length}  mục?`)) {
     try {
       for (const b in toDelete) await deleteLorebookEntriesByUids(b, toDelete[b]);
-      toastr.success('删除成功');
+      toastr.success('Xóa thành công');
       loadEntriesForSelectedBooks();
     } catch (e) {
-      toastr.error('删除失败');
+      toastr.error('Xóa thất bại');
     }
   }
 }
@@ -159,31 +159,31 @@ export async function handleDeleteEntries() {
 export async function populateModifyWorldbookSelect() {
   try {
     const books = await getAllLorebooks();
-    $modifyWbSelect.empty().append('<option value="">--请选择世界书--</option>');
+    $modifyWbSelect.empty().append('<option value="">-- Hãy chọn Sổ thế giới --</option>');
     books.forEach(b =>
       $modifyWbSelect.append(`<option value="${escapeHtml(b.file_name)}">${escapeHtml(b.name)}</option>`),
     );
-    $modifyEntrySelect.empty().append('<option value="">--先选择世界书--</option>');
+    $modifyEntrySelect.empty().append('<option value="">--Hãy chọn Sổ thế giới trước--</option>');
   } catch (e) {
-    $modifyWbSelect.empty().append('<option value="">加载失败</option>');
+    $modifyWbSelect.empty().append('<option value="">Tải thất bại</option>');
   }
 }
 
 export async function populateModifyEntrySelect() {
   const book = $modifyWbSelect.val();
   $modifyContent.val('');
-  if (!book) return $modifyEntrySelect.empty().append('<option value="">--先选择世界书--</option>');
-  $modifyEntrySelect.empty().append('<option value="">加载中...</option>');
+  if (!book) return $modifyEntrySelect.empty().append('<option value="">--Hãy chọn Sổ thế giới trước--</option>');
+  $modifyEntrySelect.empty().append('<option value="">Đang tải...</option>');
   try {
     const entries = await getLorebookEntries(book);
     $modifyEntrySelect.data('entries', entries).empty();
-    if (entries.length === 0) return $modifyEntrySelect.append('<option value="">无条目</option>');
-    $modifyEntrySelect.append('<option value="">--选择条目--</option>');
+    if (entries.length === 0) return $modifyEntrySelect.append('<option value="">Không có mục</option>');
+    $modifyEntrySelect.append('<option value="">--Chọn mục--</option>');
     entries.forEach(e =>
-      $modifyEntrySelect.append(`<option value="${e.uid}">${escapeHtml(e.name || e.comment || (e.key && e.key.length > 0 ? e.key.join(', ') : '未命名条目'))}</option>`),
+      $modifyEntrySelect.append(`<option value="${e.uid}">${escapeHtml(e.name || e.comment || (e.key && e.key.length > 0 ? e.key.join(', ') : 'Mục chưa có tên'))}</option>`),
     );
   } catch (e) {
-    $modifyEntrySelect.empty().append('<option value="">加载失败</option>');
+    $modifyEntrySelect.empty().append('<option value="">Tải thất bại</option>');
   }
 }
 
@@ -250,11 +250,11 @@ export function handleModifyEntryChange() {
 export async function handleManualSave() {
   const book = $modifyWbSelect.val(),
     uid = $modifyEntrySelect.val();
-  if (!book || !uid) return alert('请选择世界书和条目');
+  if (!book || !uid) return alert('Hãy chọn Sổ thế giới và mục');
   try {
     let entries = await getLorebookEntries(book);
     const idx = entries.findIndex(e => e.uid == uid);
-    if (idx === -1) throw new Error('找不到条目');
+    if (idx === -1) throw new Error('Không tìm thấy mục');
 
     const e = entries[idx];
     e.name = $modName.val();
@@ -298,21 +298,21 @@ export async function handleManualSave() {
     e.recursion.prevent_outgoing = $modPreventOut.is(':checked');
 
     await setLorebookEntries(book, entries);
-    alert('保存成功！');
+    alert('Lưu thành công!');
     $modifyEntrySelect.data('entries', entries);
   } catch (e) {
-    alert(`保存失败: ${e.message}`);
+    alert(`Lưu thất bại: ${e.message}`);
   }
 }
 
 export async function populateTransferSelects() {
-  $transEntriesContainer.html('<p class="wb-sync-no-tasks">请先选择源世界书。</p>');
-  $copyEntriesContainer.html('<p class="wb-sync-no-tasks">请先选择源世界书。</p>');
+  $transEntriesContainer.html('<p class="wb-sync-no-tasks">Hãy chọn Sổ thế giới nguồn trước.</p>');
+  $copyEntriesContainer.html('<p class="wb-sync-no-tasks">Hãy chọn Sổ thế giới nguồn trước.</p>');
   if ($transSelectAllBtn) $transSelectAllBtn.hide();
   if ($copySelectAllBtn) $copySelectAllBtn.hide();
   try {
     const books = await getAllLorebooks();
-    const ph = '<option value="">--请选择世界书--</option>';
+    const ph = '<option value="">-- Hãy chọn Sổ thế giới --</option>';
     $transSourceSelect.empty().append(ph);
     $transTargetSelect.empty().append(ph);
     $copySourceSelect.empty().append(ph);
@@ -325,7 +325,7 @@ export async function populateTransferSelects() {
       $copyTargetSelect.append(opt);
     });
   } catch (e) {
-    toastr.error('加载失败');
+    toastr.error('Tải thất bại');
   }
 }
 
@@ -340,25 +340,25 @@ export async function renderSourceEntries() {
 
   if (!src) {
       $transSelectAllBtn.hide();
-      return $transEntriesContainer.html('<p class="wb-sync-no-tasks">请先选择源世界书。</p>');
+      return $transEntriesContainer.html('<p class="wb-sync-no-tasks">Hãy chọn Sổ thế giới nguồn trước.</p>');
   }
-  $transEntriesContainer.html('<p>加载中...</p>');
+  $transEntriesContainer.html('<p>Đang tải...</p>');
   try {
     const entries = await getLorebookEntries(src);
     $transEntriesContainer.data('entries', entries).empty();
     if (entries.length === 0) {
         $transSelectAllBtn.hide();
-        return $transEntriesContainer.html('<p class="wb-sync-no-tasks">无条目。</p>');
+        return $transEntriesContainer.html('<p class="wb-sync-no-tasks">Không có mục.</p>');
     }
     $transSelectAllBtn.show();
     let html = '';
     entries.forEach(e => {
       const id = `trans-entry-${e.uid}`;
-      const blueIcon = '<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid black; background-color: #0078d7; margin-right: 6px; vertical-align: middle;" title="蓝灯 (常驻)"></span>';
-      const greenIcon = '<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid black; background-color: #00cc00; margin-right: 6px; vertical-align: middle;" title="绿灯 (条件触发)"></span>';
+      const blueIcon = '<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid black; background-color: #0078d7; margin-right: 6px; vertical-align: middle;" title="Đèn xanh dương (luôn hiển thị)"></span>';
+      const greenIcon = '<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid black; background-color: #00cc00; margin-right: 6px; vertical-align: middle;" title="Đèn xanh lá (kích hoạt có điều kiện)"></span>';
       const isConstant = e.type === 'constant' || e.constant === true || (e.strategy && e.strategy.type === 'constant');
       const typeTag = isConstant ? blueIcon : greenIcon;
-      const displayName = escapeHtml(e.name || e.comment || (e.key && e.key.length > 0 ? e.key.join(', ') : '未命名条目'));
+      const displayName = escapeHtml(e.name || e.comment || (e.key && e.key.length > 0 ? e.key.join(', ') : 'Mục chưa có tên'));
       html += `
                   <div class="wb-sync-checkbox-item" title="${displayName}">
                       <input type="checkbox" id="${id}" value="${e.uid}">
@@ -369,7 +369,7 @@ export async function renderSourceEntries() {
     $transEntriesContainer.html(html);
   } catch (e) {
     $transSelectAllBtn.hide();
-    $transEntriesContainer.html('<p style="color:red;">加载失败</p>');
+    $transEntriesContainer.html('<p style="color:red;">Tải thất bại</p>');
   }
 }
 
@@ -384,25 +384,25 @@ export async function renderCopySourceEntries() {
 
   if (!src) {
       $copySelectAllBtn.hide();
-      return $copyEntriesContainer.html('<p class="wb-sync-no-tasks">请先选择源世界书。</p>');
+      return $copyEntriesContainer.html('<p class="wb-sync-no-tasks">Hãy chọn Sổ thế giới nguồn trước.</p>');
   }
-  $copyEntriesContainer.html('<p>加载中...</p>');
+  $copyEntriesContainer.html('<p>Đang tải...</p>');
   try {
     const entries = await getLorebookEntries(src);
     $copyEntriesContainer.data('entries', entries).empty();
     if (entries.length === 0) {
         $copySelectAllBtn.hide();
-        return $copyEntriesContainer.html('<p class="wb-sync-no-tasks">无条目。</p>');
+        return $copyEntriesContainer.html('<p class="wb-sync-no-tasks">Không có mục.</p>');
     }
     $copySelectAllBtn.show();
     let html = '';
     entries.forEach(e => {
       const id = `copy-entry-${e.uid}`;
-      const blueIcon = '<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid black; background-color: #0078d7; margin-right: 6px; vertical-align: middle;" title="蓝灯 (常驻)"></span>';
-      const greenIcon = '<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid black; background-color: #00cc00; margin-right: 6px; vertical-align: middle;" title="绿灯 (条件触发)"></span>';
+      const blueIcon = '<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid black; background-color: #0078d7; margin-right: 6px; vertical-align: middle;" title="Đèn xanh dương (luôn hiển thị)"></span>';
+      const greenIcon = '<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid black; background-color: #00cc00; margin-right: 6px; vertical-align: middle;" title="Đèn xanh lá (kích hoạt có điều kiện)"></span>';
       const isConstant = e.type === 'constant' || e.constant === true || (e.strategy && e.strategy.type === 'constant');
       const typeTag = isConstant ? blueIcon : greenIcon;
-      const displayName = escapeHtml(e.name || e.comment || (e.key && e.key.length > 0 ? e.key.join(', ') : '未命名条目'));
+      const displayName = escapeHtml(e.name || e.comment || (e.key && e.key.length > 0 ? e.key.join(', ') : 'Mục chưa có tên'));
       html += `
                   <div class="wb-sync-checkbox-item" title="${displayName}">
                       <input type="checkbox" id="${id}" value="${e.uid}">
@@ -413,7 +413,7 @@ export async function renderCopySourceEntries() {
     $copyEntriesContainer.html(html);
   } catch (e) {
     $copySelectAllBtn.hide();
-    $copyEntriesContainer.html('<p style="color:red;">加载失败</p>');
+    $copyEntriesContainer.html('<p style="color:red;">Tải thất bại</p>');
   }
 }
 
@@ -424,12 +424,12 @@ export async function handleTransferEntries() {
     .find('input:checked')
     .map((_, el) => $(el).val())
     .get();
-  if (!src || !tgt) return toastr.warning('请选择源和目标');
-  if (src === tgt) return toastr.warning('源和目标不能相同');
-  if (uids.length === 0) return toastr.warning('请选择条目');
+  if (!src || !tgt) return toastr.warning('Hãy chọn nguồn và đích');
+  if (src === tgt) return toastr.warning('Nguồn và đích không được giống nhau');
+  if (uids.length === 0) return toastr.warning('Hãy chọn mục');
 
   showLoader();
-  $transBtn.prop('disabled', true).text('迁移中...');
+  $transBtn.prop('disabled', true).text('Đang chuyển...');
   try {
     const all = $transEntriesContainer.data('entries') || [];
     const toTrans = all.filter(e => uids.includes(String(e.uid)));
@@ -443,14 +443,14 @@ export async function handleTransferEntries() {
     await createLorebookEntries(tgt, newEntries);
     await deleteLorebookEntriesByUids(src, uids.map(uid => parseInt(uid)));
 
-    toastr.success(`成功迁移 ${toTrans.length} 个条目`);
+    toastr.success(`Chuyển thành công ${toTrans.length}  mục`);
     $transEntriesContainer.find('input:checked').prop('checked', false);
     renderSourceEntries();
   } catch (e) {
-    toastr.error(`迁移失败: ${e.message}`);
+    toastr.error(`Chuyển thất bại: ${e.message}`);
   } finally {
     hideLoader();
-    $transBtn.prop('disabled', false).text('执行迁移');
+    $transBtn.prop('disabled', false).text('Thực hiện chuyển');
   }
 }
 
@@ -461,12 +461,12 @@ export async function handleCopyEntries() {
     .find('input:checked')
     .map((_, el) => $(el).val())
     .get();
-  if (!src || !tgt) return toastr.warning('请选择源和目标');
-  if (src === tgt) return toastr.warning('源和目标不能相同');
-  if (uids.length === 0) return toastr.warning('请选择条目');
+  if (!src || !tgt) return toastr.warning('Hãy chọn nguồn và đích');
+  if (src === tgt) return toastr.warning('Nguồn và đích không được giống nhau');
+  if (uids.length === 0) return toastr.warning('Hãy chọn mục');
 
   showLoader();
-  $copyBtn.prop('disabled', true).text('复制中...');
+  $copyBtn.prop('disabled', true).text('Đang sao chép...');
   try {
     const all = $copyEntriesContainer.data('entries') || [];
     const toCopy = all.filter(e => uids.includes(String(e.uid)));
@@ -479,12 +479,12 @@ export async function handleCopyEntries() {
 
     await createLorebookEntries(tgt, newEntries);
 
-    toastr.success(`成功复制 ${toCopy.length} 个条目`);
+    toastr.success(`Sao chép thành công ${toCopy.length}  mục`);
     $copyEntriesContainer.find('input:checked').prop('checked', false);
   } catch (e) {
-    toastr.error(`复制失败: ${e.message}`);
+    toastr.error(`Sao chép thất bại: ${e.message}`);
   } finally {
     hideLoader();
-    $copyBtn.prop('disabled', false).text('执行复制');
+    $copyBtn.prop('disabled', false).text('Thực hiện sao chép');
   }
 }

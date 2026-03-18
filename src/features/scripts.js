@@ -119,9 +119,9 @@ export function initScripts() {
 
         const tavernRegex = data.id ? data : {
           id: data.id || generateUUID(),
-          script_name: data.scriptName || data.script_name || data.name || '未命名正则',
+          script_name: data.scriptName || data.script_name || data.name || 'Regex chưa có tên',
           enabled: data.disabled !== undefined ? !data.disabled : (data.enabled !== false),
-          find_regex: data.findRegex || data.find_regex || '<打开面板>',
+          find_regex: data.findRegex || data.find_regex || '<Mở bảng điều khiển>',
           replace_string: data.replaceString || data.replace_string || data.content || '',
           trim_strings: Array.isArray(data.trimStrings) ? data.trimStrings.join('\n') : (data.trim_strings || ''),
           source: data.source || {
@@ -149,11 +149,11 @@ export function initScripts() {
           return regexes;
         }, targetOpt);
         toastr.success(
-          `成功导入至${currentRegexImportTarget === 'global' ? '全局' : currentRegexImportTarget === 'preset' ? '预设' : '局部'}正则脚本！`,
+          `Nhập thành công vào ${currentRegexImportTarget === 'global' ? 'Toàn cục' : currentRegexImportTarget === 'preset' ? 'Preset' : 'Cục bộ'} script regex!`,
         );
         $mainImportRegexOptions.slideUp();
       } catch (err) {
-        toastr.error('导入失败: ' + err.message);
+        toastr.error('Nhập thất bại: ' + err.message);
       }
       $mainRegexFileInput.val('');
     };
@@ -264,7 +264,7 @@ export function initScripts() {
             : {
                 type: 'script',
                 enabled: data.enabled !== false,
-                name: data.name || '导入的脚本',
+                name: data.name || 'Script đã nhập',
                 id:
                   data.id ||
                   'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -273,7 +273,7 @@ export function initScripts() {
                     return v.toString(16);
                   }),
                 content: data.content || '',
-                info: data.info || '由世界书同步器导入',
+                info: data.info || 'Được nhập bởi Đồng bộ Sổ thế giới',
                 button: data.button || { enabled: false, buttons: [] },
                 data: data.data || {},
               };
@@ -287,11 +287,11 @@ export function initScripts() {
           return scripts;
         }, targetOpt);
         toastr.success(
-          `成功导入至${currentScriptImportTarget === 'global' ? '全局' : currentScriptImportTarget === 'preset' ? '预设' : '角色'}脚本库！`,
+          `Nhập thành công vào ${currentScriptImportTarget === 'global' ? 'Toàn cục' : currentScriptImportTarget === 'preset' ? 'Preset' : 'Nhân vật'} thư viện script!`,
         );
         $mainImportScriptOptions.slideUp();
       } catch (err) {
-        toastr.error('导入失败: ' + err.message);
+        toastr.error('Nhập thất bại: ' + err.message);
       }
       $mainScriptFileInput.val('');
     };
@@ -306,10 +306,10 @@ export function getRegexObjFromUI(prefix, cardId = null) {
 
   const scriptNameInput = $(`#wb-sync-${prefix}-script-name${suffix}`).val();
   const scriptNameTrimmed = scriptNameInput ? scriptNameInput.trim() : '';
-  if (prefix === 'cr' && !scriptNameTrimmed) return { error: '请输入名称' };
+  if (prefix === 'cr' && !scriptNameTrimmed) return { error: 'Vui lòng nhập tên' };
 
-  const scriptName = scriptNameTrimmed || '新前端脚本';
-  const findRegex = $(`#wb-sync-${prefix}-find-regex${suffix}`).val() || '<打开面板>';
+  const scriptName = scriptNameTrimmed || 'Script frontend mới';
+  const findRegex = $(`#wb-sync-${prefix}-find-regex${suffix}`).val() || '<Mở bảng điều khiển>';
 
   const placementInts = [];
   $(`.wb-sync-${prefix}-placement-cb${suffix}:checked`).each(function () {
@@ -391,9 +391,9 @@ export function getScriptSyncObjFromUI(prefix, cardId = null) {
 
   const scriptNameInput = $(`#wb-sync-${prefix}-script-name${suffix}`).val();
   const scriptNameTrimmed = scriptNameInput ? scriptNameInput.trim() : '';
-  if (prefix === 'cs' && !scriptNameTrimmed) return { error: '请输入名称' };
+  if (prefix === 'cs' && !scriptNameTrimmed) return { error: 'Vui lòng nhập tên' };
 
-  const scriptName = scriptNameTrimmed || '新助手脚本';
+  const scriptName = scriptNameTrimmed || 'Script trợ lý mới';
   const isDisabled = $(`#wb-sync-${prefix}-disabled${suffix}`).is(':checked');
   const info = $(`#wb-sync-${prefix}-info${suffix}`).val() || '';
 
@@ -414,7 +414,7 @@ export function getScriptSyncObjFromUI(prefix, cardId = null) {
 
 export async function handleRegexImport(prefix, targetType, cardId = null) {
   const regexObj = getRegexObjFromUI(prefix, cardId);
-  if (!regexObj) return toastr.warning('没有可导入的内容');
+  if (!regexObj) return toastr.warning('Không có nội dung để nhập');
   if (regexObj.error) return toastr.warning(regexObj.error);
   try {
     const tavernRegex = convertToTavernRegex(regexObj);
@@ -430,16 +430,16 @@ export async function handleRegexImport(prefix, targetType, cardId = null) {
       },
       targetOpt,
     );
-    const typeName = targetType === 'global' ? '全局' : targetType === 'preset' ? '预设' : '局部';
-    toastr.success(`成功导入至${typeName}正则脚本！`);
+    const typeName = targetType === 'global' ? 'Toàn cục' : targetType === 'preset' ? 'Preset' : 'Cục bộ';
+    toastr.success(`Nhập thành công vào ${typeName} script regex!`);
   } catch (e) {
-    toastr.error(`导入失败: ${e.message}`);
+    toastr.error(`Nhập thất bại: ${e.message}`);
   }
 }
 
 export function handleRegexDownload(prefix, cardId = null) {
   const regexObj = getRegexObjFromUI(prefix, cardId);
-  if (!regexObj) return toastr.warning('没有可下载的内容');
+  if (!regexObj) return toastr.warning('Không có nội dung để tải xuống');
   if (regexObj.error) return toastr.warning(regexObj.error);
 
   const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(regexObj, null, 4));
@@ -449,7 +449,7 @@ export function handleRegexDownload(prefix, cardId = null) {
   document.body.appendChild(downloadAnchorNode);
   downloadAnchorNode.click();
   downloadAnchorNode.remove();
-  toastr.success('下载成功！');
+  toastr.success('Tải xuống thành công!');
 }
 
 export function handleRegexFileLoad(e, prefix) {
@@ -504,9 +504,9 @@ export function handleRegexFileLoad(e, prefix) {
       $(`#wb-sync-${prefix}-min-depth`).val(data.minDepth || data.min_depth || '');
       $(`#wb-sync-${prefix}-max-depth`).val(data.maxDepth || data.max_depth || '');
 
-      toastr.success('正则脚本导入成功！');
+      toastr.success('regexNhập script thành công!');
     } catch (err) {
-      toastr.error('解析 JSON 文件失败: ' + err.message);
+      toastr.error('Phân tích tệp JSON thất bại: ' + err.message);
     }
     $(`#wb-sync-${prefix}-file-input`).val('');
   };
@@ -515,7 +515,7 @@ export function handleRegexFileLoad(e, prefix) {
 
 export async function handleScriptImport(prefix, targetType, cardId = null) {
   const scriptObj = getScriptSyncObjFromUI(prefix, cardId);
-  if (!scriptObj) return toastr.warning('没有可导入的内容');
+  if (!scriptObj) return toastr.warning('Không có nội dung để nhập');
   if (scriptObj.error) return toastr.warning(scriptObj.error);
   try {
     await updateScriptTreesWith(
@@ -525,26 +525,26 @@ export async function handleScriptImport(prefix, targetType, cardId = null) {
       },
       { type: targetType },
     );
-    const typeName = targetType === 'global' ? '全局' : targetType === 'preset' ? '预设' : '角色';
-    toastr.success(`成功导入至${typeName}脚本库！`);
+    const typeName = targetType === 'global' ? 'Toàn cục' : targetType === 'preset' ? 'Preset' : 'Nhân vật';
+    toastr.success(`Nhập thành công vào ${typeName} thư viện script!`);
   } catch (e) {
-    toastr.error(`导入失败: ${e.message}`);
+    toastr.error(`Nhập thất bại: ${e.message}`);
   }
 }
 
 export function handleScriptDownload(prefix, cardId = null) {
   const scriptObj = getScriptSyncObjFromUI(prefix, cardId);
-  if (!scriptObj) return toastr.warning('没有可下载的内容');
+  if (!scriptObj) return toastr.warning('Không có nội dung để tải xuống');
   if (scriptObj.error) return toastr.warning(scriptObj.error);
 
   const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(scriptObj, null, 4));
   const downloadAnchorNode = document.createElement('a');
   downloadAnchorNode.setAttribute('href', dataStr);
-  downloadAnchorNode.setAttribute('download', '酒馆助手脚本-' + scriptObj.name + '.json');
+  downloadAnchorNode.setAttribute('download', 'Script Trợ lý Tavern-' + scriptObj.name + '.json');
   document.body.appendChild(downloadAnchorNode);
   downloadAnchorNode.click();
   downloadAnchorNode.remove();
-  toastr.success('下载成功！');
+  toastr.success('Tải xuống thành công!');
 }
 
 export function handleScriptFileLoad(e, prefix) {
@@ -560,9 +560,9 @@ export function handleScriptFileLoad(e, prefix) {
       $(`#wb-sync-${prefix}-content`).val(data.content || '');
       $(`#wb-sync-${prefix}-disabled`).prop('checked', data.enabled === false);
 
-      toastr.success('助手脚本导入成功！');
+      toastr.success('Nhập script trợ lý thành công!');
     } catch (err) {
-      toastr.error('解析 JSON 文件失败: ' + err.message);
+      toastr.error('Phân tích tệp JSON thất bại: ' + err.message);
     }
     $(`#wb-sync-${prefix}-file-input`).val('');
   };
@@ -585,12 +585,12 @@ export async function handleExtractScript(prefix, wrapInCodeBlock = false) {
     return {
       id: Date.now() + index,
       content: finalContent,
-      name: `提取脚本 ${index + 1}`
+      name: `Trích xuất script ${index + 1}`
     };
   });
   
   renderScriptCards(prefix);
-  toastr.success(`成功提取 ${extractedScriptCards.length} 个脚本`);
+  toastr.success(`Trích xuất thành công ${extractedScriptCards.length}  script`);
 }
 
 export async function handleExtractFrontend() {
@@ -605,12 +605,12 @@ export async function handleExtractFrontend() {
     return {
       id: Date.now() + index,
       content: text,
-      name: `提取前端 ${index + 1}`
+      name: `Trích xuất frontend ${index + 1}`
     };
   });
 
   renderFrontendCards();
-  toastr.success(`成功提取 ${extractedFrontendCards.length} 个前端代码`);
+  toastr.success(`Trích xuất thành công ${extractedFrontendCards.length}  đoạn frontend`);
 }
 
 export function addFrontendCard(cardData) {
@@ -623,12 +623,12 @@ export function handleFrontendRender(cardId) {
   
   if ($container.is(':visible')) {
     $container.empty().hide();
-    $btn.html('👁️ 渲染前端');
+    $btn.html('👁️ Render frontend');
     return;
   }
 
   let htmlContent = $(`#wb-sync-fe-content-${cardId}`).val();
-  if (!htmlContent) return toastr.warning('没有可渲染的内容');
+  if (!htmlContent) return toastr.warning('Không có nội dung để render');
 
   htmlContent = htmlContent.replace(/^```(?:html)?\n?/i, '').replace(/\n?```$/i, '');
 
@@ -637,7 +637,7 @@ export function handleFrontendRender(cardId) {
     style: 'width: 100%; height: 400px; border: none;',
   });
   $container.empty().append(iframe).show();
-  $btn.html('🙈 取消渲染');
+  $btn.html('🙈 Hủy render');
 }
 
 export function removeFrontendCard(id) {
@@ -652,7 +652,7 @@ export function removeScriptCard(id) {
 
 export function renderFrontendCards() {
   if (extractedFrontendCards.length === 0) {
-    $feCardsContainer.html('<div class="wb-sync-empty-msg">没有提取到任何前端代码。</div>');
+    $feCardsContainer.html('<div class="wb-sync-empty-msg">Không trích xuất được mã frontend nào.</div>');
     return;
   }
 
@@ -670,62 +670,62 @@ export function renderFrontendCards() {
       <div class="wb-sync-card-content" style="${contentStyle}">
         <div class="wb-sync-row">
           <div class="wb-sync-group" style="flex: 1">
-            <span class="wb-sync-label">脚本名称:</span>
+            <span class="wb-sync-label">Tên script:</span>
             <input type="text" id="wb-sync-fe-script-name-${card.id}" class="wb-sync-input" style="width: 100%" value="${card.name}" />
           </div>
           <div class="wb-sync-group" style="flex: 1">
-            <span class="wb-sync-label">查找正则:</span>
-            <input type="text" id="wb-sync-fe-find-regex-${card.id}" class="wb-sync-input" style="width: 100%" value="<打开面板>" />
+            <span class="wb-sync-label">Regex tìm kiếm:</span>
+            <input type="text" id="wb-sync-fe-find-regex-${card.id}" class="wb-sync-input" style="width: 100%" value="<Mở bảng điều khiển>" />
           </div>
         </div>
         <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px">
           <div style="display: flex; flex-direction: column; gap: 5px">
-            <span class="wb-sync-label" style="font-weight: bold">作用范围</span>
-            <label class="wb-sync-checkbox-label"><input type="checkbox" class="wb-sync-fe-placement-cb-${card.id}" value="1" /> 用户输入</label>
-            <label class="wb-sync-checkbox-label"><input type="checkbox" class="wb-sync-fe-placement-cb-${card.id}" value="2" checked /> AI输出</label>
-            <label class="wb-sync-checkbox-label"><input type="checkbox" class="wb-sync-fe-placement-cb-${card.id}" value="4" /> 快捷命令</label>
-            <label class="wb-sync-checkbox-label"><input type="checkbox" class="wb-sync-fe-placement-cb-${card.id}" value="3" /> 世界信息</label>
-            <label class="wb-sync-checkbox-label"><input type="checkbox" class="wb-sync-fe-placement-cb-${card.id}" value="5" /> 推理</label>
+            <span class="wb-sync-label" style="font-weight: bold">Phạm vi áp dụng</span>
+            <label class="wb-sync-checkbox-label"><input type="checkbox" class="wb-sync-fe-placement-cb-${card.id}" value="1" /> Đầu vào người dùng</label>
+            <label class="wb-sync-checkbox-label"><input type="checkbox" class="wb-sync-fe-placement-cb-${card.id}" value="2" checked /> Đầu ra AI</label>
+            <label class="wb-sync-checkbox-label"><input type="checkbox" class="wb-sync-fe-placement-cb-${card.id}" value="4" /> Lệnh nhanh</label>
+            <label class="wb-sync-checkbox-label"><input type="checkbox" class="wb-sync-fe-placement-cb-${card.id}" value="3" /> Thông tin thế giới</label>
+            <label class="wb-sync-checkbox-label"><input type="checkbox" class="wb-sync-fe-placement-cb-${card.id}" value="5" /> Suy luận</label>
           </div>
           <div style="display: flex; flex-direction: column; gap: 5px">
-            <span class="wb-sync-label" style="font-weight: bold">其他选项</span>
-            <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-fe-disabled-${card.id}" /> 已禁用</label>
-            <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-fe-run-on-edit-${card.id}" checked /> 在编辑时运行</label>
-            <span class="wb-sync-label" style="font-weight: bold; margin-top: 5px">正则表达式查找时的宏</span>
+            <span class="wb-sync-label" style="font-weight: bold">Tùy chọn khác</span>
+            <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-fe-disabled-${card.id}" /> Đã tắt</label>
+            <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-fe-run-on-edit-${card.id}" checked /> Chạy khi chỉnh sửa</label>
+            <span class="wb-sync-label" style="font-weight: bold; margin-top: 5px">Macro khi tìm regex</span>
             <select id="wb-sync-fe-substitute-regex-${card.id}" class="wb-sync-select" style="width: 120px">
-              <option value="0" selected>不替换</option>
-              <option value="1">替换</option>
+              <option value="0" selected>Không thay</option>
+              <option value="1">Thay</option>
             </select>
           </div>
           <div style="display: flex; flex-direction: column; gap: 5px">
-            <span class="wb-sync-label" style="font-weight: bold">短暂</span>
-            <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-fe-markdown-only-${card.id}" checked /> 仅格式显示</label>
-            <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-fe-prompt-only-${card.id}" /> 仅格式提示词</label>
+            <span class="wb-sync-label" style="font-weight: bold">Tạm thời</span>
+            <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-fe-markdown-only-${card.id}" checked /> Chỉ hiển thị định dạng</label>
+            <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-fe-prompt-only-${card.id}" /> Chỉ định dạng prompt</label>
             <div style="display: flex; gap: 10px; margin-top: 5px">
               <div style="display: flex; flex-direction: column; gap: 2px">
-                <span class="wb-sync-label">最小深度</span>
-                <input type="number" id="wb-sync-fe-min-depth-${card.id}" class="wb-sync-input" style="width: 70px" placeholder="无限" />
+                <span class="wb-sync-label">Độ sâu tối thiểu</span>
+                <input type="number" id="wb-sync-fe-min-depth-${card.id}" class="wb-sync-input" style="width: 70px" placeholder="Vô hạn" />
               </div>
               <div style="display: flex; flex-direction: column; gap: 2px">
-                <span class="wb-sync-label">最大深度</span>
-                <input type="number" id="wb-sync-fe-max-depth-${card.id}" class="wb-sync-input" style="width: 70px" placeholder="无限" />
+                <span class="wb-sync-label">Độ sâu tối đa</span>
+                <input type="number" id="wb-sync-fe-max-depth-${card.id}" class="wb-sync-input" style="width: 70px" placeholder="Vô hạn" />
               </div>
             </div>
           </div>
         </div>
         <div style="display: flex; flex-direction: column; margin-top: 10px;">
-          <span class="wb-sync-label">修剪掉:</span>
-          <textarea id="wb-sync-fe-trim-strings-${card.id}" class="wb-sync-textarea" style="min-height: 60px; margin-bottom: 10px" placeholder="在替换之前全局修剪正则表达式匹配中任何不需要的部分。用回车键分隔每个元素。"></textarea>
-          <span class="wb-sync-label">替换为 (提取的 HTML 代码):</span>
+          <span class="wb-sync-label">Cắt bỏ:</span>
+          <textarea id="wb-sync-fe-trim-strings-${card.id}" class="wb-sync-textarea" style="min-height: 60px; margin-bottom: 10px" placeholder="Cắt toàn cục các phần không cần thiết trong kết quả khớp regex trước khi thay thế. Mỗi mục cách nhau bằng xuống dòng."></textarea>
+          <span class="wb-sync-label">Thay bằng (mã HTML đã trích):</span>
           <textarea id="wb-sync-fe-content-${card.id}" class="wb-sync-textarea" style="min-height: 150px; font-family: monospace">${card.content}</textarea>
         </div>
         <div class="wb-sync-actions" style="justify-content: flex-end; margin-top: 10px">
-          <button class="wb-sync-button fe-import-global-btn" data-id="${card.id}">导入至全局正则</button>
-          <button class="wb-sync-button fe-import-preset-btn" data-id="${card.id}">导入至预设正则</button>
-          <button class="wb-sync-button fe-import-character-btn" data-id="${card.id}">导入至局部正则</button>
-          <button class="wb-sync-button fe-render-btn" data-id="${card.id}">👁️ 渲染前端</button>
-          <button class="wb-sync-button wb-sync-btn-primary fe-download-btn" data-id="${card.id}">⬇️ 下载成正则脚本</button>
-          <button class="wb-sync-button wb-sync-btn-small abandon fe-delete-btn" data-id="${card.id}">🗑️ 删除</button>
+          <button class="wb-sync-button fe-import-global-btn" data-id="${card.id}">Nhập vào regex toàn cục</button>
+          <button class="wb-sync-button fe-import-preset-btn" data-id="${card.id}">Nhập vào regex preset</button>
+          <button class="wb-sync-button fe-import-character-btn" data-id="${card.id}">Nhập vào regex cục bộ</button>
+          <button class="wb-sync-button fe-render-btn" data-id="${card.id}">👁️ Render frontend</button>
+          <button class="wb-sync-button wb-sync-btn-primary fe-download-btn" data-id="${card.id}">⬇️ Tải xuống thành script regex</button>
+          <button class="wb-sync-button wb-sync-btn-small abandon fe-delete-btn" data-id="${card.id}">🗑️ Xóa</button>
         </div>
         <div id="wb-sync-fe-preview-container-${card.id}" style="display: none; margin-top: 15px; border: 1px solid var(--wb-sync-border); border-radius: 5px; padding: 10px; background: #fff; color: #000; overflow: auto; min-height: 300px;"></div>
       </div>
@@ -739,7 +739,7 @@ export function renderFrontendCards() {
 export function renderScriptCards(prefix) {
   const $container = $(`#wb-sync-${prefix}-cards-container`);
   if (extractedScriptCards.length === 0) {
-    $container.html('<div class="wb-sync-empty-msg">没有提取到任何脚本代码。</div>');
+    $container.html('<div class="wb-sync-empty-msg">Không trích xuất được mã script nào.</div>');
     return;
   }
 
@@ -757,27 +757,27 @@ export function renderScriptCards(prefix) {
       <div class="wb-sync-card-content" style="${contentStyle}">
         <div class="wb-sync-row">
           <div class="wb-sync-group" style="flex: 1">
-            <span class="wb-sync-label">脚本名称:</span>
+            <span class="wb-sync-label">Tên script:</span>
             <input type="text" id="wb-sync-${prefix}-script-name-${card.id}" class="wb-sync-input" style="width: 100%" value="${card.name}" />
           </div>
         </div>
         <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px">
           <div style="display: flex; flex-direction: column; gap: 5px">
-            <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-${prefix}-disabled-${card.id}" /> 已禁用</label>
+            <label class="wb-sync-checkbox-label"><input type="checkbox" id="wb-sync-${prefix}-disabled-${card.id}" /> Đã tắt</label>
           </div>
         </div>
         <div style="display: flex; flex-direction: column; margin-top: 10px;">
-          <span class="wb-sync-label">提取的脚本内容 (JS/TS):</span>
+          <span class="wb-sync-label">Nội dung script đã trích (JS/TS):</span>
           <textarea id="wb-sync-${prefix}-content-${card.id}" class="wb-sync-textarea" style="min-height: 150px; font-family: monospace">${card.content}</textarea>
-          <span class="wb-sync-label" style="margin-top: 10px">作者备注:</span>
-          <textarea id="wb-sync-${prefix}-info-${card.id}" class="wb-sync-textarea" style="min-height: 60px" placeholder="脚本备注，例如作者名、版本和注意事项等，支持简单的 markdown 和 html"></textarea>
+          <span class="wb-sync-label" style="margin-top: 10px">Ghi chú tác giả:</span>
+          <textarea id="wb-sync-${prefix}-info-${card.id}" class="wb-sync-textarea" style="min-height: 60px" placeholder="Ghi chú script, ví dụ tác giả, phiên bản và lưu ý; hỗ trợ markdown và html cơ bản"></textarea>
         </div>
         <div class="wb-sync-actions" style="justify-content: flex-end; margin-top: 10px; flex-wrap: wrap">
-          <button class="wb-sync-button ss-import-global-btn" data-id="${card.id}" style="background-color: var(--wb-sync-primary); color: #000; opacity: 1">导入至全局脚本库</button>
-          <button class="wb-sync-button ss-import-preset-btn" data-id="${card.id}" style="background-color: var(--wb-sync-primary); color: #000; opacity: 1">导入至预设脚本库</button>
-          <button class="wb-sync-button ss-import-character-btn" data-id="${card.id}" style="background-color: var(--wb-sync-primary); color: #000; opacity: 1">导入至角色脚本库</button>
-          <button class="wb-sync-button wb-sync-btn-primary ss-download-btn" data-id="${card.id}" style="opacity: 1">⬇️ 下载脚本</button>
-          <button class="wb-sync-button wb-sync-btn-small abandon ss-delete-btn" data-id="${card.id}">🗑️ 删除</button>
+          <button class="wb-sync-button ss-import-global-btn" data-id="${card.id}" style="background-color: var(--wb-sync-primary); color: #000; opacity: 1">Nhập vào thư viện script toàn cục</button>
+          <button class="wb-sync-button ss-import-preset-btn" data-id="${card.id}" style="background-color: var(--wb-sync-primary); color: #000; opacity: 1">Nhập vào thư viện script preset</button>
+          <button class="wb-sync-button ss-import-character-btn" data-id="${card.id}" style="background-color: var(--wb-sync-primary); color: #000; opacity: 1">Nhập vào thư viện script nhân vật</button>
+          <button class="wb-sync-button wb-sync-btn-primary ss-download-btn" data-id="${card.id}" style="opacity: 1">⬇️ Tải script</button>
+          <button class="wb-sync-button wb-sync-btn-small abandon ss-delete-btn" data-id="${card.id}">🗑️ Xóa</button>
         </div>
       </div>
     </div>

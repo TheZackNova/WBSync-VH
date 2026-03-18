@@ -81,7 +81,7 @@ export function showMainView() {
   
   renderPresets();
 
-  $('#wb-sync-header-title').text('世界书同步器 - 主菜单');
+  $('#wb-sync-header-title').text('Đồng bộ Sổ thế giới - Menu chính');
   $('#wb-sync-popup-back-btn').hide();
   localStorage.setItem(STORAGE_KEY_LAST_VIEW, 'wb-sync-main-view');
 
@@ -115,39 +115,39 @@ export async function showSubView(viewId) {
     elements.manageRegexView,
   ].forEach(v => v && v.hide());
 
-  let title = '世界书同步器';
+  let title = 'Đồng bộ Sổ thế giới';
   if (viewId === 'wb-sync-select-view') {
-    title = '✅ 选择要启用的世界书';
+    title = '✅ Chọn Sổ thế giới cần bật';
     renderWorldBooks();
   }
   if (viewId === 'wb-sync-modify-view') {
-    title = '📝 修改世界书条目';
+    title = '📝 Chỉnh sửa mục của Sổ thế giới';
     populateModifyWorldbookSelect();
   }
   if (viewId === 'wb-sync-transfer-view') {
-    title = '🔄 条目迁移';
+    title = '🔄 Chuyển mục';
     populateTransferSelects();
   }
   if (viewId === 'wb-sync-sync-view') {
-    title = '⚡ 世界书同步器';
+    title = '⚡ Đồng bộ Sổ thế giới';
     populateSyncWorldbooks();
   }
   if (viewId === 'wb-sync-duplicate-view') {
-    title = '📑 复制世界书';
+    title = '📑 Sao chép Sổ thế giới';
     populateDuplicateSelect();
   }
   if (viewId === 'wb-sync-rename-view') {
-    title = '✏️ 修改名称';
+    title = '✏️ Đổi tên';
     populateRenameSelect();
   }
   if (viewId === 'wb-sync-delete-view') {
-    title = '🗑️ 删除世界书和条目';
+    title = '🗑️ Xóa Sổ thế giới và mục';
     renderDeleteView();
   }
-  if (viewId === 'wb-sync-frontend-view') title = '💻 前端同步器';
-  if (viewId === 'wb-sync-script-sync-view') title = '💻 脚本同步器';
+  if (viewId === 'wb-sync-frontend-view') title = '💻 Trình đồng bộ frontend';
+  if (viewId === 'wb-sync-script-sync-view') title = '💻 Trình đồng bộ script';
   if (viewId === 'wb-sync-create-regex-view') {
-    title = '💻 创建正则脚本';
+    title = '💻 Tạo script regex';
     const isCharacterSelected = SillyTavern.getContext().characterId !== undefined;
     if (isCharacterSelected) {
       $('#wb-sync-cr-import-character-btn').show();
@@ -156,7 +156,7 @@ export async function showSubView(viewId) {
     }
   }
   if (viewId === 'wb-sync-create-script-view') {
-    title = '💻 创建酒馆助手脚本';
+    title = '💻 Tạo script Trợ lý Tavern';
     const isCharacterSelected = SillyTavern.getContext().characterId !== undefined;
     if (isCharacterSelected) {
       $('#wb-sync-cs-import-character-script-btn').show();
@@ -164,16 +164,16 @@ export async function showSubView(viewId) {
       $('#wb-sync-cs-import-character-script-btn').hide();
     }
   }
-  if (viewId === 'wb-sync-settings-view') title = '⚙️ 插件设置';
+  if (viewId === 'wb-sync-settings-view') title = '⚙️ Cài đặt tiện ích';
   if (viewId === 'wb-sync-manage-wb-view') {
-    title = '📚 世界书管理';
+    title = '📚 Quản lý Sổ thế giới';
     renderManageWorldbookList();
     $('#wb-sync-manage-wb-refresh-btn').show();
   } else {
     $('#wb-sync-manage-wb-refresh-btn').hide();
   }
   if (viewId === 'wb-sync-manage-script-view') {
-    title = '🤖 酒馆助手脚本管理';
+    title = '🤖 Quản lý script Trợ lý Tavern';
     renderManageScriptLists();
     $('#wb-sync-manage-script-refresh-btn').show();
     const isCharacterSelected = SillyTavern.getContext().characterId !== undefined;
@@ -186,7 +186,7 @@ export async function showSubView(viewId) {
     $('#wb-sync-manage-script-refresh-btn').hide();
   }
   if (viewId === 'wb-sync-manage-regex-view') {
-    title = '📋 正则脚本管理';
+    title = '📋 Quản lý script regex';
     renderManageRegexLists();
     $('#wb-sync-manage-regex-refresh-btn').show();
     const isCharacterSelected = SillyTavern.getContext().characterId !== undefined;
