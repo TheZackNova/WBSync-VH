@@ -2,6 +2,10 @@ import { showPopup } from '../ui.js';
 
 export const STORAGE_KEY_BUTTON_POS = 'wb-sync-btn-pos';
 export const STORAGE_KEY_SETTINGS = 'wb-sync-settings';
+const MAGIC_MENU_ID = 'wb-sync-extension-menu-item';
+
+let magicMenuRetryTimer = null;
+let magicMenuRetryCount = 0;
 
 let $showFloatingBtn;
 let $showMagicWandBtn;
@@ -42,7 +46,66 @@ export function initSettings() {
 
   loadSettings();
   initFloatingButton();
+  initMagicWandMenu();
   initQrMenu();
+}
+
+function normalizeSettings(raw = {}) {
+  const settings = {
+    showFloatingBtn: raw.showFloatingBtn !== false,
+    showMagicWandBtn: raw.showMagicWandBtn !== false,
+    showQrBtn: raw.showQrBtn !== false,
+    defaultCollapse: raw.defaultCollapse !== false,
+    manageWbCollapsed: raw.manageWbCollapsed === true,
+    manageScriptCollapsed: raw.manageScriptCollapsed === true,
+    manageRegexCollapsed: raw.manageRegexCollapsed === true,
+  };
+
+  // Never allow all entry points to be disabled, otherwise users cannot reopen the UI.
+  if (!settings.showFloatingBtn && !settings.showMagicWandBtn && !settings.showQrBtn) {
+    settings.showFloatingBtn = true;
+  }
+
+  return settings;
+}
+
+function getMagicMenuContainer() {
+  return $('#extensionsMenu, #extensions-menu, #extensions_settings, #extensions-settings, .extensionsMenu, .extensions-menu').first();
+}
+
+function createMagicWandMenuIfPossible() {
+  if ($(`#${MAGIC_MENU_ID}`).length > 0) return true;
+
+  const $container = getMagicMenuContainer();
+  if ($container.length === 0) return false;
+
+  const menuItemHtml = `
+      <div id="${MAGIC_MENU_ID}" class="list-group-item flex-container flexGap5" title="Mở Đồng bộ Sổ thế giới">
+          <i class="fa-solid fa-book-atlas fa-fw"></i>
+          <span>Đồng bộ Sổ thế giới</span>
+      </div>
+  `;
+  $container.append(menuItemHtml);
+  $(`#${MAGIC_MENU_ID}`).on('click', () => {
+    showPopup();
+  });
+
+  return true;
+}
+
+function initMagicWandMenu() {
+  if (magicMenuRetryTimer) return;
+
+  magicMenuRetryCount = 0;
+  magicMenuRetryTimer = setInterval(() => {
+    const created = createMagicWandMenuIfPossible();
+    magicMenuRetryCount++;
+
+    if (created || magicMenuRetryCount > 20) {
+      clearInterval(magicMenuRetryTimer);
+      magicMenuRetryTimer = null;
+    }
+  }, 500);
 }
 
 export function initFloatingButton() {
@@ -120,20 +183,27 @@ export function loadSettings() {
     $manageRegexCollapsedBtn = $('#wb-sync-setting-manage-regex-collapsed');
   }
 
-  const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)) || {};
-  $showFloatingBtn.prop('checked', settings.showFloatingBtn !== false);
-  $showMagicWandBtn.prop('checked', settings.showMagicWandBtn !== false);
-  $showQrBtn.prop('checked', settings.showQrBtn !== false);
-  $defaultCollapseBtn.prop('checked', settings.defaultCollapse !== false);
-  $manageWbCollapsedBtn.prop('checked', settings.manageWbCollapsed === true);
-  $manageScriptCollapsedBtn.prop('checked', settings.manageScriptCollapsed === true);
-  $manageRegexCollapsedBtn.prop('checked', settings.manageRegexCollapsed === true);
+  const rawSettings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)) || {};
+  const settings = normalizeSettings(rawSettings);
+
+  // Persist normalized settings so broken legacy values are auto-repaired.
+  if (JSON.stringify(rawSettings) !== JSON.stringify(settings)) {
+    localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(settings));
+  }
+
+  $showFloatingBtn.prop('checked', settings.showFloatingBtn);
+  $showMagicWandBtn.prop('checked', settings.showMagicWandBtn);
+  $showQrBtn.prop('checked', settings.showQrBtn);
+  $defaultCollapseBtn.prop('checked', settings.defaultCollapse);
+  $manageWbCollapsedBtn.prop('checked', settings.manageWbCollapsed);
+  $manageScriptCollapsedBtn.prop('checked', settings.manageScriptCollapsed);
+  $manageRegexCollapsedBtn.prop('checked', settings.manageRegexCollapsed);
   applySettings(settings);
 }
 
 export function saveSettings(event) {
   const $changedCheckbox = $(event.target);
-  const settings = {
+  const settings = normalizeSettings({
     showFloatingBtn: $showFloatingBtn.is(':checked'),
     showMagicWandBtn: $showMagicWandBtn.is(':checked'),
     showQrBtn: $showQrBtn.is(':checked'),
@@ -141,7 +211,7 @@ export function saveSettings(event) {
     manageWbCollapsed: $manageWbCollapsedBtn.is(':checked'),
     manageScriptCollapsed: $manageScriptCollapsedBtn.is(':checked'),
     manageRegexCollapsed: $manageRegexCollapsedBtn.is(':checked'),
-  };
+  });
 
   if (!settings.showFloatingBtn && !settings.showMagicWandBtn && !settings.showQrBtn) {
     toastr.warning('Cần giữ lại ít nhất một lối vào tiện ích!');
@@ -175,29 +245,20 @@ export function isManageRegexCollapsed() {
 }
 
 export function applySettings(settings) {
-  $('#wb-sync-floating-btn').toggle(settings.showFloatingBtn !== false);
+  const normalized = normalizeSettings(settings);
 
-  const menuId = 'wb-sync-extension-menu-item';
-  if (settings.showMagicWandBtn !== false) {
-      if ($(`#${menuId}`).length === 0) {
-          const menuItemHtml = `
-              <div id="${menuId}" class="list-group-item flex-container flexGap5" title="Mở Đồng bộ Sổ thế giới">
-                  <i class="fa-solid fa-book-atlas fa-fw"></i>
-                  <span>Đồng bộ Sổ thế giới</span>
-              </div>
-          `;
-          $('#extensionsMenu').append(menuItemHtml);
-          $(`#${menuId}`).on('click', () => {
-              showPopup();
-          });
-      } else {
-          $(`#${menuId}`).show();
-      }
+  $('#wb-sync-floating-btn').toggle(normalized.showFloatingBtn);
+
+  if (normalized.showMagicWandBtn) {
+    if (!createMagicWandMenuIfPossible()) {
+      initMagicWandMenu();
+    }
+    $(`#${MAGIC_MENU_ID}`).show();
   } else {
-      $(`#${menuId}`).hide();
+    $(`#${MAGIC_MENU_ID}`).hide();
   }
 
-  $('#wb-sync-qr-menu-item').toggle(settings.showQrBtn !== false);
+  $('#wb-sync-qr-menu-item').toggle(normalized.showQrBtn);
 }
 
 export function initQrMenu() {
