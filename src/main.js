@@ -18,14 +18,14 @@ import {
 } from "./ui.js";
 
 const MODULE_NAME = "Đồng bộ Sổ thế giới";
-const extensionFolderPath = `scripts/extensions/third-party/WBSync`;
+const extensionBaseUrl = new URL("../", import.meta.url);
 
 export const STORAGE_KEY_TAG_START = "wb-sync-tag-start-val";
 export const STORAGE_KEY_TAG_END = "wb-sync-tag-end-val";
 
 async function init() {
   try {
-    const html = await $.get(`/${extensionFolderPath}/panel.html`);
+    const html = await $.get(new URL("panel.html", extensionBaseUrl).href);
     $("body").append(html);
 
     initUIElements();

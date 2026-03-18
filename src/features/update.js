@@ -1,9 +1,9 @@
 const STORAGE_KEY_VERSION = 'wb-sync-version';
-const extensionFolderPath = 'scripts/extensions/third-party/WBSync';
+const extensionBaseUrl = new URL('../', import.meta.url);
 
 export async function checkUpdateStatus() {
   try {
-    const manifest = await $.getJSON(`/${extensionFolderPath}/manifest.json`);
+    const manifest = await $.getJSON(new URL('manifest.json', extensionBaseUrl).href);
     const currentVersion = manifest.version;
     const savedVersion = localStorage.getItem(STORAGE_KEY_VERSION);
 
