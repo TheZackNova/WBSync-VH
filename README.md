@@ -1,104 +1,104 @@
-# 世界书同步器 (Worldbook Synchronizer) v1.5.0
+# Bộ đồng bộ Thế giới thư (Worldbook Synchronizer) v1.5.0
 
-这是一个为 SillyTavern 设计的强大世界书管理与同步插件，旨在提供一个比默认编辑器更高效、更直观的工作流程。
+Đây là một plugin quản lý và đồng bộ hóa Thế giới thư mạnh mẽ được thiết kế cho SillyTavern, nhằm cung cấp một quy trình làm việc hiệu quả và trực quan hơn so với trình chỉnh sửa mặc định.
 
-## 🆕 更新日志 (Changelog)
+## 🆕 Nhật ký cập nhật (Changelog)
 
 ### v1.5.0
-*   **新增**: 自动更新功能，在主菜单中提供更新入口，初次安装或有新版本时自动提示。
-*   **优化**: 优化了“角色脚本”和“局部正则”的显示逻辑，现在仅在进入角色卡时才会显示相关选项。
-*   **新增**: 在世界书管理/酒馆助手脚本管理/正则脚本管理加入了下载
+* **Thêm mới**: Tính năng tự động cập nhật, cung cấp lối vào cập nhật trong menu chính, tự động nhắc nhở khi cài đặt lần đầu hoặc có phiên bản mới.
+* **Tối ưu hóa**: Tối ưu hóa logic hiển thị của "Script nhân vật" và "Regex cục bộ", hiện chỉ hiển thị các tùy chọn liên quan khi vào thẻ nhân vật.
+* **Thêm mới**: Thêm chức năng tải xuống trong Quản lý Thế giới thư/Quản lý Script trợ lý tửu quán/Quản lý Script Regex.
 
 ### v1.4.0
-*   **新增**: "世界书管理"、"酒馆助手脚本管理"、"正则脚本管理"三大管理模块，采用卡片式布局，支持折叠展开。
-*   **新增**: "世界书管理"中条目列表显示"插入位置"、"顺序"、"触发概率"等详细信息。
-*   **新增**: "正则脚本管理"编辑面板集成实时渲染预览功能，可直接在插件内预览 HTML 渲染效果。
-*   **新增**: 插件设置中增加"世界书管理"、"酒馆助手脚本管理"、"正则脚本管理"的默认折叠状态选项。
-*   **优化**: 管理模块的刷新按钮统一移至标题栏，操作更便捷。
-*   **优化**: 编辑面板的"保存"、"取消"按钮移至标题栏，界面更简洁。
-*   **优化**: 重构代码为模块化架构（draggable.js、worldbook-manager.js、script-manager.js、regex-manager.js），提升可维护性。
-*   **优化**: 修复"局部正则"和"角色脚本"显示逻辑，仅在选择角色卡时显示。
-*   **优化**: 修复编辑面板折叠状态异常问题，每次打开时自动展开。
-*   **优化**: 修复世界书条目蓝灯/绿灯显示逻辑，正确判断常驻/条件触发模式。
+* **Thêm mới**: Ba mô-đun quản lý lớn gồm "Quản lý Thế giới thư", "Quản lý Script trợ lý tửu quán", "Quản lý Script Regex", sử dụng bố cục dạng thẻ, hỗ trợ thu gọn/mở rộng.
+* **Thêm mới**: Trong "Quản lý Thế giới thư", danh sách mục hiển thị thông tin chi tiết như "Vị trí chèn", "Thứ tự", "Xác suất kích hoạt".
+* **Thêm mới**: Bảng chỉnh sửa "Quản lý Script Regex" tích hợp tính năng xem trước render thời gian thực, có thể xem trực tiếp hiệu ứng render HTML trong plugin.
+* **Thêm mới**: Thêm tùy chọn trạng thái thu gọn mặc định cho "Quản lý Thế giới thư", "Quản lý Script trợ lý tửu quán", "Quản lý Script Regex" trong cài đặt plugin.
+* **Tối ưu hóa**: Nút làm mới của các mô-đun quản lý được chuyển thống nhất lên thanh tiêu đề, thao tác thuận tiện hơn.
+* **Tối ưu hóa**: Các nút "Lưu", "Hủy" của bảng chỉnh sửa được chuyển lên thanh tiêu đề, giao diện gọn gàng hơn.
+* **Tối ưu hóa**: Tái cấu trúc mã nguồn sang kiến trúc mô-đun (draggable.js, worldbook-manager.js, script-manager.js, regex-manager.js), nâng cao khả năng bảo trì.
+* **Tối ưu hóa**: Sửa logic hiển thị của "Regex cục bộ" và "Script nhân vật", chỉ hiển thị khi chọn thẻ nhân vật.
+* **Tối ưu hóa**: Sửa lỗi trạng thái thu gọn bất thường của bảng chỉnh sửa, tự động mở rộng mỗi khi mở.
+* **Tối ưu hóa**: Sửa logic hiển thị đèn xanh dương/đèn xanh lá của mục Thế giới thư, phán đoán chính xác chế độ thường trực/kích hoạt có điều kiện.
 
 ### v1.3.0
-*   **重构**: 规范了模块式管理，将核心逻辑拆分为多个功能模块，增强了代码的内聚性和可维护性。
-*   **优化**: 引入了 DOM 查询缓存和批量 DOM 渲染机制，显著优化了卡顿问题，提升了性能。
-*   **新增**: 为"世界书同步器"、"前端同步器"和"脚本同步器"提取生成的卡片增加了折叠功能。
-*   **新增**: 在"插件设置"中增加了"提取卡片时默认折叠内容"的选项，允许用户自定义卡片的默认显示状态。
-*   **优化**: 调整了"世界书同步器"卡片中"关键字"输入框的间距，改善了视觉布局。
+* **Tái cấu trúc**: Quy chuẩn hóa quản lý kiểu mô-đun, chia tách logic cốt lõi thành nhiều mô-đun chức năng, tăng cường tính gắn kết và khả năng bảo trì của mã nguồn.
+* **Tối ưu hóa**: Áp dụng cơ chế bộ nhớ đệm truy vấn DOM và render DOM hàng loạt, tối ưu hóa đáng kể vấn đề giật lag, nâng cao hiệu suất.
+* **Thêm mới**: Thêm chức năng thu gọn cho các thẻ được trích xuất tạo ra trong "Bộ đồng bộ Thế giới thư", "Bộ đồng bộ Front-end" và "Bộ đồng bộ Script".
+* **Thêm mới**: Thêm tùy chọn "Mặc định thu gọn nội dung khi trích xuất thẻ" trong "Cài đặt plugin", cho phép người dùng tùy chỉnh trạng thái hiển thị mặc định của thẻ.
+* **Tối ưu hóa**: Điều chỉnh khoảng cách ô nhập "Từ khóa" trong thẻ "Bộ đồng bộ Thế giới thư", cải thiện bố cục thị giác.
 
 ### v1.2.0
-*   **修复**: 移除了 CSS 中滚动条的 `:hover` 伪类样式，解决了酒馆核心 `dynamic-styles.js` 尝试生成 `:focus-visible` 规则时导致的控制台红字报错问题。
-*   **优化**: 提升了插件在最新版 SillyTavern 中的兼容性和稳定性。
+* **Sửa lỗi**: Loại bỏ kiểu giả lập `:hover` của thanh cuộn trong CSS, giải quyết vấn đề báo lỗi chữ đỏ trong console khi core của tửu quán `dynamic-styles.js` cố gắng tạo quy tắc `:focus-visible`.
+* **Tối ưu hóa**: Nâng cao tính tương thích và độ ổn định của plugin trong phiên bản SillyTavern mới nhất.
 
-## ✨ 核心功能
+## ✨ Chức năng cốt lõi
 
-### 1. ⚡ 世界书同步器
-*   **智能提取**：通过自定义的起始和结束标签（如 `<wb>` 和 `</wb>`），自动从最新一楼的聊天记录中提取 AI 生成的世界书设定。
-*   **卡片式编辑**：提取的内容会自动生成独立的卡片，您可以直观地修改条目的名称、关键字、内容。
-*   **高级设置**：支持修改条目的触发模式（常驻/条件触发）、插入位置（角色定义前后、深度插入等）、插入深度、递归设置等高级属性。
-*   **批量操作**：提供批量设置功能，一键统一所有提取条目的属性，并支持一键同步到目标世界书。
+### 1. ⚡ Bộ đồng bộ Thế giới thư
+* **Trích xuất thông minh**: Thông qua các thẻ bắt đầu và kết thúc tùy chỉnh (như `<wb>` và `</wb>`), tự động trích xuất các thiết lập Thế giới thư do AI tạo ra từ lịch sử trò chuyện mới nhất.
+* **Chỉnh sửa dạng thẻ**: Nội dung trích xuất sẽ tự động tạo thành các thẻ độc lập, bạn có thể sửa đổi tên mục, từ khóa, nội dung một cách trực quan.
+* **Cài đặt nâng cao**: Hỗ trợ sửa đổi các thuộc tính nâng cao như chế độ kích hoạt (thường trực/kích hoạt có điều kiện), vị trí chèn (trước/sau định nghĩa nhân vật, chèn sâu...), độ sâu chèn, cài đặt đệ quy, v.v.
+* **Thao tác hàng loạt**: Cung cấp chức năng thiết lập hàng loạt, thống nhất thuộc tính của tất cả các mục được trích xuất bằng một cú nhấp chuột, và hỗ trợ đồng bộ một chạm vào Thế giới thư mục tiêu.
 
-### 2. 📚 世界书管理
-*   **卡片式布局**：世界书列表和条目列表采用卡片式布局，支持折叠/展开，信息展示更清晰。
-*   **详细信息**：条目列表显示"插入位置"、"顺序"、"触发概率"等详细信息，一目了然。
-*   **快速操作**：新建、全选/反选、删除等操作按钮置于卡片标题栏，操作更便捷。
-*   **选择启用**：在独立的面板中快速勾选、取消勾选需要全局启用的世界书。
-*   **方案保存与加载**：将常用的世界书组合保存为方案，一键加载，方便在不同场景间切换。
-*   **新建世界书**：快速创建新的空白世界书。
-*   **修改名称**：安全地重命名世界书，插件会自动处理内容的迁移。
-*   **复制世界书**：一键克隆现有的世界书，方便您在不同聊天中进行分支测试或备份。
-*   **删除世界书与条目**：提供直观的列表，支持批量勾选并永久删除不需要的世界书或特定条目。条目按"蓝灯（常驻）"和"绿灯（条件触发）"分类显示。
-*   **条目迁移**：轻松将一个世界书中的特定条目批量复制/迁移到另一个世界书中，方便整合和重组您的世界观设定。
+### 2. 📚 Quản lý Thế giới thư
+* **Bố cục dạng thẻ**: Danh sách Thế giới thư và danh sách mục sử dụng bố cục dạng thẻ, hỗ trợ thu gọn/mở rộng, hiển thị thông tin rõ ràng hơn.
+* **Thông tin chi tiết**: Danh sách mục hiển thị thông tin chi tiết như "Vị trí chèn", "Thứ tự", "Xác suất kích hoạt", nhìn là hiểu ngay.
+* **Thao tác nhanh**: Các nút thao tác như tạo mới, chọn tất cả/bỏ chọn, xóa được đặt trên thanh tiêu đề của thẻ, thao tác thuận tiện hơn.
+* **Chọn kích hoạt**: Nhanh chóng tích chọn hoặc bỏ chọn các Thế giới thư cần kích hoạt toàn cục trong một bảng điều khiển độc lập.
+* **Lưu và tải phương án**: Lưu các tổ hợp Thế giới thư thường dùng thành phương án, tải một chạm, thuận tiện chuyển đổi giữa các ngữ cảnh khác nhau.
+* **Tạo mới Thế giới thư**: Nhanh chóng tạo Thế giới thư trống mới.
+* **Sửa đổi tên**: Đổi tên Thế giới thư một cách an toàn, plugin sẽ tự động xử lý việc di chuyển nội dung.
+* **Sao chép Thế giới thư**: Nhân bản Thế giới thư hiện có bằng một cú nhấp chuột, thuận tiện cho bạn thực hiện thử nghiệm nhánh hoặc sao lưu trong các cuộc trò chuyện khác nhau.
+* **Xóa Thế giới thư và mục**: Cung cấp danh sách trực quan, hỗ trợ tích chọn hàng loạt và xóa vĩnh viễn các Thế giới thư hoặc các mục cụ thể không cần thiết. Các mục được hiển thị phân loại theo "Đèn xanh dương (thường trực)" và "Đèn xanh lá (kích hoạt có điều kiện)".
+* **Di chuyển mục**: Dễ dàng sao chép/di chuyển hàng loạt các mục cụ thể từ một Thế giới thư này sang một Thế giới thư khác, thuận tiện cho việc hợp nhất và tổ chức lại các thiết lập thế giới quan của bạn.
 
-### 3. 🤖 酒馆助手脚本管理
-*   **卡片式布局**：全局脚本、预设脚本、角色脚本分类展示，支持折叠/展开。
-*   **快速编辑**：点击脚本即可在编辑面板中修改脚本名称、内容、作者备注等。
-*   **启用/禁用**：一键切换脚本启用状态。
-*   **删除脚本**：支持删除不需要的脚本。
+### 3. 🤖 Quản lý Script trợ lý tửu quán
+* **Bố cục dạng thẻ**: Hiển thị phân loại Script toàn cục, Script cài sẵn, Script nhân vật, hỗ trợ thu gọn/mở rộng.
+* **Chỉnh sửa nhanh**: Nhấp vào script để sửa đổi tên script, nội dung, ghi chú tác giả, v.v. trong bảng chỉnh sửa.
+* **Bật/Tắt**: Chuyển đổi trạng thái kích hoạt script bằng một cú nhấp chuột.
+* **Xóa script**: Hỗ trợ xóa các script không cần thiết.
 
-### 4. 📋 正则脚本管理
-*   **卡片式布局**：全局正则、预设正则、局部正则分类展示，支持折叠/展开。
-*   **完整编辑**：支持编辑正则脚本的所有属性，包括查找正则、替换文本、作用范围、深度设置等。
-*   **实时渲染**：编辑面板集成渲染预览功能，可直接在插件内预览 HTML 渲染效果。
-*   **启用/禁用**：一键切换正则启用状态。
-*   **删除正则**：支持删除不需要的正则脚本。
+### 4. 📋 Quản lý Script Regex
+* **Bố cục dạng thẻ**: Hiển thị phân loại Regex toàn cục, Regex cài sẵn, Regex cục bộ, hỗ trợ thu gọn/mở rộng.
+* **Chỉnh sửa đầy đủ**: Hỗ trợ chỉnh sửa tất cả các thuộc tính của script regex, bao gồm regex tìm kiếm, văn bản thay thế, phạm vi tác động, cài đặt độ sâu, v.v.
+* **Render thời gian thực**: Bảng chỉnh sửa tích hợp chức năng xem trước render, có thể xem trực tiếp hiệu ứng render HTML trong plugin.
+* **Bật/Tắt**: Chuyển đổi trạng thái kích hoạt regex bằng một cú nhấp chuột.
+* **Xóa regex**: Hỗ trợ xóa các script regex không cần thiết.
 
-### 5. 🛠️ 脚本与正则工具
-*   **创建/导入正则脚本**：在插件内直接创建复杂的正则脚本，或从文件导入。支持配置所有原生正则脚本选项，并可选择导入到全局、预设或角色中。
-*   **创建/导入酒馆助手脚本**：直接编写或导入酒馆助手脚本，并可选择导入到全局、预设或角色脚本库。
-*   **前端同步器**：通过自定义标签提取 AI 生成的 HTML/CSS/JS 前端代码，并可在安全的沙盒环境中实时预览渲染效果。
-*   **脚本同步器**：通过自定义标签从聊天记录中提取 JS/TS 代码，并快速导入为酒馆助手脚本。
+### 5. 🛠️ Công cụ Script và Regex
+* **Tạo/Nhập script regex**: Trực tiếp tạo các script regex phức tạp trong plugin hoặc nhập từ tệp. Hỗ trợ cấu hình tất cả các tùy chọn script regex gốc, và có thể chọn nhập vào toàn cục, cài sẵn hoặc nhân vật.
+* **Tạo/Nhập script trợ lý tửu quán**: Trực tiếp viết hoặc nhập script trợ lý tửu quán, và có thể chọn nhập vào kho script toàn cục, cài sẵn hoặc nhân vật.
+* **Bộ đồng bộ Front-end**: Trích xuất mã front-end HTML/CSS/JS do AI tạo ra thông qua các thẻ tùy chỉnh, và có thể xem trước hiệu ứng render thời gian thực trong môi trường sandbox an toàn.
+* **Bộ đồng bộ Script**: Trích xuất mã JS/TS từ lịch sử trò chuyện thông qua các thẻ tùy chỉnh và nhanh chóng nhập làm script trợ lý tửu quán.
 
-### 6. ⚙️ 插件设置
-*   **入口管理**: 您可以根据自己的使用习惯，自由选择插件的入口方式，包括：
-    *   **悬浮球**: 在页面右下角显示一个可拖动的悬浮球，点击即可打开插件。
-    *   **魔法棒菜单**: 在左下角的魔法棒菜单中显示 "世界书同步器" 入口。
-    *   **快捷回复栏**: 在输入框附近的快捷回复栏中显示一个图标入口。
-*   **智能守护**: 为了防止您意外关闭所有入口而无法访问插件，系统会强制要求至少保留一个入口处于开启状态。
-*   **管理模块折叠设置**: 可设置"世界书管理"、"酒馆助手脚本管理"、"正则脚本管理"的卡片默认折叠状态。
+### 6. ⚙️ Cài đặt plugin
+* **Quản lý lối vào**: Bạn có thể tự do lựa chọn phương thức vào plugin theo thói quen sử dụng của mình, bao gồm:
+    * **Bóng nổi**: Hiển thị một bóng nổi có thể kéo được ở góc dưới bên phải trang, nhấp để mở plugin.
+    * **Menu đũa thần**: Hiển thị lối vào "Bộ đồng bộ Thế giới thư" trong menu đũa thần ở góc dưới bên trái.
+    * **Thanh phản hồi nhanh**: Hiển thị một biểu tượng lối vào trong thanh phản hồi nhanh gần ô nhập liệu.
+* **Bảo vệ thông minh**: Để ngăn bạn vô tình đóng tất cả các lối vào dẫn đến không thể truy cập plugin, hệ thống sẽ bắt buộc yêu cầu giữ lại ít nhất một lối vào ở trạng thái mở.
+* **Cài đặt thu gọn mô-đun quản lý**: Có thể thiết lập trạng thái thu gọn mặc định của các thẻ "Quản lý Thế giới thư", "Quản lý Script trợ lý tửu quán", "Quản lý Script Regex".
 
-## 🚀 使用说明
+## 🚀 Hướng dẫn sử dụng
 
-1.  **打开插件**:
-    *   **悬浮球**: 点击页面右下角的 <i class="fa-solid fa-book-atlas"></i> 悬浮球。
-    *   **魔法棒菜单**: 点击页面左下角的魔法棒图标，在弹出菜单中选择 "世界书同步器"。
-    *   **快捷回复栏**: 点击输入框附近的 <i class="fa-solid fa-book-atlas"></i> 图标。
+1.  **Mở plugin**:
+    * **Bóng nổi**: Nhấp vào bóng nổi <i class="fa-solid fa-book-atlas"></i> ở góc dưới bên phải trang.
+    * **Menu đũa thần**: Nhấp vào biểu tượng đũa thần ở góc dưới bên trái trang, chọn "Bộ đồng bộ Thế giới thư" trong menu hiện ra.
+    * **Thanh phản hồi nhanh**: Nhấp vào biểu tượng <i class="fa-solid fa-book-atlas"></i> gần ô nhập liệu.
 
-2.  **主菜单**:
-    *   **载入全局世界书**: 管理和加载全局启用的世界书方案。
-    *   **世界书管理**: 提供新建、重命名、复制、修改、删除、迁移世界书条目等一系列强大的编辑功能。
-    *   **酒馆助手脚本管理**: 管理全局、预设、角色脚本，支持快速编辑和删除。
-    *   **正则脚本管理**: 管理全局、预设、局部正则，支持完整编辑和实时渲染预览。
-    *   **插件功能**:
-        *   **世界书同步器**: 核心功能，从聊天中提取内容并同步为世界书条目。
-        *   **前端同步器**: 提取并预览前端代码。
-        *   **脚本同步器**: 提取并导入酒馆助手脚本。
-        *   **插件设置**: 管理插件的入口显示方式和管理模块折叠设置。
+2.  **Menu chính**:
+    * **Tải Thế giới thư toàn cục**: Quản lý và tải các phương án Thế giới thư được kích hoạt toàn cục.
+    * **Quản lý Thế giới thư**: Cung cấp một loạt các chức năng chỉnh sửa mạnh mẽ như tạo mới, đổi tên, sao chép, sửa đổi, xóa, di chuyển các mục Thế giới thư.
+    * **Quản lý Script trợ lý tửu quán**: Quản lý script toàn cục, cài sẵn, nhân vật, hỗ trợ chỉnh sửa nhanh và xóa.
+    * **Quản lý Script Regex**: Quản lý regex toàn cục, cài sẵn, cục bộ, hỗ trợ chỉnh sửa đầy đủ và xem trước render thời gian thực.
+    * **Chức năng plugin**:
+        * **Bộ đồng bộ Thế giới thư**: Chức năng cốt lõi, trích xuất nội dung từ trò chuyện và đồng bộ thành mục Thế giới thư.
+        * **Bộ đồng bộ Front-end**: Trích xuất và xem trước mã front-end.
+        * **Bộ đồng bộ Script**: Trích xuất và nhập script trợ lý tửu quán.
+        * **Cài đặt plugin**: Quản lý phương thức hiển thị lối vào plugin và cài đặt thu gọn mô-đun quản lý.
 
-3.  **持久化记忆**:
-    *   插件会自动保存您上次关闭时的界面视图，方便您下次打开时能继续之前的操作。
-    *   所有设置，例如提取时使用的标签、选择的世界书、入口的显示状态、管理模块的折叠状态等，都会自动保存在您的浏览器本地存储中，无需重复配置。
+3.  **Ghi nhớ lâu dài**:
+    * Plugin sẽ tự động lưu lại chế độ xem giao diện khi bạn đóng lần trước, thuận tiện cho bạn tiếp tục các thao tác trước đó khi mở lại lần sau.
+    * Tất cả các cài đặt, ví dụ như các thẻ được sử dụng khi trích xuất, Thế giới thư được chọn, trạng thái hiển thị của lối vào, trạng thái thu gọn của mô-đun quản lý, v.v., đều sẽ được tự động lưu trong bộ nhớ cục bộ của trình duyệt, không cần cấu hình lại.
 
-希望这份详细的说明能帮助您更好地使用世界书同步器！
+Hy vọng bản hướng dẫn chi tiết này sẽ giúp bạn sử dụng Bộ đồng bộ Thế giới thư tốt hơn!
