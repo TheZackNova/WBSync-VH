@@ -1,5 +1,7 @@
 # Bộ đồng bộ Thế giới thư (Worldbook Synchronizer) v1.5.0
 
+## Original Repo: https://github.com/DXY2026212/WBSync
+
 Đây là một plugin quản lý và đồng bộ hóa Thế giới thư mạnh mẽ được thiết kế cho SillyTavern, nhằm cung cấp một quy trình làm việc hiệu quả và trực quan hơn so với trình chỉnh sửa mặc định.
 
 ## 🆕 Nhật ký cập nhật (Changelog)
